@@ -1,0 +1,36 @@
+<section class="top_header">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-5 hidden-xs">
+				<p>Welcome to My Health Adviser</p>
+			</div>
+			<div class="col-xs-12 col-sm-7">
+				<ul class="nav nav-pills">
+					<li><a ng-class="{'active' : stateName == 'login'}" ui-sref="login">Login</a></li>
+					<li><a ng-class="{'active' : stateName == 'register'}" ui-sref="register">Register</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>
+<nav class="navbar navbar-default navbar-static-top fluid_header">
+	<div class="container">
+		<div class="navbar-header">
+			<a class="navbar-brand" ui-sref="home"><img src="images/logo.png" alt=""></a>
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main_navigation" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+		</div>
+		<div class="collapse navbar-collapse" id="main_navigation">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a ui-sref="specialization">Specialization</a></li>
+				<li><a ui-sref="state-directory">Doctor Directory</a></li>
+				<li><a ui-sref="health-feed">Health Feed</a></li>
+				<li><a ui-sref="contact-us">Contact</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>

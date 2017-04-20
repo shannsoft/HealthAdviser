@@ -1,0 +1,105 @@
+<section class="banner-section" ng-init="homeInit()">
+	<div class="js-height-full">
+		<div class="banner-content">
+			<div class="banner-text">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="banner-block">
+								<h1>Your Health Our Best Priority</h1>
+								<div class="row m-t-30">
+									<div class="col-md-4">
+										<div class="form-group">
+											<i class="fa fa-map-marker map-marker-icon"></i>
+											<input type="text" class="form-control" id="main_loc" placeholder="Location" ng-model="home.location">
+											<i class="fa fa-close input-icon" ng-click="clearInputs('loc')"></i>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											<i class="fa fa-search search-icon"></i>
+											<input type="text" class="form-control" placeholder="Name / Specialization" ng-model="home.doctorName">
+											<i class="fa fa-close input-icon" ng-click="clearInputs('name')"></i>
+										</div>
+									</div>
+									<div class="col-md-2">
+										<button class="btn btn-red btn-md text-u-c" ng-click="do_search()">Search</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="page-section home-step1-section padd-v-80">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-7">
+				<h2>Need Help Selecting a Doctor?</h2>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac felis rutrum, interdum enim a, vulputate nisi. Praesent ut posuere sapien, at scelerisque tellus. </p>
+				<ul>
+					<li><i class="fa fa-check"></i>Attract and engage new patients</li>
+					<li><i class="fa fa-check"></i>Build and strengthen your online reputation</li>
+					<li><i class="fa fa-check"></i>Deliver a premium experience patients love</li>
+				</ul>
+				<button class="btn btn-blue btn-lg text-u-c" ui-sref="find-doctors">Find your Doctor</button>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="page-section home-step2-section padd-v-80">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 m-b-30">
+				<h2>Book health appointments in seconds</h2>
+			</div>
+			<div class="col-md-4">
+				<div class="card-block">
+					<h3>Advanced Search</h3>
+					<p>Securely correspond with  healthcare professionals online healthcare professionals online</p>
+					<button type="button" class="btn btn-blue btn-md">Search Doctor</button>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="card-block">
+					<h3>Schedule Appointment</h3>
+					<p>Securely correspond with healthcare professionals online healthcare professionals online</p>
+					<button type="button" class="btn btn-blue btn-md">Search Doctor</button>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="card-block">
+					<h3>Communication Portal</h3>
+					<p>Securely correspond with healthcare professionals online healthcare professionals online</p>
+					<button type="button" class="btn btn-blue btn-md">Search Doctor</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="page-section home-step3-section padd-v-80">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-5">
+				<div class="app-view">
+					<img class="img-responsive hidden-xs" src="images/mobile-app.png" />
+				</div>
+			</div>
+			<div class="col-md-7">
+				<h2>Get the my Health Adviser app</h2>
+				<ul class="block-list">
+					<li><i class="fa fa-check"></i> Find nearby doctors in your network</li>
+					<li><i class="fa fa-check"></i> Browse real patient reviews</li>
+					<li><i class="fa fa-check"></i> Book appointments with a tap</li>
+				</ul>
+				<ul class="inline-list">
+					<li><a href="#"><img src="images/ios-app-btn.png" /></a></li>
+					<li><a href="#"><img src="images/android-app-btn.png" /></a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>

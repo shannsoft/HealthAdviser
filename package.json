@@ -1,0 +1,29 @@
+{
+  "name": "toastmaster",
+  "version": "1.0.0",
+  "description": "This branch is made for the implementation for the login and the signup operation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://rajendra_santosh@bitbucket.org/lawsuit/ui.lawsuit.com.git"
+  },
+  "author": "rajendra <rajendrasahoodbpb@gmail.com> (http://rajendradbpb.com/)",
+  "license": "ISC",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-cache-breaker": "^2.0.1",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-connect": "^1.0.2",
+    "grunt-contrib-cssmin": "^1.0.1",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-ng-annotate": "^2.0.2",
+    "grunt-notify": "^0.4.5",
+    "grunt-stripcomments": "^0.5.0"
+  },
+  "homepage": "https://bitbucket.org/lawsuit/ui.lawsuit.com#readme"
+}
