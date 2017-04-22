@@ -1982,4 +1982,20 @@ dl {
 }
 .star-vote li a:hover{
 	color:#fff;
-	tex
+}
+#googleMap{
+	height: 300px;
+	width: 100%;
+}
+.alert{
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 50%;
+}
+.color-red{
+	color:red;
+}
+#locationMap{
+	
+}

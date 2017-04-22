@@ -1,26 +1,25 @@
-<section class="details-banner-section">
+<section class="details-banner-section" ng-init="loadDoctorDetails()">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-3">
 				<div class="profile-image">
-					<img class="img-responsive" src="images/doctor/doctor-1.jpg" />
+					<div ng-if="!doctorDetails.photo" class="text">{{doctorDetails.profile.name | getShortName}}</div>
+					<img ng-if="doctorDetails.photo" class="img-responsive" ng-src="{{doctorDetails.photo}}" />
 				</div>
 			</div>
-			<div class="col-md-9">
+			<div class="col-md-9" ng-if="doctorDetails">
 				<div class="details-banner-content">
-					<h3>Letisha Denise Bivins</h3>
-					<div class="rating-star">
+					<h3>{{doctorDetails.profile.name}}</h3>
+					<div class="rating-star" ng-init="getRatings(doctorDetails)">
 						<ul>
-							<li><i class="fa fa-star"></i></li>
-							<li><i class="fa fa-star"></i></li>
-							<li><i class="fa fa-star"></i></li>
-							<li><i class="fa fa-star"></i></li>
-							<li><i class="fa fa-star-o"></i></li>
-							<li>12 Reviews</li>
+							<li ng-repeat="star in doctorDetails.ratingArr track by $index">
+		                      <i class="{{star}}"></i>
+		                    </li>
+							<li>{{doctorDetails.totalReview}} Reviews</li>
 						</ul>
 					</div>
-					<p>23 years Experience</p>
-					<p>Fees - INR 300 /-</p>
+					<p ng-if="doctorDetails.yearsOfExperience">{{doctorDetails.yearsOfExperience}} years Experience</p>
+					<p ng-if="!doctorDetails.consulation.is_free_consultation">Fees - INR {{doctorDetails.consulation.fees}} /-</p>
 					<div class="m-t-30 m-b-20">
 						<a href="book-appointment.html" class="btn btn-blue btn-md m-r-5">Book Appointment</a>
 						<a href="review.html" class="btn btn-white btn-md">Review a Doctor</a>
@@ -39,40 +38,38 @@
 					<h3>Contact info</h3>
 					<div class="address-block">
 						<p class="text-u-c"><i class="fa fa-map-marker"></i> Location</p>
-						<address>Brookline Derm LLC 1208B Vfw Parkway, Suite 200, West Roxbury, MA 02132 (Map)</address>
+						<address>{{doctorDetails.address.formatted}}</address>
 					</div>
 					<div class="address-line"></div>
-					<div class="address-block">
-						<p class="text-u-c"><i class="fa fa-clock-o"></i> Mon-Sun</p>
-						11:00am - 2:00pm,<br/> 6:00pm - 9:00 pm
+					<div class="address-block" ng-repeat="time in doctorDetails.timing">
+						<p class="text-u-c"><i class="fa fa-clock-o"></i>{{time.day}}</p>
+						{{time.from}} - {{time.to}}
 					</div>
-					<div class="address-line"></div>
-					<div class="address-block">
+					<div class="address-line" ng-if="doctorDetails.phone.length > 0"></div>
+					<div class="address-block" ng-if="doctorDetails.phone.length > 0">
 						<p class="text-u-c"><i class="fa fa-phone"></i> Phone</p>
-						+91 7894561230
+						+91 {{doctorDetails.phone[0].number | phonenumber}}
 					</div>
-					<div class="address-line"></div>
-					<div class="address-block">
+					<div class="address-line" ng-if="doctorDetails.email"></div>
+					<div class="address-block" ng-if="doctorDetails.email">
 						<p class="text-u-c"><i class="fa fa-envelope"></i> Email</p>
-						santoshm@gmail.com
+						{{doctorDetails.email}}
 					</div>
-					<div class="address-line"></div>
-					<div class="address-block">
+					<div class="address-line" ng-if="doctorDetails.website"></div>
+					<div class="address-block" ng-if="doctorDetails.website">
 						<p class="text-u-c"><i class="fa fa-desktop"></i> Website</p>
-						<a href="">www.teknobiz.com</a>
+						<a href="{{doctorDetails.website}}" target="_blank">{{doctorDetails.website}}</a>
 					</div>
 					<div class="address-line"></div>
 					<div class="address-block">
 						<p class="text-u-c"><i class="fa fa-user"></i> Social Profile</p>
 						<ul class="social-address">
-							<li><a href=""><i class="fa fa-facebook"></i></a></li>
-							<li><a href=""><i class="fa fa-twitter"></i></a></li>
-							<li><a href=""><i class="fa fa-linkedin"></i></a></li>
-							<li><a href=""><i class="fa fa-google-plus"></i></a></li>
+							<li ng-repeat="social in doctorDetails.socialLink"><a href="{{social.url}}"><i class="fa {{social.image}}"></i></a></li>
 						<ul>
 					</div>
 					<div class="clearfix m-t-30">
-						<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14969.21271310986!2d85.84351009999999!3d20.287714299999998!3m2!1i1024!2i768!4f13.1!4m3!3e6!4m0!4m0!5e0!3m2!1sen!2sin!4v1483627062127" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
+						<div id="googleMap"></div>
+						<!-- <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14969.21271310986!2d85.84351009999999!3d20.287714299999998!3m2!1i1024!2i768!4f13.1!4m3!3e6!4m0!4m0!5e0!3m2!1sen!2sin!4v1483627062127" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen></iframe> -->
 					</div>
 				</div>
 			</div>
@@ -82,7 +79,7 @@
 						<h3>Information</h3>
 					</div>
 					<div class="content">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac felis rutrum, interdum enim a, vulputate nisi. Praesent ut posuere sapien, at scelerisque tellus. Vivamus ac felis rutrum, interdum enim a, vulputate nisi. Praesent ut posuere sapien, at scelerisque tellus. Praesent ut posuere sapien, at scelerisque tellus. Vivamus ac felis rutrum, interdum enim a, vulputate nisi. Praesent ut posuere sapien, at scelerisque tellus.vulputate nisi. Praesent ut posuere sapien, at scelerisque tellus. Praesent ut posuere sapien, at scelerisque tellus. Vivamus ac felis rutrum, interdum enim a, vulputate nisi. Praesent ut posuere sapien, at scelerisque tellus.
+						{{doctorDetails.profile.about}}
 					</div>
 				</div>
 				<div class="details-cardbox m-b-20">
@@ -91,28 +88,12 @@
 					</div>
 					<div class="content">
 						<ul class="timeline-v2 timeline-me">
-							<li>
-								<time datetime="" class="cbp_tmtime"><span>MDS Endodontist </span> <span>2012 - Current</span></time>
+							<li ng-repeat="edu in doctorDetails.education">
+								<time datetime="" class="cbp_tmtime"><span>{{edu.educationType}}</span> <span>{{edu.date | dateYear}}</span></time>
 								<i class="cbp_tmicon rounded-x hidden-xs"></i>
 								<div class="cbp_tmlabel">
 									<h2>The Oxford Dental College</h2>
-									<p>Winter purslane courgette pumpkin quandong komatsuna fennel green bean cucumber watercress. Peasprouts wattle seed rutabaga okra yarrow cress avocado grape.</p>
-								</div>
-							</li>
-							<li>
-								<time datetime="" class="cbp_tmtime"><span>Harvard Univarsity</span> <span>2007 - 2012</span></time>
-								<i class="cbp_tmicon rounded-x hidden-xs"></i>
-								<div class="cbp_tmlabel">
-									<h2>Advanced Aesthetics</h2>
-									<p>Caulie dandelion maize lentil collard greens radish arugula sweet pepper water spinach kombu courgette lettuce.</p>
-								</div>
-							</li>
-							<li>
-								<time datetime="" class="cbp_tmtime"><span>High School</span> <span>2003 - 2007</span></time>
-								<i class="cbp_tmicon rounded-x hidden-xs"></i>
-								<div class="cbp_tmlabel">
-									<h2>Toren Condo</h2>
-									<p>Caulie dandelion maize lentil collard greens radish arugula sweet pepper water spinach kombu courgette lettuce. Celery coriander bitterleaf epazote radicchio shallot.</p>
+									<p>{{edu.description}}</p>
 								</div>
 							</li>
 						</ul>
@@ -124,31 +105,14 @@
 					</div>
 					<div class="content">
 						<ul class="timeline-v2 timeline-me">
-							<li>
-								<time datetime="" class="cbp_tmtime"><span>Appolo Hospital </span> <span>2015 - Current</span></time>
+							<li ng-repeat="experiance in doctorDetails.experience">
+								<time datetime="" class="cbp_tmtime"><span>{{experiance.organizationName}} </span> <span>{{experiance.dateFrom | dateYear}} - {{experiance.dateTo | dateYear}}</span></time>
 								<i class="cbp_tmicon rounded-x hidden-xs"></i>
 								<div class="cbp_tmlabel">
-									<h2>Dentist Specalist</h2>
-									<p>Winter purslane courgette pumpkin quandong komatsuna fennel green bean cucumber watercress. Peasprouts wattle seed rutabaga okra yarrow cress avocado grape.</p>
+									<h2>{{experiance.designation}}</h2>
+									<p>{{experiance.description}}</p>
 								</div>
-							</li>
-							<li>
-								<time datetime="" class="cbp_tmtime"><span>Sum Hospital </span> <span>2012 - 2015</span></time>
-								<i class="cbp_tmicon rounded-x hidden-xs"></i>
-								<div class="cbp_tmlabel">
-									<h2>Procedural Dermatology</h2>
-									<p>Winter purslane courgette pumpkin quandong komatsuna fennel green bean cucumber watercress. Peasprouts wattle seed rutabaga okra yarrow cress avocado grape.</p>
-								</div>
-							</li>
-							<li>
-								<time datetime="" class="cbp_tmtime"><span>Kalinga Hospital </span> <span>2010 - 2012</span></time>
-								<i class="cbp_tmicon rounded-x hidden-xs"></i>
-								<div class="cbp_tmlabel">
-									<h2>Laser and Cosmetic</h2>
-									<p>Winter purslane courgette pumpkin quandong komatsuna fennel green bean cucumber watercress. Peasprouts wattle seed rutabaga okra yarrow cress avocado grape.</p>
-								</div>
-							</li>
-						
+							</li>						
 						</ul>
 					</div>
 				</div>
@@ -158,16 +122,7 @@
 					</div>
 					<div class="content">
 						<ul class="specialist-list">
-							<li><a href=""><i class="fa fa-angle-double-right"></i>Endodontist</a></li>
-							<li><a href=""><i class="fa fa-angle-double-right"></i>Aesthetic Dentist</a></li>
-							<li><a href=""><i class="fa fa-angle-double-right"></i>Dermatology</a></li>
-							<li><a href=""><i class="fa fa-angle-double-right"></i>Procedural Dermatology</a></li>
-							<li><a href=""><i class="fa fa-angle-double-right"></i>Laser and Cosmetic</a></li>
-							<li><a href=""><i class="fa fa-angle-double-right"></i>Endodontist</a></li>
-							<li><a href=""><i class="fa fa-angle-double-right"></i>Aesthetic Dentist</a></li>
-							<li><a href=""><i class="fa fa-angle-double-right"></i>Dermatology</a></li>
-							<li><a href=""><i class="fa fa-angle-double-right"></i>Procedural Dermatology</a></li>
-							<li><a href=""><i class="fa fa-angle-double-right"></i>Laser and Cosmetic</a></li>
+							<li ng-repeat="spe in doctorDetails.specialization"><a href=""><i class="fa fa-angle-double-right"></i>{{spe.specializationOn}}</a></li>
 						</ul>
 					</div>
 				</div>
@@ -177,7 +132,7 @@
 					</div>
 					<div class="content">
 						<ul class="timeline-v2 timeline-me">
-							<li>
+							<li >
 								<time datetime="" class="cbp_tmtime"><span>Santosh Majhi </span> 
 									<span>
 										<div class="review-rating">
@@ -250,32 +205,22 @@
 						<h3>Awards & Certificates</h3>
 					</div>
 					<div class="content">
-						<div class="row">
-							<div class="col-sm-4">
-								<img src="images/award-1.jpg" />
-							</div>
-							<div class="col-sm-8">
-								<div class="award-content">
-									<h3>Best Doctors' innovative physician</h3>
-									<span>2014</span>
-									<p>Caulie dandelion maize lentil collard greens radish arugula sweet pepper water spinach kombu courgette lettuce. Celery coriander bitterleaf epazote radicchio shallot.</p>
+						<div ng-repeat="award in doctorDetails.award">
+							<div class="row" >
+								<div class="col-sm-4">
+									<img src="images/award-1.jpg" />
+								</div>
+								<div class="col-sm-8">
+									<div class="award-content">
+										<h3>{{award.awardFor}}</h3>
+										<span>{{award.awardDate | dateYear}}</span>
+										<p>{{award.description}}</p>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-12">
-								<div class="light-gray-line"></div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-4">
-								<img src="images/award-2.jpg" />
-							</div>
-							<div class="col-sm-8">
-								<div class="award-content">
-									<h3>Best Doctors' innovative physician</h3>
-									<span>2014</span>
-									<p>Caulie dandelion maize lentil collard greens radish arugula sweet pepper water spinach kombu courgette lettuce. Celery coriander bitterleaf epazote radicchio shallot.</p>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="light-gray-line"></div>
 								</div>
 							</div>
 						</div>

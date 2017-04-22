@@ -1,4 +1,4 @@
-var app = angular.module('health-advisor',['ui.router','ngAnimate']);
+var app = angular.module('health-advisor',['ui.router','ngAnimate','ui.bootstrap','ui.utils','bw.paging']);
 app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/home');
   $stateProvider
@@ -23,7 +23,8 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
   })
   .state('contact-us', {
     templateUrl: 'src/views/common/contact-us.html',
-    url: '/contact-us'
+    url: '/contact-us',
+    controller: 'CommonController'
   })
   .state('state-directory', {
     templateUrl: 'src/views/directory/state-directory.html',
@@ -55,6 +56,11 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     url: '/doctor-details/:profileName',
     controller: 'DoctorDetailsController'
   })
+  .state('doctor-compare', {
+    templateUrl: 'src/views/doctors/doctor-compare.html',
+    url: '/doctor-compare',
+    controller: 'DoctorsController'
+  })
 }]);
 app.run(["$http", "$rootScope", "$timeout", function($http,$rootScope,$timeout){
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
@@ -77,14 +83,68 @@ app.constant('CONFIG', {
 }]);
 ;app.controller('AuthenticationController',["$scope", "$rootScope", function($scope,$rootScope){
 	
-}]);;app.controller('DoctorDetailsController',["$scope", "$rootScope", function($scope,$rootScope){
-	
-}]);app.controller('DoctorsController',["$scope", "$rootScope", "DoctorService", function($scope,$rootScope,DoctorService){
-	$scope.compareDoctor = [{}, {}, {}, {}];
-	$scope.compareDoctor = function(operation, doctor) {
+}]);;app.controller("CommonController",["$scope", "$rootScope", "CommonService", "Util", function($scope,$rootScope,CommonService,Util){
+	$scope.contact = {};
+	$scope.sendEnquiry = function(){
+		$scope.contact.actType = "I";
+		$rootScope.showPreloader = true;
+		CommonService.sendEnquiry($scope.contact).then(function(response){
+			if(response.data.StatusCode == 200){
+		        Util.alertMessage('success',"Thank you! We appreciate you contacting us. We'll respond to your inquiry as soon as possible. Have a great day!");
+		    }
+		    else{
+		        Util.alertMessage('danger',"Something went wrong! unable to send your request");
+		    }
+			$rootScope.showPreloader = false;
+		})
+	}
+}]);app.controller('DoctorDetailsController',["$scope", "$rootScope", "DoctorService", "$stateParams", function($scope,$rootScope,DoctorService,$stateParams){
+	$scope.loadDoctorDetails = function(){
+		$rootScope.showPreloader = true;
+		if($stateParams.profileName){
+			DoctorService.doctorDetails($stateParams.profileName).then(function(response){
+				$rootScope.showPreloader = false;
+				$scope.doctorDetails = response.data.Data.result;
+				console.log(response.data.Data);
+				$scope.initMap($scope.doctorDetails.address);
+			})
+		}
+	}
+	$scope.initMap = function(address) {
+      if(document.getElementById('googleMap')){
+        if(address.lat != '' || address.lng != ''){
+          var myLatLng = {lat: parseFloat(address.lat), lng: parseFloat(address.lng)};
+          map = new google.maps.Map(document.getElementById('googleMap'), {
+            zoom: 15,
+            center: myLatLng
+          });
+
+          var marker = new google.maps.Marker({
+            position: myLatLng,
+            map: map
+          });
+        }
+      }
+    }
+}]);app.controller('DoctorsController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorModel", "$state", function($scope,$rootScope,DoctorService,$stateParams,DoctorModel,$state){
+	$scope.compareDoctorArr = [{}, {}, {}, {}];
+	var map;
+	var directionService;
+	var directionDisplay;
+	var sourcePlace;
+	var destination;
+	$scope.paging = {currentPage:1,totalPage:0,showResult:0};
+	$scope.filter = {};
+	$scope.showCompare = function(operation, doctor) {
     	switch (operation) {
 	      case 'show':
-	        $scope.showCompare = true;
+	        $scope.showCompareBox = true;
+	        for (var i in $scope.compareDoctorArr) {
+	          if (angular.equals($scope.compareDoctorArr[i], {}) && $scope.compareDoctorArr.indexOf(doctor) === -1) {
+	            $scope.compareDoctorArr[i] = doctor;
+	            break;
+	          }
+	        }
 	        break;
 	      case 'clear':
 	        $scope.resetCompareDoctor();
@@ -94,18 +154,123 @@ app.constant('CONFIG', {
 	}
   	$scope.initListing = function() {
       	$scope.doctorList = DoctorService.getDoctorLisitng();
-      	console.log($scope.doctorList);
       	$scope.searchData = DoctorService.getSearchData();
       	$scope.resetCompareDoctor();
+	    $scope.loadMap();
+	    if($scope.doctorList.result){
+		    angular.forEach($scope.doctorList.result,function(doctor){
+		    	doctor.specializationArray = [];
+		    	angular.forEach(doctor.specialization,function(item){
+		    		doctor.specializationArray.push(item.specializationOn);
+		    	})
+		    	doctor.specializationArray = doctor.specializationArray.toString();
+		    })
+		    $scope.paging.showResult = $scope.doctorList.result.length;
+		    $scope.paging.totalPage = $scope.doctorList.totalResultCount;
+		}
     }
+	$scope.loadMap = function() {
+	    $scope.markers = [];
+	    map = new google.maps.Map(document.getElementById('googleMap'), {
+	      zoom: 7
+	    });
+	    $scope.setMarkers();
+	}
+	$scope.setMarkers = function() {
+	    var bound = new google.maps.LatLngBounds();
+	    angular.forEach($scope.doctorList.result, function(item) {
+	      var loc = new google.maps.LatLng(parseFloat(item.address.lat), parseFloat(item.address.lng));
+	      var marker = new google.maps.Marker({
+	        position: loc,
+	        map: map,
+	        animation: google.maps.Animation.DROP
+	      });
+	      console.log(marker);
+	      bound.extend(loc);
+	      $scope.markers.push(marker);
+	    });
+	    map.setCenter(bound.getCenter());
+	}
 
 	$scope.resetCompareDoctor = function() {
 	    $scope.compareDoctor = [{}, {}, {}, {}];
 	}
 	$scope.closeCompare = function(){
-		console.log(121);
-	    $scope.showCompare = false;
+	    $scope.showCompareBox = false;
 	}
+	$scope.closeDoctorCompare = function(index) {
+	    $scope.compareDoctorArr[index] = {};
+	    $scope.compareCloseCount();
+	}
+	$scope.compareCloseCount = function() {
+	    for (var i in $scope.compareDoctorArr) {
+	      if (!angular.equals($scope.compareDoctorArr[i], {})) {
+	        return;
+	      }
+	    }
+	    $scope.showCompareBox = false;
+	}
+	$scope.doCompare = function() {
+	    DoctorModel.setCompareArr($scope.compareDoctorArr);
+	    $state.go("doctor-compare");
+	}
+	$scope.compareInit = function(){
+		$scope.compareDoctorArr = DoctorModel.getCompareArr();
+	}
+
+	$scope.filterChanged = function(pageNumber) {
+    	var filterObj = {}
+    	var counter = 0;
+    	filterObj.startRecord =  parseInt($scope.paging.currentPage);
+    	angular.forEach($scope.filter, function(value, key) {
+	        switch (key) {
+	        	case "languages":
+	        		filterObj.language = [];
+		            angular.forEach($scope.filter.languages, function(value, key) {
+		              if (value)
+		                filterObj.language.push(key);
+		              	counter++;
+		              if (counter >= Object.keys($scope.filter.languages).length && filterObj.language.length <= 0)
+		                delete filterObj['language'];
+		            })
+		            break;
+	            case "specialization":
+	        		filterObj.specialization = [];
+		            angular.forEach($scope.filter.languages, function(value, key) {
+		              if (value)
+		                filterObj.specialization.push(key);
+		              	counter++;
+		              if (counter >= Object.keys($scope.filter.specialization).length && filterObj.specialization.length <= 0)
+		                delete filterObj['specialization'];
+		            })
+		            break;
+	        }
+	    })
+	    var obj = {
+	    	"searchText": $state.params.searchParams.searchText,
+		    "geoPoint": $state.params.searchParams.latLong,
+		    "filter": filterObj
+	    }
+	    DoctorService.fetchDoctor(obj).then(function(response) {
+	      DoctorService.setDoctorLisitng(response.data.Data);
+	      $scope.initListing();
+	      $state.current.name == "lawer-listing" ? $state.transitionTo($state.current, {
+	        searchParams: {
+	          latLong: $scope.searchData.latLong,
+	          searchText: $scope.searchData.searchText,
+	          place: $scope.searchData.place
+	        }
+	      }) : $state.go("lawer-listing", {
+	        searchParams: {
+	          latLong: $scope.searchData.latLong,
+	          searchText: $scope.searchData.searchText,
+	          place: $scope.searchData.place
+	        }
+	      });
+	    }, function(err) {
+
+	   });
+  	}
 }]);app.controller("HomeController",["$scope", function($scope){
 
 }])
@@ -118,6 +283,9 @@ app.constant('CONFIG', {
   	$scope.home = {};
 
   	$scope.homeInit = function(reload) {
+  		$scope.home.location = DoctorService.getSearchData() && DoctorService.getSearchData().place ? DoctorService.getSearchData().place.formatted_address : undefined;
+  		if(!reload && $scope.home.location)
+      		return;
 	    if(google=="" || !google.maps || !google.maps.places)
         	googleTime = $timeout($scope.homeInit , 3000);
 	    else {
@@ -134,8 +302,7 @@ app.constant('CONFIG', {
 	          CommonService.fetchLocation(urlStr).then(function(response) {
 	            $scope.place = response.data.results[3];
 	            $scope.home.location = $scope.place.formatted_address;
-	            $scope.lat =  $scope.place.geometry.location.lat;
-	            $scope.long = $scope.place.geometry.location.lng;
+	           	$scope.latLong =  $scope.place.geometry.location.lat + "," +  $scope.place.geometry.location.lng;
 	            $scope.initLocation();
 	          },function(err) {
 
@@ -159,8 +326,7 @@ app.constant('CONFIG', {
 	var onPlaceChanged = function() {
 	    var place = $scope.place = autocomplete.getPlace();
 	    if (place.geometry) {
-	    	$scope.lat =  place.geometry.location.lat();
-	        $scope.long = place.geometry.location.lng();
+	    	$scope.latLong = place.geometry.location.lat() + "," + place.geometry.location.lng();
 	    } else {
 	      document.getElementById('main_loc').placeholder = 'Enter a city';
 	    }
@@ -174,6 +340,7 @@ app.constant('CONFIG', {
 	    }
 	}
   	$scope.getRatings = function(doctor) {
+  		console.log(doctor);
 	    if(doctor.avgRating){
 	      rating = doctor.avgRating.toString().split(".");
 	      ratingArr = [];
@@ -195,8 +362,8 @@ app.constant('CONFIG', {
 	$scope.do_search = function() {
 	    $rootScope.showPreloader = true;
 	    var obj  = {
-		  "searchText": "SA",
-		  "geoPoint": "20.2961,85.8245",
+		  "searchText": $scope.home.doctorName,
+		  "geoPoint": $scope.latLong,
 		  "filter": {
 		    "startRecord": 1
 		  }
@@ -204,13 +371,13 @@ app.constant('CONFIG', {
 	    DoctorService.fetchDoctor(obj).then(function(response) {
 	      $rootScope.showPreloader = false;
 	      DoctorService.setDoctorLisitng(response.data.Data);
-	      DoctorService.setSearchData({lat:$scope.lat,lon:$scope.long,name:$scope.home.doctorName,place:$scope.place});
+	      DoctorService.setSearchData({latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place});
 	      switch($state.current.name){
 	        case "doctors-list":
-	          $state.transitionTo($state.current,{searchParams:{lat:$scope.lat,lon:$scope.long,name:$scope.home.doctorName,place:$scope.place}});
+	          $state.transitionTo($state.current,{searchParams:{latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place}});
 	          break;
 	        case "home":
-	          $state.go("doctors-list",{searchParams:{lat:$scope.lat,lon:$scope.long,name:$scope.home.doctorName,place:$scope.place}});
+	          $state.go("doctors-list",{searchParams:{latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place}});
 	          break;
 	      }
 	    },function(err) {
@@ -218,78 +385,121 @@ app.constant('CONFIG', {
 	    });
 	};
 }]);
-;app.factory("CommonService", ["$http", "$q", function ($http,$q) {
-  var keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-
-  var encode = function (input){
-      var output = "";
-      var chr1, chr2, chr3 = "";
-      var enc1, enc2, enc3, enc4 = "";
-      var i = 0;
-      do {
-          chr1 = input.charCodeAt(i++);
-          chr2 = input.charCodeAt(i++);
-          chr3 = input.charCodeAt(i++);
-          enc1 = chr1 >> 2;
-          enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-          enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-          enc4 = chr3 & 63;
-          if (isNaN(chr2)) {
-              enc3 = enc4 = 64;
-          } else if (isNaN(chr3)) {
-              enc4 = 64;
-          }
-          output = output +
-              keyStr.charAt(enc1) +
-              keyStr.charAt(enc2) +
-              keyStr.charAt(enc3) +
-              keyStr.charAt(enc4);
-          chr1 = chr2 = chr3 = "";
-          enc1 = enc2 = enc3 = enc4 = "";
-      } while (i < input.length);
-      return output;
-  };
-  var decode = function ( input ){
-      var output = "";
-      var chr1, chr2, chr3 = "";
-      var enc1, enc2, enc3, enc4 = "";
-      var i = 0;
-      var base64test = /[^A-Za-z0-9\+\/\=]/g;
-      if (base64test.exec(input)) {
-          window.alert("There were invalid base64 characters in the input text.\n" +
-              "Valid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\n" +
-              "Expect errors in decoding.");
+;app.directive('phonenumberDirective', ['$filter', function($filter) {
+	function link(scope, element, attributes) {
+		scope.inputValue = scope.phonenumberModel;
+		scope.$watch('inputValue', function(value, oldValue) {
+			value = String(value);
+			var number = value.replace(/[^0-9]+/g, '');
+			scope.phonenumberModel = number;
+			scope.inputValue = $filter('phonenumber')(number);
+		});
+		scope.$watch('phonenumberModel', function(value, oldValue) {
+    value = String(value);
+			var number = value.replace(/[^0-9]+/g, '');
+			scope.phonenumberModel = number;
+			scope.inputValue = $filter('phonenumber')(number);
+		});
+	}
+	return {
+		link: link,
+		restrict: 'E',
+		scope: {
+			phonenumberPlaceholder: '=placeholder',
+			phonenumberModel: '=model',
+    		class: '=customclass',
+		},
+		template: '<input ng-model="inputValue" name="phone" type="tel" class="{{class}}" placeholder="{{phonenumberPlaceholder}}" title="Phonenumber (Format: (999) 9999-9999)">',
+	};
+}]);app.filter('getShortName', function () {
+    return function (value) {
+      if(value){
+        var temp = angular.copy(value);
+        temp = temp.split(" ");
+        temp = temp[0].charAt(0)+temp[temp.length-1].charAt(0);
+        return temp.toUpperCase();
       }
-      input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
-      do {
-          enc1 = keyStr.indexOf(input.charAt(i++));
-          enc2 = keyStr.indexOf(input.charAt(i++));
-          enc3 = keyStr.indexOf(input.charAt(i++));
-          enc4 = keyStr.indexOf(input.charAt(i++));
-          chr1 = (enc1 << 2) | (enc2 >> 4);
-          chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-          chr3 = ((enc3 & 3) << 6) | enc4;
-          output = output + String.fromCharCode(chr1);
-          if (enc3 != 64) {
-              output = output + String.fromCharCode(chr2);
-          }
-          if (enc4 != 64) {
-              output = output + String.fromCharCode(chr3);
-          }
-          chr1 = chr2 = chr3 = "";
-          enc1 = enc2 = enc3 = enc4 = "";
-      } while (i < input.length);
-      return output;
+    };
+});
+app.filter('dateformat', function(){
+  return function(date){
+    if(date){
+      return moment(date).format("MM/DD/YYYY");
+    }
+  }
+})
+app.filter('dateYear', function(){
+  return function(date){
+    if(date){
+      return moment(date).format("YYYY");
+    }
+  }
+})
+app.filter('dateformat1', function(){
+  return function(date){
+    if(date){
+      return moment(date).format("DD-MM-YYYY");
+    }
+  }
+})
+app.filter('dateformat2', function(){
+  return function(date){
+    if(date){
+      return moment(date).format("MMM DD, YYYY");
+    }
+  }
+})
+app.filter('dateformat3', function(){
+  return function(date){
+    if(date){
+      return moment(date).format("MM-DD-YYYY");
+    }
+  }
+})
+app.filter('phonenumber', function() {
+  return function (number) {
+    if (!number) { return ''; }
+    number = String(number);
+    var formattedNumber = number;
+    var c = (number[0] == '1') ? '1 ' : '';
+    number = number[0] == '1' ? number.slice(1) : number;
+    var area = number.substring(0,3);
+    var front = number.substring(3, 6);
+    var end = number.substring(6, 10);
+    if (front) {
+      formattedNumber = (c + "(" + area + ") " + front);
+    }
+    if (end) {
+      formattedNumber += ("-" + end);
+    }
+    return formattedNumber;
   };
-  var fetchLocation = function(params) {
-    var response = $http.get(params);
-    return response;
-  };
-  return {
-      encode                : encode,
-      decode                : decode,
-      fetchLocation         : fetchLocation
-  };
+});;app.factory("DoctorModel", function(){
+	var compareArr = [];
+	return {
+		setCompareArr : function(array){
+			compareArr = array;
+		},
+		getCompareArr : function(array){
+			return compareArr;
+		}
+	}
+});app.factory("CommonService", ["$http", "$q", "CONFIG", function ($http,$q,CONFIG) {
+  return{
+    fetchLocation: function(params) {
+      var response = $http.get(params);
+      return response;
+    },
+    sendEnquiry : function(obj){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.API_PATH+'_ContactUs',
+          data : obj,
+          headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
+      });
+      return response;
+    }
+  }
 }]);
 app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){
     var Util = {};
@@ -325,6 +535,14 @@ app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){
 		        url: CONFIG.API_PATH+'_PublicDoctorSearch',
 		        data : obj,
 		        headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
+		    });
+		    return response;		
+		},
+		doctorDetails : function(profileName){
+		    var response = $http({
+		        method: 'GET',
+		        url: CONFIG.API_PATH+'_User/'+profileName,
+		        headers: {'Server': CONFIG.SERVER_PATH}
 		    });
 		    return response;		
 		}

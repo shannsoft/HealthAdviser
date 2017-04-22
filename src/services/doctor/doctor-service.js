@@ -22,6 +22,14 @@ app.factory("DoctorService",function($http,CONFIG){
 		        headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
 		    });
 		    return response;		
+		},
+		doctorDetails : function(profileName){
+		    var response = $http({
+		        method: 'GET',
+		        url: CONFIG.API_PATH+'_User/'+profileName,
+		        headers: {'Server': CONFIG.SERVER_PATH}
+		    });
+		    return response;		
 		}
 	}
 })

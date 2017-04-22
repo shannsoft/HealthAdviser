@@ -13,6 +13,9 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
   	$scope.home = {};
 
   	$scope.homeInit = function(reload) {
+  		$scope.home.location = DoctorService.getSearchData() && DoctorService.getSearchData().place ? DoctorService.getSearchData().place.formatted_address : undefined;
+  		if(!reload && $scope.home.location)
+      		return;
 	    if(google=="" || !google.maps || !google.maps.places)
         	googleTime = $timeout($scope.homeInit , 3000);
 	    else {
@@ -29,8 +32,7 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
 	          CommonService.fetchLocation(urlStr).then(function(response) {
 	            $scope.place = response.data.results[3];
 	            $scope.home.location = $scope.place.formatted_address;
-	            $scope.lat =  $scope.place.geometry.location.lat;
-	            $scope.long = $scope.place.geometry.location.lng;
+	           	$scope.latLong =  $scope.place.geometry.location.lat + "," +  $scope.place.geometry.location.lng;
 	            $scope.initLocation();
 	          },function(err) {
 
@@ -54,8 +56,7 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
 	var onPlaceChanged = function() {
 	    var place = $scope.place = autocomplete.getPlace();
 	    if (place.geometry) {
-	    	$scope.lat =  place.geometry.location.lat();
-	        $scope.long = place.geometry.location.lng();
+	    	$scope.latLong = place.geometry.location.lat() + "," + place.geometry.location.lng();
 	    } else {
 	      document.getElementById('main_loc').placeholder = 'Enter a city';
 	    }
@@ -73,6 +74,7 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
     /****************fUNCTION USE FOR FIRE A EVENT TO JAVASCRIPT*****************/
   	/****************************************************************************/
   	$scope.getRatings = function(doctor) {
+  		console.log(doctor);
 	    if(doctor.avgRating){
 	      rating = doctor.avgRating.toString().split(".");
 	      ratingArr = [];
@@ -98,8 +100,8 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
 	$scope.do_search = function() {
 	    $rootScope.showPreloader = true;
 	    var obj  = {
-		  "searchText": "SA",
-		  "geoPoint": "20.2961,85.8245",
+		  "searchText": $scope.home.doctorName,
+		  "geoPoint": $scope.latLong,
 		  "filter": {
 		    "startRecord": 1
 		  }
@@ -107,13 +109,13 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
 	    DoctorService.fetchDoctor(obj).then(function(response) {
 	      $rootScope.showPreloader = false;
 	      DoctorService.setDoctorLisitng(response.data.Data);
-	      DoctorService.setSearchData({lat:$scope.lat,lon:$scope.long,name:$scope.home.doctorName,place:$scope.place});
+	      DoctorService.setSearchData({latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place});
 	      switch($state.current.name){
 	        case "doctors-list":
-	          $state.transitionTo($state.current,{searchParams:{lat:$scope.lat,lon:$scope.long,name:$scope.home.doctorName,place:$scope.place}});
+	          $state.transitionTo($state.current,{searchParams:{latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place}});
 	          break;
 	        case "home":
-	          $state.go("doctors-list",{searchParams:{lat:$scope.lat,lon:$scope.long,name:$scope.home.doctorName,place:$scope.place}});
+	          $state.go("doctors-list",{searchParams:{latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place}});
 	          break;
 	      }
 	    },function(err) {

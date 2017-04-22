@@ -7,25 +7,27 @@
 						<div class="col-md-12">
 							<div class="banner-block">
 								<h1>Your Health Our Best Priority</h1>
-								<div class="row m-t-30">
-									<div class="col-md-4">
-										<div class="form-group">
-											<i class="fa fa-map-marker map-marker-icon"></i>
-											<input type="text" class="form-control" id="main_loc" placeholder="Location" ng-model="home.location">
-											<i class="fa fa-close input-icon" ng-click="clearInputs('loc')"></i>
+								<form name="searchFrm">
+									<div class="row m-t-30">
+										<div class="col-md-4">
+											<div class="form-group">
+												<i class="fa fa-map-marker map-marker-icon"></i>
+												<input type="text" class="form-control" id="main_loc" placeholder="Location" ng-model="home.location" required>
+												<i class="fa fa-close input-icon" ng-click="clearInputs('loc')"></i>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<i class="fa fa-search search-icon"></i>
+												<input type="text" class="form-control" placeholder="Name / Specialization" ng-model="home.doctorName" required>
+												<i class="fa fa-close input-icon" ng-click="clearInputs('name')"></i>
+											</div>
+										</div>
+										<div class="col-md-2">
+											<button class="btn btn-red btn-md text-u-c" ng-disabled="searchFrm.$invalid" ng-click="do_search()">Search</button>
 										</div>
 									</div>
-									<div class="col-md-4">
-										<div class="form-group">
-											<i class="fa fa-search search-icon"></i>
-											<input type="text" class="form-control" placeholder="Name / Specialization" ng-model="home.doctorName">
-											<i class="fa fa-close input-icon" ng-click="clearInputs('name')"></i>
-										</div>
-									</div>
-									<div class="col-md-2">
-										<button class="btn btn-red btn-md text-u-c" ng-click="do_search()">Search</button>
-									</div>
-								</div>
+								</form>
 							</div>
 						</div>
 					</div>

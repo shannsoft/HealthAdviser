@@ -1,19 +1,30 @@
-<section class="inner-banner-section">
+<section class="inner-banner-section" ng-init="homeInit()">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
 				<label>What do you need help with today?</label>
 			</div>
-			<div class="col-md-6">
-				<div class="form-group m-b-0">
-					<i class="fa fa-search search-icon"></i>
-					<input type="text" class="form-control" id="exampleInputEmail1" placeholder="select a specialist">
-					<i class="fa fa-close input-icon"></i>
+			<form name="searchFrm">
+				<div class="row m-t-30">
+					<div class="col-md-4">
+						<div class="form-group">
+							<i class="fa fa-map-marker map-marker-icon"></i>
+							<input type="text" class="form-control" id="main_loc" placeholder="Location" ng-model="home.location" required>
+							<i class="fa fa-close input-icon" ng-click="clearInputs('loc')"></i>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<i class="fa fa-search search-icon"></i>
+							<input type="text" class="form-control" placeholder="Name / Specialization" ng-model="home.doctorName" required>
+							<i class="fa fa-close input-icon" ng-click="clearInputs('name')"></i>
+						</div>
+					</div>
+					<div class="col-md-2">
+						<button class="btn btn-black btn-md text-u-c" ng-disabled="searchFrm.$invalid" ng-click="do_search()">Search</button>
+					</div>
 				</div>
-			</div>
-			<div class="col-md-2">
-				<button class="btn btn-black btn-md text-u-c">Search</button>
-			</div>
+			</form>
 		</div>
 	</div>
 </section>
@@ -23,15 +34,19 @@
 			<div class="col-md-9">
 				<div class="row m-b-10">
 					<div class="col-md-9">
-						6 providers found for "Dermatopathology"
+						{{doctorList.totalResultCount}} doctors matching criteria {{searchData.searchText}} near {{searchData.place.formatted_address}}
 					</div>
-					<div class="col-md-3">
-						<select class="form-control form-control-sm">
-						  <option value="sort">Sort by</option>
-						  <option value="sort">1 - 10</option>
-						  <option value="sort">1 - 20</option>
-						  <option value="sort">1 - 30</option>
-						</select>
+				</div>
+				<div class="row m-b-10" ng-if="doctorList.result.length > 0">
+					<div class="col-md-12">
+						<paging
+						    page="paging.currentPage" 
+						    page-size="paging.showResult" 
+						    total="paging.totalPage"
+						    show-prev-next="true"
+							show-first-last="true"
+						    paging-action="filterChanged(page)">
+						</paging>
 					</div>
 				</div>
 				<div class="doctor-list-box" ng-repeat="doctor in doctorList.result">
@@ -39,10 +54,11 @@
 						<div class="m-l-10">
 							<div class="col-sm-2 m-t-10">
 								<div class="listing-img">
-									<img class="img-responsive" src="images/doctor/doctor-1.jpg" />
+									<div ng-if="!doctor.photo" class="text">{{doctor.profile.name | getShortName}}</div>
+									<img ng-if="doctor.photo" class="img-responsive" ng-src="{{doctor.photo}}" />
 								</div>
-								<a href="" ng-click="compareDoctor('show','doctor')" class="btn btn-warning btn-sm text-u-c m-t-10 btn-block">Compare</a>
-								<div class="rating-icons">
+								<a href="" ng-click="showCompare('show',doctor)" class="btn btn-warning btn-sm text-u-c m-t-10 btn-block">Compare</a>
+								<div class="rating-icons" ng-init="getRatings(doctor)">
 									<ul>
 										<li ng-repeat="star in doctor.ratingArr track by $index">
 					                      <i class="{{star}}"></i>
@@ -51,10 +67,10 @@
 								</div>
 							</div>
 							<div class="col-sm-6 m-t-10">
-								<a ui-sref="doctor-details({profileName:'santosh'})"><h3>{{doctor.profile.name}}</h3></a>
+								<a ui-sref="doctor-details({profileName:doctor.userCode})"><h3>{{doctor.profile.name}}</h3></a>
 								<div class="clearfix">
 									<strong>Specialties :</strong>
-									<span class="text-gray">Dermatology, Procedural Dermatology, Laser and Cosmetic	</span>
+									<span class="text-gray">{{doctor.specializationArray}}</span>
 								</div>
 								<div class="clearfix">
 									<strong>Locations :</strong>
@@ -65,7 +81,8 @@
 								<div class="doctor-fees m-b-20">
 									<ul>
 										<li>{{doctor.yearsOfExperience}} years Experience</li>
-										<li><span class="font-bold">Fees</span> - INR 300 /-</li>
+										<li ng-if="!doctor.consulation.is_free_consultation"><span class="font-bold">Fees</span> - INR  {{doctor.consulation.fees}} /-</li>
+										<li ng-if="doctor.consulation.is_free_consultation"><span class="font-bold">Free Consulation</li>
 									</ul>
 								</div>
 								<a href="book-appointment.html" class="btn btn-blue btn-sm text-u-c">Book Appointment</a>
@@ -73,7 +90,7 @@
 						</div>
 						<div class="col-sm-12 m-t-10">
 							<ul>
-								<li><i class="fa fa-phone"></i> +91 7894561230</li>
+								<li ng-if="doctor.phone.length > 0"><i class="fa fa-phone"></i> +91 {{doctor.phone[0].number}}</li>
 								<li ng-if="doctor.website"><a href="{{doctor.website}}"><i class="fa fa-globe"></i> Website</a></li>
 								<li><a href=""><i class="fa fa-map-marker"></i> Direction</a></li>
 								<li><i class="fa fa-star"></i><a href="">Write Review</a></li>
@@ -83,35 +100,16 @@
 				</div>
 				<div class="row">
 					<div class="col-sm-12">
-						<nav aria-label="Page navigation">
-						  <ul class="pagination custom-pagination">
-							<li>
-							  <a href="#" aria-label="first">
-								<span aria-hidden="true">First</span>
-							  </a>
-							</li>
-							<li>
-							  <a href="#" aria-label="Previous">
-								<span aria-hidden="true">Previous</span>
-							  </a>
-							</li>
-							<li><a href="#">1</a></li>
-							<li><a class="active" href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li>
-							  <a href="#" aria-label="Next">
-								<span aria-hidden="true">Next</span>
-							  </a>
-							</li>
-							<li>
-							  <a href="#" aria-label="last">
-								<span aria-hidden="true">Last</span>
-							  </a>
-							</li>
-						  </ul>
-						</nav>
+						<nav class="ld-padd-20" ng-if="doctorList.result.length > 0">
+				            <paging
+							    page="1" 
+							    page-size="20" 
+							    total="1000"
+							    show-prev-next="true"
+  								show-first-last="true"
+							    paging-action="filterChanged(page)">
+							</paging>
+				         </nav>
 					</div>
 				</div>
 			</div>
@@ -134,7 +132,7 @@
 						<div class="block-padd">
 							<div class="radio radio-black">
 								<div class="checkbox check-black" ng-repeat="lang in doctorList.language">
-									<input type="checkbox" value="1" id="checkbox_{{$index}}">
+									<input ng-disabled="lang.count == 0" type="checkbox"  value="{{lang.language}}" id="checkbox_{{$index}}" ng-model="filter.languages[lang.language]" ng-click="filterChanged()">
 									<label for="checkbox_{{$index}}">{{lang.language}} ({{lang.count}})</label>
 								</div>
 							</div>
@@ -144,7 +142,7 @@
 						<h3>Specialization</h3>
 						<div class="block-padd">
 							<div class="checkbox check-black" ng-repeat="spe in doctorList.specializationCount">
-								<input type="checkbox" value="1" id="spe_{{$index}}">
+								<input type="checkbox" ng-disabled="spe.count == 0" value="{{spe.name}}" id="spe_{{$index}}" ng-model="filter.specialization[spe.name]" ng-click="filterChanged()">
 								<label for="spe_{{$index}}">{{spe.name}} ({{spe.count}})</label>
 							</div>
 							<div class="clearfix m-t-30">
@@ -154,53 +152,28 @@
 					</div>
 					
 					<div class="clearfix m-t-10">
-						<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14969.21271310986!2d85.84351009999999!3d20.287714299999998!3m2!1i1024!2i768!4f13.1!4m3!3e6!4m0!4m0!5e0!3m2!1sen!2sin!4v1483627062127" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
+						<div id="googleMap"></div>
 					</div>
 					
 				</div>
 			</div>
 		</div>
-		<div class="row" ng-if="showCompare">
+		<div class="row" ng-if="showCompareBox">
 			<div class="col-md-12">
 				<div class="compare-popup-box">
 					<ul>
-						<li>
-							<a class="buttonCloseIcon" href=""><i class="fa fa-close"></i>
-							</a> 
+						<li ng-repeat="comDoc in compareDoctorArr">
+							<a class="buttonCloseIcon" href="" ng-if="comDoc.userCode" ng-click="closeDoctorCompare($index)"><i class="fa fa-close"></i></a> 
 							<a href="">
-								<img class="img-responsive" src="images/doctor/doctor-1.jpg">
+								<img class="img-responsive" ng-if="comDoc.photo" src="comDoc.photo">
+								<span class="doctor-alfa" ng-if="!comDoc.photo">{{comDoc.profile.name | getShortName}}</span>
 							</a> 
-							<span class="text-ellipsis">Letisha Denise</span>
+							<span class="text-ellipsis">{{comDoc.profile.name}}</span>
 						</li>
-						<li>
-							<a class="buttonCloseIcon" href=""><i class="fa fa-close"></i>
-							</a> 
-							<a href="">
-								<span class="doctor-alfa">SM</span>
-							</a> 
-							<span class="text-ellipsis">Santosh Majhi</span>
-						</li>
-						<li>
-							<a class="buttonCloseIcon" href=""><i class="fa fa-close"></i>
-							</a> 
-							<a href="">
-								<span class="doctor-alfa">SS</span>
-							</a> 
-							<span class="text-ellipsis">Soumya Sahoo</span>
-						</li>
-						<li>
-							<a class="buttonCloseIcon" href=""><i class="fa fa-close"></i>
-							</a> 
-							<a href="">
-								<span class="doctor-alfa">SM</span>
-							</a> 
-							<span class="text-ellipsis">Sardar Mukta</span>
-						</li>
-					
 					</ul>
 					<div class="compare-btn">
-						<a class="btn btn-primary btn-sm" href="" role="button">Compare</a>
-						<a class="btn btn-danger btn-sm" role="button" ng-click="compareDoctor('clear')">Clear</a>
+						<a class="btn btn-primary btn-sm" href="" role="button" ng-click="doCompare()">Compare</a>
+						<a class="btn btn-danger btn-sm" role="button" ng-click="showCompare('clear')">Clear</a>
 					  </div>
 					<a class="compare-close-btn buttonCloseIcon" href="" ng-click="closeCompare()">
 						<i class="fa fa-close"></i>

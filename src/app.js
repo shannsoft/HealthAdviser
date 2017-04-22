@@ -1,4 +1,4 @@
-var app = angular.module('health-advisor',['ui.router','ngAnimate']);
+var app = angular.module('health-advisor',['ui.router','ngAnimate','ui.bootstrap','ui.utils','bw.paging']);
 app.config(function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/home');
   $stateProvider
@@ -23,7 +23,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
   })
   .state('contact-us', {
     templateUrl: 'src/views/common/contact-us.html',
-    url: '/contact-us'
+    url: '/contact-us',
+    controller: 'CommonController'
   })
   .state('state-directory', {
     templateUrl: 'src/views/directory/state-directory.html',
@@ -54,6 +55,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
     templateUrl: 'src/views/doctors/doctor-details.html',
     url: '/doctor-details/:profileName',
     controller: 'DoctorDetailsController'
+  })
+  .state('doctor-compare', {
+    templateUrl: 'src/views/doctors/doctor-compare.html',
+    url: '/doctor-compare',
+    controller: 'DoctorsController'
   })
 });
 app.run(function($http,$rootScope,$timeout){

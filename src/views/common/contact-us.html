@@ -11,36 +11,55 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-6">
-				<div class="form-group">
-					<label>Name</label>
-					<input type="text" class="form-control" id="" placeholder="Name">
-				</div>
-				<div class="form-group">
-					<label>Email</label>
-					<input type="text" class="form-control" id="" placeholder="Email">
-				</div>
-				<div class="row">
-					<div class="col-sm-6">
-						<div class="form-group">
-							<label>Phone</label>
-							<input type="text" class="form-control" id="">
+				<form name="contactFrm">
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Name</label>
+								<input type="text" name="name" class="form-control" id="" placeholder="Name" ng-model="contact.name" required>
+								<span class="color-red" ng-if="contactFrm.name.$touched && contactFrm.name.$error.required">Please enter your name</span>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Email</label>
+								<input type="text" name ="email" class="form-control" id="" placeholder="Email" ng-model="contact.email" required ng-pattern="/^[a-z]+[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}$/">
+								<span class="color-red" ng-if="contactFrm.email.$touched && contactFrm.email.$error.required">Please enter mail</span>
+								<span class="color-red" ng-if="contactFrm.email.$touched && contactFrm.email.$error.pattern">Enter valid email address</span>
+							</div>
 						</div>
 					</div>
-					<div class="col-sm-6">
-						<div class="form-group">
-							<label>Subject</label>
-							<input type="text" class="form-control" id="" placeholder="subject">
+					<div class="form-group">
+						<label>Phone</label>
+						<input class="form-control" ui-mask="999-999-9999" placeholder="xxx-xxx-xxxx" ng-model="contact.phone"
+			            />
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Subject</label>
+								<input type="text" class="form-control" placeholder="Subject" id="" ng-model="contact.subject" required>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>User Type</label>
+								<select class="form-control" ng-model="contact.type" required>
+								  <option value="">User Type</option>
+								  <option value="Doctor">Doctor</option>
+								  <option value="User">User</option>
+								</select>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="form-group">
-					<label>Message</label>
-					<textarea class="form-control" rows="4" placeholder="say someting..."></textarea>
-				</div>
-				<div class="form-group text-right">
-					<button class="btn btn-blue btn-md text-u-c m-r-5">Send <i class="fa fa-send-o"></i></button>
-				</div>
-				
+					<div class="form-group">
+						<label>Message</label>
+						<textarea class="form-control" rows="4" placeholder="Question/Comments/Suggestions" ng-model="contact.comment" required></textarea>
+					</div>
+					<div class="form-group text-right">
+						<button class="btn btn-blue btn-md text-u-c m-r-5" ng-disabled="contactFrm.$invalid" ng-click="sendEnquiry()">Send <i class="fa fa-send-o"></i></button>
+					</div>
+				</form>
 			</div>
 			<div class="col-sm-6">
 				<div class="clearfix">

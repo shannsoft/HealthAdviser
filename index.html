@@ -23,7 +23,7 @@
     <script src="lib/angular/angular-animate.js"></script>
     <script src="lib/angular/angular-ui-router.js"></script> -->
 
-    <script src="custom.js?rel=1492614003348"></script>
+    <script src="custom.js?rel=1492836587685"></script>
     <!-- Custom javascript files -->
     <!-- <script src="src/app.js"></script>
     <script src="src/controllers/main_controller.js"></script>
@@ -31,6 +31,9 @@
 
 </head>
 <body ng-controller="MainController">
+  <div ng-repeat="alert in alerts" class="alert alert-{{alert.type}}">
+    {{alert.msg}}
+  </div>
   <div id="preloader" ng-if="showPreloader">
     <div id="status"><i class="fa fa-spinner fa-spin"></i></div>
   </div>

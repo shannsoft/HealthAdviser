@@ -9,7 +9,8 @@ module.exports = function(grunt) {
                 src: [
                     "js/jquery-1.11.2.min.js",
                     "js/bootstrap.min.js",
-                    "js/theme.js"
+                    "js/theme.js",
+                    "lib/moment.js",
                 ],
                 dest: 'libs.js'
             },
@@ -25,6 +26,9 @@ module.exports = function(grunt) {
                     "lib/angular/angular.js",
                     "lib/angular/angular-animate.js",
                     "lib/angular/angular-ui-router.js",
+                    "lib/angular/ui-bootstrap.min.js",
+                    "lib/angular/angular-ui-utils.min.js",
+                    "lib/angular/paging.min.js",
                 ],
                 dest: 'ng-libs.js'
             },

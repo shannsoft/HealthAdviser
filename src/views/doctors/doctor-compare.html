@@ -1,0 +1,65 @@
+<section class="inner-banner-section" ng-init="compareInit()">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Doctor Compare</h2>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="page-section padd-v-60">
+	<div class="container">
+		<div class="row m-t-20">
+            <div class="col-sm-6 col-md-3" ng-repeat="doctor in compareDoctorArr track by $index" ng-if="doctor.profile.name">
+              <div class="team-v2">
+                <div class="text-center">
+					<div class="compare-doctor-img">
+					  <span ng-if="!doctor.photo" class="lawyer-alfa">{{doctor.profile.name | getShortName}}</span>
+					  <img ng-if="doctor.photo" src="{{doctor.photo}}" alt="">
+					</div>
+                </div>
+                <div class="inner-team">
+                  <div class="text-center m-b-40">
+                    <h3>{{doctor.profile.name}}</h3>
+                    <small ng-if="doctor.specialization.length > 0">{{doctor.specialization[0].specializationOn}}</small>
+                    <address>
+                      {{doctor.address.streetAddress}} {{doctor.address.city}}
+                      <br> {{doctor.address.state}} {{doctor.address.country}} {{doctor.address.postalCode}}
+                      <br>
+                      <abbr title="Phone" ng-if="doctor.phone.length > 0">P:</abbr> {{doctor.phone[0].number}}
+                    </address>
+                    <address>
+                      <i class="fa fa-map-marker"></i>
+                      <span>{{doctor.distance}} miles away</span>
+                      
+                    </address>
+                    <div class="star-vote">
+                      <ul class="list-inline" ng-init="getRatings(doctor)">
+                        <li ng-repeat="star in doctor.ratingArr track by $index"><i class="{{star}}"></i></li>
+                        <li>{{doctor.totalReview}} reviews</li>
+                      </ul>
+                      <a href="" class="btn btn-blue btn-sm" ui-sref="doctor-details({profileName:doctor.userCode})">View Profile</a>
+                    </div>
+                  </div>
+                  <div class="text-left">
+                    <dl class="dl-horizontal">
+                      <dt>Language :</dt>
+                      <dd ng-repeat="lang in doctor.profile.language">{{lang.language}}</dd>
+                    </dl>
+                    <!-- <dl class="dl-horizontal">
+                      <dt>Payment :</dt>
+                      <dd>Check</dd>
+                      <dd>Cash</dd>
+                      <dd>Credit Card</dd>
+                    </dl> -->
+                    <dl class="dl-horizontal">
+                      <dt ng-if="!doctor.consulation.is_free_consultation">{{doctor.consulation.fees}}</dt>
+                      <dd ng-if="doctor.consulation.is_free_consultation">Free Consultation</dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+	</div>
+</section>
