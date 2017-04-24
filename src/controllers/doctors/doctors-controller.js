@@ -108,8 +108,11 @@ app.controller('DoctorsController',function($scope,$rootScope,DoctorService,$sta
 	}
 
 	$scope.filterChanged = function(pageNumber) {
+		$rootScope.showPreloader = true;
     	var filterObj = {}
     	var counter = 0;
+    	if(pageNumber)
+    		$scope.paging.currentPage = pageNumber;
     	filterObj.startRecord =  parseInt($scope.paging.currentPage);
     	angular.forEach($scope.filter, function(value, key) {
 	        switch (key) {
@@ -125,7 +128,7 @@ app.controller('DoctorsController',function($scope,$rootScope,DoctorService,$sta
 		            break;
 	            case "specialization":
 	        		filterObj.specialization = [];
-		            angular.forEach($scope.filter.languages, function(value, key) {
+		            angular.forEach($scope.filter.specialization, function(value, key) {
 		              if (value)
 		                filterObj.specialization.push(key);
 		              	counter++;
@@ -133,6 +136,18 @@ app.controller('DoctorsController',function($scope,$rootScope,DoctorService,$sta
 		                delete filterObj['specialization'];
 		            })
 		            break;
+		        case "rating":
+	        		filterObj.rating = [];
+		            angular.forEach($scope.filter.rating, function(value, key) {
+		              if (value)
+		                filterObj.rating.push(key);
+		              	counter++;
+		              if (counter >= Object.keys($scope.filter.rating).length && filterObj.rating.length <= 0)
+		                delete filterObj['rating'];
+		            })
+		            break;
+		        case "distance":
+		        	filterObj.distance = value;
 	        }
 	    })
 	    var obj = {
@@ -141,15 +156,16 @@ app.controller('DoctorsController',function($scope,$rootScope,DoctorService,$sta
 		    "filter": filterObj
 	    }
 	    DoctorService.fetchDoctor(obj).then(function(response) {
+	      $rootScope.showPreloader = false;
 	      DoctorService.setDoctorLisitng(response.data.Data);
 	      $scope.initListing();
-	      $state.current.name == "lawer-listing" ? $state.transitionTo($state.current, {
+	      $state.current.name == "doctors-list" ? $state.transitionTo($state.current, {
 	        searchParams: {
 	          latLong: $scope.searchData.latLong,
 	          searchText: $scope.searchData.searchText,
 	          place: $scope.searchData.place
 	        }
-	      }) : $state.go("lawer-listing", {
+	      }) : $state.go("doctors-list", {
 	        searchParams: {
 	          latLong: $scope.searchData.latLong,
 	          searchText: $scope.searchData.searchText,
@@ -160,4 +176,98 @@ app.controller('DoctorsController',function($scope,$rootScope,DoctorService,$sta
 
 	   });
   	}
+  	$scope.numberToArray = function (n) {
+        return new Array(parseInt(n));
+    };
+    /*******************************************************************************************/
+	/************************Function use for download vcard details****************************/
+	/*******************************************************************************************/
+    $scope.downloadVCard = function(doctor){
+    	var vCardObj = vCard.create(vCard.Version.TWO)
+      	vCardObj.add(vCard.Entry.FORMATTEDNAME, doctor.profile.name)
+      	if(doctor.phone.length > 0)
+        	vCardObj.add(vCard.Entry.PHONE, doctor.phone[0].number)
+      	vCardObj.add(vCard.Entry.EMAIL, doctor.emailId)
+      	vCardObj.add(vCard.Entry.ADDRESS, doctor.address.formatted)
+      	vCardObj.add(vCard.Entry.CITY, doctor.address.city)
+      	vCardObj.add(vCard.Entry.STATE, doctor.address.state)
+  		var link = vCard.export(vCardObj, doctor.profile.name, true)
+    }
+
+    /*******************************************************************************************/
+  	/***************                    Direction section                         **************/
+  	/*******************************************************************************************/
+
+  	$scope.goToDirection = function(doctor) {
+    	DoctorModel.setDoctorProfile(doctor);
+  		$state.go('doctor-direction');
+  	}
+
+  	$scope.initDirection = function() {
+	    $scope.doctorProfile = DoctorModel.getDoctorProfile();
+	    if($scope.doctorProfile.address){
+		    var address = $scope.doctorProfile.address;
+		    var loc = new google.maps.LatLng(parseFloat(address.lat), parseFloat(address.lng));
+		    if (navigator.geolocation) {
+		      navigator.geolocation.getCurrentPosition(
+		        function(position) {
+		          var pos = {
+		            lat: position.coords.latitude,
+		            lng: position.coords.longitude
+		          };
+		          var pyrmont = new google.maps.LatLng(pos.lat, pos.lng);
+		          map = new google.maps.Map(document.getElementById('googleMapdirection'), {
+		            center: pyrmont,
+		            zoom: 12
+		          });
+		          var rendererOptions = {
+		            map: map
+		          };
+		          directionService = new google.maps.DirectionsService();
+		          directionDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+		          var geocoder = new google.maps.Geocoder();
+		          geocoder.geocode({
+		            'latLng': pyrmont
+		          }, function(results, status) {
+		            if (status == google.maps.GeocoderStatus.OK) {
+		              sourcePlace = results[0]['formatted_address'];
+		              geocoder.geocode({
+		                'latLng': loc
+		              }, function(results, status) {
+		                if (status == google.maps.GeocoderStatus.OK) {
+		                  destination = results[0]['formatted_address'];
+		                  var request = {
+		                    origin: sourcePlace,
+		                    destination: destination,
+		                    travelMode: google.maps.TravelMode.DRIVING
+		                  };
+		                  directionService.route(request, function(response, status) {
+		                    if (status == google.maps.DirectionsStatus.OK) {
+		                      directionDisplay.setDirections(response);
+		                      // var infowindow2 = new google.maps.InfoWindow();
+		                      var service = new google.maps.DistanceMatrixService();
+		                      service.getDistanceMatrix(
+		                        {
+		                          origins: [sourcePlace],
+		                          destinations: [destination],
+		                          travelMode: 'DRIVING'
+		                        }, function callback(response, status) {
+		                          //$scope.distanceElem = response.rows[0].elements[0];
+		                        });
+
+		                    } else {
+		                      window.alert('Directions request failed due to ' + status);
+		                    }
+		                  });
+		                };
+		              });
+		            };
+		          });
+		        });
+		    }
+		}
+		else{
+			$state.go('home');
+		}
+	}
 })

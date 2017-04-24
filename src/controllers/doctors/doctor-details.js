@@ -11,19 +11,19 @@ app.controller('DoctorDetailsController',function($scope,$rootScope,DoctorServic
 		}
 	}
 	$scope.initMap = function(address) {
-      if(document.getElementById('googleMap')){
-        if(address.lat != '' || address.lng != ''){
-          var myLatLng = {lat: parseFloat(address.lat), lng: parseFloat(address.lng)};
-          map = new google.maps.Map(document.getElementById('googleMap'), {
-            zoom: 15,
-            center: myLatLng
-          });
+    if(document.getElementById('googleMap')){
+      if(address.lat != '' || address.lng != ''){
+        var myLatLng = {lat: parseFloat(address.lat), lng: parseFloat(address.lng)};
+        map = new google.maps.Map(document.getElementById('googleMap'), {
+          zoom: 15,
+          center: myLatLng
+        });
 
-          var marker = new google.maps.Marker({
-            position: myLatLng,
-            map: map
-          });
-        }
+        var marker = new google.maps.Marker({
+          position: myLatLng,
+          map: map
+        });
       }
     }
+  }
 })

@@ -77,6 +77,16 @@ a:hover{ color:#000;}
   box-shadow: none;
   text-shadow: none;
 }
+.btn.btn-xs {
+  padding: 5px 15px;
+}
+.btn-xs,
+.btn-group-xs > .btn {
+  padding: 1px 5px!important;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
 
 .btn-group-xl>.btn, .btn-xl {
     padding: 20px 80px;
@@ -256,7 +266,7 @@ a:hover{ color:#000;}
 }
 .checkbox label {
     transition: border 0.2s linear 0s, color 0.2s linear 0s;
-    white-space: nowrap;
+    white-space: normal;
 }
 .checkbox label:before {
     top: 3px;
@@ -433,6 +443,7 @@ a:hover{ color:#000;}
 .m-b-40{ margin-bottom:40px;}
 .m-b-50{ margin-bottom:50px;}
 .m-l-10{ margin-left:10px;}
+.m-l-20{ margin-left:20px;}
 .m-r-5{ margin-right:5px;}
 .m-r-10{ margin-right:10px;}
 .m-r-20{ margin-right:20px;}
@@ -1452,6 +1463,18 @@ a:hover{ color:#000;}
 	display:inline-block;
 	margin:0 3px;
 }
+.star-vote ul {
+	margin:0;
+	padding:0;
+}
+.star-vote ul li{
+	display:inline-block;
+	margin:0 3px;
+}
+.direction-btn-wrap{
+	clear:both;
+	margin-top:10px;
+}
 .rating-card ul li i{
 	font-size:20px;
 }
@@ -1998,4 +2021,11 @@ dl {
 }
 #locationMap{
 	
+}
+#googleMapdirection{
+	width: 100%;
+	height: 500px;	
+}
+.filter-rating i{
+	color: #ffb103;
 }

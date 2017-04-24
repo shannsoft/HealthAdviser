@@ -74,7 +74,6 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
     /****************fUNCTION USE FOR FIRE A EVENT TO JAVASCRIPT*****************/
   	/****************************************************************************/
   	$scope.getRatings = function(doctor) {
-  		console.log(doctor);
 	    if(doctor.avgRating){
 	      rating = doctor.avgRating.toString().split(".");
 	      ratingArr = [];

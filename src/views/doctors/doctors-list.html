@@ -92,8 +92,9 @@
 							<ul>
 								<li ng-if="doctor.phone.length > 0"><i class="fa fa-phone"></i> +91 {{doctor.phone[0].number}}</li>
 								<li ng-if="doctor.website"><a href="{{doctor.website}}"><i class="fa fa-globe"></i> Website</a></li>
-								<li><a href=""><i class="fa fa-map-marker"></i> Direction</a></li>
-								<li><i class="fa fa-star"></i><a href="">Write Review</a></li>
+								<li><a href="" ng-click="goToDirection(doctor)"><i class="fa fa-map-marker"></i> Direction</a></li>
+								<li><a href=""><i class="fa fa-star"></i>Write Review</a></li>
+								<li><a href="" ng-click="downloadVCard(doctor)"><i class="fa fa-id-card" aria-hidden="true"></i>VCard</a></li>
 							</ul>
 						</div>
 					</div>
@@ -102,11 +103,11 @@
 					<div class="col-sm-12">
 						<nav class="ld-padd-20" ng-if="doctorList.result.length > 0">
 				            <paging
-							    page="1" 
-							    page-size="20" 
-							    total="1000"
+							    page="paging.currentPage" 
+							    page-size="paging.showResult" 
+							    total="paging.totalPage"
 							    show-prev-next="true"
-  								show-first-last="true"
+								show-first-last="true"
 							    paging-action="filterChanged(page)">
 							</paging>
 				         </nav>
@@ -119,10 +120,9 @@
 						<h3>Distance</h3>
 						<div class="block-padd">
 							<div class="form-group">
-								<select class="form-control form-control-sm">
-								  <option value="miles">100 - 1000 Miles</option>
-								  <option value="miles">200 - 2000 Miles</option>
-								  <option value="miles">300 - 3000 Miles</option>
+								<select class="form-control form-control-sm" ng-model="filter.distance" ng-change="filterChanged()">
+								  <option value="">Distance Filter</option>
+								  <option value="{{miles.name}}" ng-repeat="miles in doctorList.distanceCount">{{miles.name}} Miles ({{miles.count}})</option>
 								</select>
 							</div>
 						</div>
@@ -134,6 +134,17 @@
 								<div class="checkbox check-black" ng-repeat="lang in doctorList.language">
 									<input ng-disabled="lang.count == 0" type="checkbox"  value="{{lang.language}}" id="checkbox_{{$index}}" ng-model="filter.languages[lang.language]" ng-click="filterChanged()">
 									<label for="checkbox_{{$index}}">{{lang.language}} ({{lang.count}})</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="clearfix m-t-10">
+						<h3>Rating</h3>
+						<div class="block-padd filter-rating">
+							<div class="radio radio-black">
+								<div class="checkbox check-black" ng-repeat="rating in doctorList.ratingCount">
+									<input type="checkbox"  value="1" id="rating_{{$index}}" ng-model="filter.rating[rating.star]" ng-click="filterChanged()">
+									<label for="rating_{{$index}}"><i class="fa fa-star" ng-repeat="i in numberToArray(rating.star) track by $index"></i><span class="m-l-20">({{rating.count}})</span></label>
 								</div>
 							</div>
 						</div>

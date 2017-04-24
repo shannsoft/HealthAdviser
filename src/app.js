@@ -46,6 +46,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
       searchParams : null
     }
   })
+  .state('doctor-direction', {
+    templateUrl: 'src/views/doctors/doctor-direction.html',
+    url: '/doctor-direction',
+    controller: 'DoctorsController'
+  })
   .state('find-doctors', {
     templateUrl: 'src/views/doctors/find-doctors.html',
     url: '/find-doctors',

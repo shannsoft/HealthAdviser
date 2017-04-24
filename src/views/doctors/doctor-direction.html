@@ -1,0 +1,44 @@
+<section class="inner-banner-section" ng-init="initDirection()">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Direction from your location</h2>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="page-section padd-v-60">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-3">
+				<div class="doctor-profile-pic">
+					<img ng-if="doctorProfile.photo" class="img-responsive" src="{{doctorProfile.photo}}">
+					<span ng-if="!doctorProfile.photo">{{doctorProfile.profile.name | getShortName}}</span>
+				</div>
+				<div class="profile-content">
+					<h3 class="ng-binding">{{doctorProfile.profile.name}}</h3>
+					<address class="ng-binding">
+					  {{doctorProfile.address.formatted}}</br>
+					 <abbr title="Phone" ng-if="doctorProfile.phone.length > 0">P:</abbr> +91 {{doctorProfile.phone[0].number}}
+					</address>
+					<address>
+					  <i class="fa fa-map-marker color-yellow"></i>
+					  <span class="ng-binding">{{doctorProfile.distance}} miles away</span>
+					</address>
+			  	</div>
+				<div class="star-vote">
+				  	<ul ng-init="getRatings(doctorProfile)">
+						<li ng-repeat="star in doctorProfile.ratingArr track by $index"><i class="color-yellow {{star}}"></i></li>
+					</ul>
+				  	<small class="ng-binding">{{doctorProfile.avgRating}} Rating</small>
+					<div class="direction-btn-wrap">
+						<a href="" class="btn btn-primary btn-xs" ui-sref="doctor-details({profileName:doctorProfile.userCode})">View Profile</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-9">
+				<div id="googleMapdirection"></div>
+			</div>
+		</div>
+	</div>
+</section>

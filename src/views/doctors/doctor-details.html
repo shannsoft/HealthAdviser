@@ -132,8 +132,8 @@
 					</div>
 					<div class="content">
 						<ul class="timeline-v2 timeline-me">
-							<li >
-								<time datetime="" class="cbp_tmtime"><span>Santosh Majhi </span> 
+							<li ng-repeat="review in doctorDetails.review">
+								<time datetime="" class="cbp_tmtime"><span>{{review.userName}}</span> 
 									<span>
 										<div class="review-rating">
 											<ul>
@@ -149,50 +149,8 @@
 								<i class="cbp_tmicon rounded-x hidden-xs"></i>
 								<div class="cbp_tmlabel">
 									<div class="rating-thumbs"><i class="fa fa-thumbs-o-up thumbs-up"></i> <small>3 days ago</small></div>
-									<h2>Throat and Voice Problems, Tonsils (Tonsillitis) Treatment</h2>
-									<p>Doctor saw the condition patiently, asked about medical history and lifesyle and then made an informed diagnosis. </p>
-								</div>
-							</li>
-							<li>
-								<time datetime="" class="cbp_tmtime"><span>Santosh Majhi </span> 
-									<span>
-										<div class="review-rating">
-											<ul>
-												<li><i class="fa fa-star"></i></li>
-												<li><i class="fa fa-star"></i></li>
-												<li><i class="fa fa-star"></i></li>
-												<li><i class="fa fa-star"></i></li>
-												<li><i class="fa fa-star-o"></i></li>
-											</ul>
-										</div>
-									</span>
-								</time>
-								<i class="cbp_tmicon rounded-x hidden-xs"></i>
-								<div class="cbp_tmlabel">
-									<div class="rating-thumbs"><i class="fa fa-thumbs-o-up thumbs-up"></i> <small>3 days ago</small></div>
-									<h2>Throat and Voice Problems, Tonsils (Tonsillitis) Treatment</h2>
-									<p>I liked the way he treated and preferred to keep the patient always informed. I will recommend him to others having an ENT conditions.</p>
-								</div>
-							</li>
-							<li>
-								<time datetime="" class="cbp_tmtime"><span>Santosh Majhi </span> 
-									<span>
-										<div class="review-rating">
-											<ul>
-												<li><i class="fa fa-star"></i></li>
-												<li><i class="fa fa-star-o"></i></li>
-												<li><i class="fa fa-star-o"></i></li>
-												<li><i class="fa fa-star-o"></i></li>
-												<li><i class="fa fa-star-o"></i></li>
-											</ul>
-										</div>
-									</span>
-								</time>
-								<i class="cbp_tmicon rounded-x hidden-xs"></i>
-								<div class="cbp_tmlabel">
-									<div class="rating-thumbs"><i class="fa fa-thumbs-o-down thumbs-down"></i> <small>3 days ago</small></div>
-									<h2>Throat and Voice Problems, Tonsils (Tonsillitis) Treatment</h2>
-									<p>Doctor saw the condition patiently, asked about medical history and lifesyle and then made an informed diagnosis.</p>
+									<h2>{{review.title}}</h2>
+									<p>{{review.review}}</p>
 								</div>
 							</li>
 						</ul>
@@ -208,7 +166,8 @@
 						<div ng-repeat="award in doctorDetails.award">
 							<div class="row" >
 								<div class="col-sm-4">
-									<img src="images/award-1.jpg" />
+									<img ng-if="!award.image" src="images/award-1.jpg" />
+									<img ng-if="award.image" src="{{award.image}}" />
 								</div>
 								<div class="col-sm-8">
 									<div class="award-content">

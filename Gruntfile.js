@@ -11,6 +11,7 @@ module.exports = function(grunt) {
                     "js/bootstrap.min.js",
                     "js/theme.js",
                     "lib/moment.js",
+                    "lib/vcard/vcard.js",
                 ],
                 dest: 'libs.js'
             },
