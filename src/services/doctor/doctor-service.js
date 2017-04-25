@@ -23,6 +23,14 @@ app.factory("DoctorService",function($http,CONFIG){
 		    });
 		    return response;		
 		},
+		countryDetails : function(value){
+		     var response = $http({
+				method: 'GET',
+				url: CONFIG.API_PATH+'/_CountryCityState/'+value,
+				headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
+			})
+			return response;		
+		},
 		doctorDetails : function(profileName){
 		    var response = $http({
 		        method: 'GET',

@@ -28,15 +28,18 @@ app.config(function($stateProvider, $urlRouterProvider) {
   })
   .state('state-directory', {
     templateUrl: 'src/views/directory/state-directory.html',
-    url: '/state-directory'
+    url: '/state-directory',
+	controller: 'DirectoryController'
   })
   .state('city-directory', {
     templateUrl: 'src/views/directory/city-directory.html',
-    url: '/city-directory'
+    url: '/city-directory/:cityName',
+	controller: 'DirectoryController'
   })
   .state('doctors-directory', {
     templateUrl: 'src/views/directory/doctors-directory.html',
-    url: '/doctors-directory'
+    url: '/doctors-directory/:cityName',
+	controller: 'DirectoryController'
   })
   .state('doctors-list', {
     templateUrl: 'src/views/doctors/doctors-list.html',

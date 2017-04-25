@@ -28,15 +28,18 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
   })
   .state('state-directory', {
     templateUrl: 'src/views/directory/state-directory.html',
-    url: '/state-directory'
+    url: '/state-directory',
+	controller: 'DirectoryController'
   })
   .state('city-directory', {
     templateUrl: 'src/views/directory/city-directory.html',
-    url: '/city-directory'
+    url: '/city-directory/:cityName',
+	controller: 'DirectoryController'
   })
   .state('doctors-directory', {
     templateUrl: 'src/views/directory/doctors-directory.html',
-    url: '/doctors-directory'
+    url: '/doctors-directory/:cityName',
+	controller: 'DirectoryController'
   })
   .state('doctors-list', {
     templateUrl: 'src/views/doctors/doctors-list.html',
@@ -104,6 +107,18 @@ app.constant('CONFIG', {
 			$rootScope.showPreloader = false;
 		})
 	}
+}]);app.controller('DirectoryController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorModel", "$state", function($scope,$rootScope,DoctorService,$stateParams,DoctorModel,$state){
+	$scope.getStateList = function(){
+		$rootScope.showPreloader = true;
+		var data = ($stateParams.cityName) ? $stateParams.cityName : 'ind';
+		DoctorService.countryDetails(data).then(function(response){
+			$rootScope.showPreloader = false;
+			if(response.data.StatusCode == 200){
+				$scope.stateList = response.data.Data;
+			}
+		})
+	}
+
 }]);app.controller('DoctorDetailsController',["$scope", "$rootScope", "DoctorService", "$stateParams", function($scope,$rootScope,DoctorService,$stateParams){
 	$scope.loadDoctorDetails = function(){
 		$rootScope.showPreloader = true;
@@ -650,6 +665,14 @@ app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){
 		        headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
 		    });
 		    return response;		
+		},
+		countryDetails : function(value){
+		     var response = $http({
+				method: 'GET',
+				url: CONFIG.API_PATH+'/_CountryCityState/'+value,
+				headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
+			})
+			return response;		
 		},
 		doctorDetails : function(profileName){
 		    var response = $http({
