@@ -30,6 +30,7 @@ module.exports = function(grunt) {
                     "lib/angular/ui-bootstrap.min.js",
                     "lib/angular/angular-ui-utils.min.js",
                     "lib/angular/paging.min.js",
+                    "lib/angular/ng-time-relative.js",
                 ],
                 dest: 'ng-libs.js'
             },

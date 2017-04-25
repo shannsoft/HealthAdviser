@@ -1,4 +1,4 @@
-var app = angular.module('health-advisor',['ui.router','ngAnimate','ui.bootstrap','ui.utils','bw.paging']);
+var app = angular.module('health-advisor',['ui.router','ngAnimate','ui.bootstrap','ui.utils','bw.paging','timeRelative']);
 app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/home');
   $stateProvider
@@ -76,7 +76,8 @@ app.run(["$http", "$rootScope", "$timeout", function($http,$rootScope,$timeout){
 app.constant('CONFIG', {
   "API_PATH":"http://healthadvisor.ssmaktak.com/api/",
   "SERVER_PATH":1 
-});app.factory("Config", ["$rootScope", function($rootScope) {
+})
+;app.factory("Config", ["$rootScope", function($rootScope) {
   var gApi = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
   var gApiKey = "AIzaSyAXBP60-UkTuNPGRX5N5jtdKZl2YRvXUdA";
   return{
