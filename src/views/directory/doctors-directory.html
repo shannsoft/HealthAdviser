@@ -1,4 +1,4 @@
-<section class="inner-banner-section">
+<section class="inner-banner-section" ng-init="homeInit();doctorsList()">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
@@ -10,12 +10,13 @@
 <section class="page-section padd-v-60">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-3">
+			<div class="col-sm-3" ng-repeat="doctor in doctorList">
 				<div class="cities-doctor">
 					<div class="prof-img">
-						<img src="images/doctor/doctor-1.jpg">
+						<div ng-if="!doctor.photo" class="text">{{doctor.profile.name | getShortName}}</div>
+						<img ng-if="doctor.photo" class="img-responsive" ng-src="{{doctor.photo}}" />
 						<div class="content">
-							 <a class="title" href="doctor-details.html">Santosh Majhi</a>
+							 <a class="title" ui-sref="doctor-details({profileName:doctor.profile.profileName})">{{doctor.profile.name}}</a>
 						</div>
 					</div>
 				</div>
@@ -25,35 +26,14 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
-				<nav aria-label="Page navigation">
-				  <ul class="pagination custom-pagination">
-					<li>
-					  <a href="#" aria-label="first">
-						<span aria-hidden="true">First</span>
-					  </a>
-					</li>
-					<li>
-					  <a href="#" aria-label="Previous">
-						<span aria-hidden="true">Previous</span>
-					  </a>
-					</li>
-					<li><a href="#">1</a></li>
-					<li><a class="active" href="#">2</a></li>
-					<li><a href="#">3</a></li>
-					<li><a href="#">4</a></li>
-					<li><a href="#">5</a></li>
-					<li>
-					  <a href="#" aria-label="Next">
-						<span aria-hidden="true">Next</span>
-					  </a>
-					</li>
-					<li>
-					  <a href="#" aria-label="last">
-						<span aria-hidden="true">Last</span>
-					  </a>
-					</li>
-				  </ul>
-				</nav>
+				<paging
+					page="startRecord" 
+					page-size="resultCount" 
+					total="totalPage"
+					show-prev-next="true"
+					show-first-last="true"
+					paging-action="filterChanged(page)">
+				</paging>
 			</div>
 		</div>
 	</div>
