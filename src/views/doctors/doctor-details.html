@@ -136,12 +136,8 @@
 								<time datetime="" class="cbp_tmtime"><span>{{review.userName}}</span> 
 									<span>
 										<div class="review-rating">
-											<ul>
-												<li><i class="fa fa-star"></i></li>
-												<li><i class="fa fa-star"></i></li>
-												<li><i class="fa fa-star"></i></li>
-												<li><i class="fa fa-star"></i></li>
-												<li><i class="fa fa-star-o"></i></li>
+											<ul ng-init="reviewRatings(review)">
+												<li ng-repeat="star in review.ratingArr track by $index"><i class="{{star}}"></i></li>
 											</ul>
 										</div>
 									</span>

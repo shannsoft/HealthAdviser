@@ -6,7 +6,7 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
 	  	$(document).trigger("TemplateLoaded");
 	});
 	/****************************************************************************/
-    /****************fUNCTION USE FOR FIRE A EVENT TO JAVASCRIPT*****************/
+    /****************fUNCTION USE FOR FIND THE INITIAL LOCATION******************/
   	/****************************************************************************/
   	google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
@@ -35,8 +35,8 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
 	           	$scope.latLong =  $scope.place.geometry.location.lat + "," +  $scope.place.geometry.location.lng;
 	            $scope.initLocation();
 	          },function(err) {
-
-	          });
+	          	console.log(err);
+	          },{maximumAge:60000, timeout:5000, enableHighAccuracy:true});
 	        });
 	      }
 	    }
@@ -71,7 +71,7 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
 	}
 
 	/****************************************************************************/
-    /****************fUNCTION USE FOR FIRE A EVENT TO JAVASCRIPT*****************/
+    /************FUNCTION USE FOR CALCULATE RATING ON EACH DOCTOR****************/
   	/****************************************************************************/
   	$scope.getRatings = function(doctor) {
 	    if(doctor.avgRating){
@@ -92,9 +92,31 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
 	      doctor.ratingArr = ratingArr;
 	    }
 	}
+	/****************************************************************************/
+    /****************FUNCTION USE CALCULATE RATING ON EACH REVIEW****************/
+  	/****************************************************************************/
+  	$scope.reviewRatings = function(review) {
+	    if(review && review.rating > 0){
+	      rating = review.rating.toString().split(".");
+	      ratingArr = [];
+	      halfStar = false;
+	      var isFloat = false;
+	      for (var i = 0; i < 5; i++) {
+	        if (i < parseInt(rating[0])) {
+	          ratingArr.push("fa fa-star");
+	        } else if (parseInt(rating[1]) && !halfStar) {
+	          ratingArr.push("fa fa-star-half-o");
+	          halfStar = true;
+	        } else {
+	          ratingArr.push("fa fa-star-o");
+	        }
+	      }
+	      review.ratingArr = ratingArr;
+	    }
+	}
 
   	/****************************************************************************/
-    /****************fUNCTION USE FOR FIRE A EVENT TO JAVASCRIPT*****************/
+    /******************FUNCTION USE FOR PUBLIC DOCTOR SEARCH*********************/
   	/****************************************************************************/
 	$scope.do_search = function() {
 	    $rootScope.showPreloader = true;
@@ -109,11 +131,17 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
 	      $rootScope.showPreloader = false;
 	      DoctorService.setDoctorLisitng(response.data.Data);
 	      DoctorService.setSearchData({latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place});
+	      $timeout(function() {
+	      	$scope.$emit("DOCTOR_LIST_FETCHED");
+	      }, 500);
 	      switch($state.current.name){
 	        case "doctors-list":
 	          $state.transitionTo($state.current,{searchParams:{latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place}});
 	          break;
 	        case "home":
+	          $state.go("doctors-list",{searchParams:{latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place}});
+	          break; 
+	        case "find-doctors":
 	          $state.go("doctors-list",{searchParams:{latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place}});
 	          break;
 	      }

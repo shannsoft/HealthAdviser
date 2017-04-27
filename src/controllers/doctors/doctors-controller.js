@@ -47,6 +47,10 @@ app.controller('DoctorsController',function($scope,$rootScope,DoctorService,$sta
 		    $scope.paging.totalPage = $scope.doctorList.totalResultCount;
 		}
     }
+    $rootScope.$on("DOCTOR_LIST_FETCHED",function(){
+    	$scope.paging.currentPage = 1;
+    	$scope.filter = {};
+    })
     /*******************************************************************************************/
 	/*************** Info - Load google map of listing page*************************************/
 	/*******************************************************************************************/
@@ -111,9 +115,7 @@ app.controller('DoctorsController',function($scope,$rootScope,DoctorService,$sta
 		$rootScope.showPreloader = true;
     	var filterObj = {}
     	var counter = 0;
-    	if(pageNumber)
-    		$scope.paging.currentPage = pageNumber;
-    	filterObj.startRecord =  parseInt($scope.paging.currentPage);
+    	filterObj.startRecord =  (pageNumber) ? parseInt(pageNumber) : 1;
     	angular.forEach($scope.filter, function(value, key) {
 	        switch (key) {
 	        	case "languages":

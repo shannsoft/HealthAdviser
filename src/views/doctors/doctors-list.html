@@ -38,7 +38,7 @@
 					</div>
 				</div>
 				<div class="row m-b-10" ng-if="doctorList.result.length > 0">
-					<div class="col-md-12">
+					<div class="col-md-9">
 						<paging
 						    page="paging.currentPage" 
 						    page-size="paging.showResult" 
@@ -48,8 +48,16 @@
 						    paging-action="filterChanged(page)">
 						</paging>
 					</div>
+					<div class="col-md-3 sort-by">
+						<select class="form-control form-control-sm" ng-model="list.sortBy">
+						  <option value="">Sort By</option>
+						  <option value="profile.name">Name</option>
+						  <option value="distance">Distance</option>
+						  <option value="avgRating">Rating</option>
+						</select>
+					</div>
 				</div>
-				<div class="doctor-list-box" ng-repeat="doctor in doctorList.result">
+				<div class="doctor-list-box" ng-repeat="doctor in doctorList.result | orderBy: list.sortBy" >
 					<div class="row">
 						<div class="m-l-10">
 							<div class="col-sm-2 m-t-10">

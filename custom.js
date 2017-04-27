@@ -19,7 +19,8 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
   })
   .state('specialization', {
     templateUrl: 'src/views/common/specialization.html',
-    url: '/specialization'
+    url: '/specialization',
+    controller:'SpecializationController'
   })
   .state('contact-us', {
     templateUrl: 'src/views/common/contact-us.html',
@@ -56,8 +57,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
   })
   .state('find-doctors', {
     templateUrl: 'src/views/doctors/find-doctors.html',
-    url: '/find-doctors',
-    controller: 'DoctorsController'
+    url: '/find-doctors'
   })
   .state('doctor-details', {
     templateUrl: 'src/views/doctors/doctor-details.html',
@@ -71,6 +71,7 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
   })
 }]);
 app.run(["$http", "$rootScope", "$timeout", function($http,$rootScope,$timeout){
+    moment.locale('en');
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
       $rootScope.stateName = toState.name;
       window.scrollTo(0, 0);
@@ -105,6 +106,18 @@ app.constant('CONFIG', {
 		        Util.alertMessage('danger',"Something went wrong! unable to send your request");
 		    }
 			$rootScope.showPreloader = false;
+		})
+	}
+}]);app.controller("SpecializationController", ["$scope", "$rootScope", "CommonService", function($scope,$rootScope,CommonService){
+	$scope.getSpecializationList = function(){
+		$rootScope.showPreloader = true;
+		CommonService.specialization().then(function(response){
+			$rootScope.showPreloader = false;
+			if(response.data.StatusCode == 200){
+				$scope.specializationList = response.data.Data;
+			}
+		},function(errot){
+			$$rootScope.showPreloader = false;
 		})
 	}
 }]);app.controller('DirectoryController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorModel", "$state", "$timeout", function($scope,$rootScope,DoctorService,$stateParams,DoctorModel,$state,$timeout){
@@ -222,6 +235,10 @@ app.constant('CONFIG', {
 		    $scope.paging.totalPage = $scope.doctorList.totalResultCount;
 		}
     }
+    $rootScope.$on("DOCTOR_LIST_FETCHED",function(){
+    	$scope.paging.currentPage = 1;
+    	$scope.filter = {};
+    })
 	$scope.loadMap = function() {
 	    $scope.markers = [];
 	    map = new google.maps.Map(document.getElementById('googleMap'), {
@@ -275,9 +292,7 @@ app.constant('CONFIG', {
 		$rootScope.showPreloader = true;
     	var filterObj = {}
     	var counter = 0;
-    	if(pageNumber)
-    		$scope.paging.currentPage = pageNumber;
-    	filterObj.startRecord =  parseInt($scope.paging.currentPage);
+    	filterObj.startRecord =  (pageNumber) ? parseInt(pageNumber) : 1;
     	angular.forEach($scope.filter, function(value, key) {
 	        switch (key) {
 	        	case "languages":
@@ -459,8 +474,8 @@ app.constant('CONFIG', {
 	           	$scope.latLong =  $scope.place.geometry.location.lat + "," +  $scope.place.geometry.location.lng;
 	            $scope.initLocation();
 	          },function(err) {
-
-	          });
+	          	console.log(err);
+	          },{maximumAge:60000, timeout:5000, enableHighAccuracy:true});
 	        });
 	      }
 	    }
@@ -512,6 +527,25 @@ app.constant('CONFIG', {
 	      doctor.ratingArr = ratingArr;
 	    }
 	}
+  	$scope.reviewRatings = function(review) {
+	    if(review && review.rating > 0){
+	      rating = review.rating.toString().split(".");
+	      ratingArr = [];
+	      halfStar = false;
+	      var isFloat = false;
+	      for (var i = 0; i < 5; i++) {
+	        if (i < parseInt(rating[0])) {
+	          ratingArr.push("fa fa-star");
+	        } else if (parseInt(rating[1]) && !halfStar) {
+	          ratingArr.push("fa fa-star-half-o");
+	          halfStar = true;
+	        } else {
+	          ratingArr.push("fa fa-star-o");
+	        }
+	      }
+	      review.ratingArr = ratingArr;
+	    }
+	}
 	$scope.do_search = function() {
 	    $rootScope.showPreloader = true;
 	    var obj  = {
@@ -525,11 +559,17 @@ app.constant('CONFIG', {
 	      $rootScope.showPreloader = false;
 	      DoctorService.setDoctorLisitng(response.data.Data);
 	      DoctorService.setSearchData({latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place});
+	      $timeout(function() {
+	      	$scope.$emit("DOCTOR_LIST_FETCHED");
+	      }, 500);
 	      switch($state.current.name){
 	        case "doctors-list":
 	          $state.transitionTo($state.current,{searchParams:{latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place}});
 	          break;
 	        case "home":
+	          $state.go("doctors-list",{searchParams:{latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place}});
+	          break; 
+	        case "find-doctors":
 	          $state.go("doctors-list",{searchParams:{latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place}});
 	          break;
 	      }
@@ -656,6 +696,14 @@ app.filter('phonenumber', function() {
           url: CONFIG.API_PATH+'_ContactUs',
           data : obj,
           headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
+      });
+      return response;
+    },
+    specialization : function(){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.API_PATH+'_ENUM_Specialization',
+          headers: {'Server': CONFIG.SERVER_PATH}
       });
       return response;
     }

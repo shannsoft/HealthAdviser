@@ -2029,3 +2029,6 @@ dl {
 .filter-rating i{
 	color: #ffb103;
 }
+.sort-by select{
+	margin: 23px 0;
+}

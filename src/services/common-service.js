@@ -12,6 +12,14 @@ app.factory("CommonService", function ($http,$q,CONFIG) {
           headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
       });
       return response;
+    },
+    specialization : function(){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.API_PATH+'_ENUM_Specialization',
+          headers: {'Server': CONFIG.SERVER_PATH}
+      });
+      return response;
     }
   }
 });

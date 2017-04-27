@@ -19,7 +19,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
   })
   .state('specialization', {
     templateUrl: 'src/views/common/specialization.html',
-    url: '/specialization'
+    url: '/specialization',
+    controller:'SpecializationController'
   })
   .state('contact-us', {
     templateUrl: 'src/views/common/contact-us.html',
@@ -56,8 +57,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
   })
   .state('find-doctors', {
     templateUrl: 'src/views/doctors/find-doctors.html',
-    url: '/find-doctors',
-    controller: 'DoctorsController'
+    url: '/find-doctors'
   })
   .state('doctor-details', {
     templateUrl: 'src/views/doctors/doctor-details.html',
@@ -71,6 +71,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
   })
 });
 app.run(function($http,$rootScope,$timeout){
+    moment.locale('en');
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
       $rootScope.stateName = toState.name;
       window.scrollTo(0, 0);
