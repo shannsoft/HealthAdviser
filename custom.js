@@ -1,4 +1,4 @@
-var app = angular.module('health-advisor',['ui.router','ngAnimate','ui.bootstrap','ui.utils','bw.paging','timeRelative']);
+var app = angular.module('health-advisor',['ui.router','ngAnimate','ui.bootstrap','ui.utils','bw.paging','timeRelative','ngStorage']);
 app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/home');
   $stateProvider
@@ -16,6 +16,16 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     templateUrl: 'src/views/header/register.html',
     controller: "AuthenticationController",
     url: '/register'
+  })
+  .state('doctor-verify', {
+    templateUrl: 'src/views/doctors/doctor-verified.html',
+    controller: "AuthenticationController",
+    url: '/doctor-verify'
+  })
+  .state('updateDoctorProfile', {
+    templateUrl: 'src/views/doctors/doctor-profile.html',
+    controller: "DoctorProfileController",
+    url: '/updateDoctorProfile'
   })
   .state('specialization', {
     templateUrl: 'src/views/common/specialization.html',
@@ -64,14 +74,19 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     url: '/doctor-details/:profileName',
     controller: 'DoctorDetailsController'
   })
+  .state('signedDoctor', {
+    templateUrl: 'src/views/doctors/doctor-details.html',
+    url: '/signedDoctor',
+    controller: 'DoctorDetailsController'
+  })
   .state('doctor-compare', {
     templateUrl: 'src/views/doctors/doctor-compare.html',
     url: '/doctor-compare',
     controller: 'DoctorsController'
   })
 }]);
-app.run(["$http", "$rootScope", "$timeout", function($http,$rootScope,$timeout){
-    moment.locale('en');
+app.run(["$http", "$rootScope", "$timeout", "AuthorizeService", function($http,$rootScope,$timeout,AuthorizeService){
+  AuthorizeService.checkTokenTime();
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
       $rootScope.stateName = toState.name;
       window.scrollTo(0, 0);
@@ -91,8 +106,110 @@ app.constant('CONFIG', {
   	}
   }
 }]);
-;app.controller('AuthenticationController',["$scope", "$rootScope", function($scope,$rootScope){
-	
+app.constant("HEALTH_ADVISER",function(){
+	ACCESS_TOKEN_EXPIRES_IN:300
+});app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "AuthorizeService", "$state", function($scope,$rootScope,$timeout,AuthorizeService,$state){
+	$scope.user = {};
+	google = typeof google === 'undefined' ? "" : google;
+  	var googleTime;
+	var options = {
+	    componentRestrictions: {country: "IN"},
+	    types: ['(cities)']
+	};
+	$scope.initRegister = function(){
+		if(google=="" || !google.maps || !google.maps.places)
+        	googleTime = $timeout($scope.initRegister , 3000);
+	    else {
+	      	clearTimeout(googleTime);
+			var inputFrom = document.getElementById('city');
+			var autocompleteFrom = new google.maps.places.Autocomplete(inputFrom, options);
+			google.maps.event.addListener(autocompleteFrom, 'place_changed', function() {
+			    populateAddressFields(autocompleteFrom.getPlace());
+			    $scope.$apply();
+			});
+		}
+	}
+	function populateAddressFields(place) {
+		console.log(place);
+	    if (place.geometry) {
+	      $scope.user.latLng = place.geometry.location.lat() + "," + place.geometry.location.lng();
+	    }
+	    $scope.user.city = place.name;
+	}
+	$scope.validatePassword = function(){
+		if($scope.user.password !== $scope.user.c_pass){
+	      $scope.showPasswordMisMatch = true;
+	    }
+	   	if($scope.user.password === $scope.user.c_pass) {
+	      $scope.showPasswordMisMatch = false;
+	    }
+	}
+	$scope.validateUserInfo = function(email) {
+		var obj = {
+			"email":email
+		}
+      	AuthorizeService.validateUserName(obj).then(function (response) {
+          console.log(response);
+          if(response.data.StatusCode == 302){
+          	$scope.isExist = true;
+          }
+          else{
+          	$scope.isExist = false;
+          }
+      	}, function (errorResponse) {
+      	});
+  	}
+  	$scope.register = function(){
+  		var userData = {
+  			"actType": "I",
+	      	"address": {
+	        	"city": $scope.user.city,
+	        	"lat":$scope.user.latLng
+	      	},
+	      	"phone": $scope.user.phone,
+	      	"profile": {
+	        	"fName": $scope.user.first_name,
+	        	"lName": $scope.user.last_name
+	      	},
+	      	"email": $scope.user.email,
+	      	"initial_signup_method": "health adviser",
+	      	"isDoctor": $scope.user.isDoctor,
+	      	"password": $scope.user.password,
+	      	"userName": $scope.user.email,
+	      	"hearAboutUs":$scope.user.hear_about
+	    };
+	    $rootScope.showPreloader = true;
+	    AuthorizeService.register(userData).then(function (response) {
+	    	$rootScope.showPreloader = false;
+	    	console.log(response)
+          if(response.data.StatusCode == 200){
+          	var obj = {
+   				"userId": $scope.user.email,
+				"password": $scope.user.password
+   			}
+          	AuthorizeService.login(obj).then(function (response) {
+          		console.log(response);
+          	})
+          }
+          else{
+          	
+          }
+      	}, function (errorResponse) {
+      	});
+	}
+  	$scope.login = function(){
+  		var obj = {
+			"userId": $scope.user.email,
+			"password": $scope.user.password
+		}
+		$rootScope.showPreloader = true;
+      	AuthorizeService.login(obj).then(function (response) {
+      		$rootScope.showPreloader = false;
+      		if(response.data.StatusCode == 200){
+      			$state.go('signedDoctor');
+      		}
+      	})
+  	}
 }]);;app.controller("CommonController",["$scope", "$rootScope", "CommonService", "Util", function($scope,$rootScope,CommonService,Util){
 	$scope.contact = {};
 	$scope.sendEnquiry = function(){
@@ -164,7 +281,7 @@ app.constant('CONFIG', {
 		$scope.doctorsList();
 	}
 
-}]);app.controller('DoctorDetailsController',["$scope", "$rootScope", "DoctorService", "$stateParams", function($scope,$rootScope,DoctorService,$stateParams){
+}]);app.controller('DoctorDetailsController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorDetailsService", function($scope,$rootScope,DoctorService,$stateParams,DoctorDetailsService){
 	$scope.loadDoctorDetails = function(){
 		$rootScope.showPreloader = true;
 		if($stateParams.profileName){
@@ -175,6 +292,14 @@ app.constant('CONFIG', {
 				$scope.initMap($scope.doctorDetails.address);
 			})
 		}
+    else{
+      DoctorDetailsService.doctorDetails().then(function(response){
+        $rootScope.showPreloader = false;
+        $scope.doctorDetails = response.data.Data.result;
+        console.log(response.data.Data);
+        $scope.initMap($scope.doctorDetails.address);
+      })
+    }
 	}
 	$scope.initMap = function(address) {
     if(document.getElementById('googleMap')){
@@ -192,7 +317,7 @@ app.constant('CONFIG', {
       }
     }
   }
-}]);app.controller('DoctorsController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorModel", "$state", function($scope,$rootScope,DoctorService,$stateParams,DoctorModel,$state){
+}]);app.controller('DoctorsController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorModel", "$state", "orderByFilter", function($scope,$rootScope,DoctorService,$stateParams,DoctorModel,$state,orderByFilter){
 	$scope.compareDoctorArr = [{}, {}, {}, {}];
 	var map;
 	var directionService;
@@ -201,6 +326,7 @@ app.constant('CONFIG', {
 	var destination;
 	$scope.paging = {currentPage:1,totalPage:0,showResult:0};
 	$scope.filter = {};
+	$scope.filter.sorting = 'avgRating';
 	$scope.showCompare = function(operation, doctor) {
     	switch (operation) {
 	      case 'show':
@@ -219,6 +345,7 @@ app.constant('CONFIG', {
 	    }
 	}
   	$scope.initListing = function() {
+  		$scope.filter.sorting = 'avgRating';
       	$scope.doctorList = DoctorService.getDoctorLisitng();
       	$scope.searchData = DoctorService.getSearchData();
       	$scope.resetCompareDoctor();
@@ -327,6 +454,7 @@ app.constant('CONFIG', {
 		            break;
 		        case "distance":
 		        	filterObj.distance = value;
+		        	break;
 	        }
 	    })
 	    var obj = {
@@ -357,6 +485,10 @@ app.constant('CONFIG', {
   	}
   	$scope.numberToArray = function (n) {
         return new Array(parseInt(n));
+    };
+    $scope.sortList = function () {
+    	var ascending = ($scope.filter.sorting == 'profile.name') ? false : true;
+	    $scope.doctorList.result = orderByFilter($scope.doctorList.result, $scope.filter.sorting, ascending);
     };
     $scope.downloadVCard = function(doctor){
     	var vCardObj = vCard.create(vCard.Version.TWO)
@@ -447,6 +579,9 @@ app.constant('CONFIG', {
   	$scope.$on('$viewContentLoaded', function(event) {
 	  	$(document).trigger("TemplateLoaded");
 	});
+  	$rootScope.$on('SESSION_EXPIRED',function(){
+  		alert('Sesstion Expired');
+  	})
   	google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
   	$scope.home = {};
@@ -684,7 +819,147 @@ app.filter('phonenumber', function() {
 			return doctorProfile;
 		}
 	}
-});app.factory("CommonService", ["$http", "$q", "CONFIG", function ($http,$q,CONFIG) {
+});app.factory("AuthorizeService", ["$http", "CONFIG", "$q", "HEALTH_ADVISER", "$interval", "$timeout", "$state", "HealthAuth", "$rootScope", function($http,CONFIG,$q,HEALTH_ADVISER,$interval,$timeout,$state,HealthAuth,$rootScope){
+	var timer;
+	var checkTokenTime = function(){
+		if(HealthAuth['currentUserId']){
+			var scheduleTime = moment(HealthAuth['expireTime']).local().format()
+    		var now = moment().local().format();
+    		console.log(moment(scheduleTime).diff(now));
+    		if(moment(scheduleTime).diff(now) < 0 ){
+	          logout().then(function(response){
+	          	$state.go('login');
+	          },function(error){
+	          	$state.go('login');
+	          })
+	        }
+	        else{
+	          var ms = moment(scheduleTime).diff(now);
+	          timer = $timeout(function() {
+	          	$rootScope.$emit('SESSION_EXPIRED');
+	          }, ms);
+	        }
+		}
+	};
+	var validateUserName = function(obj){
+		var response = $http({
+	        method: 'POST',
+	        url: CONFIG.API_PATH+'_UserSignupCheckEmail',
+	        data : obj,
+	        headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
+	    });
+	    return response;
+	};
+	var register = function(obj){
+		var response = $http({
+	        method: 'POST',
+	        url: CONFIG.API_PATH+'_UserSignup',
+	        data : obj,
+	        headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
+	    });
+	    return response;
+	};
+	var login = function( obj ){
+        var deferred = $q.defer();
+        $http({
+            method: 'POST',
+            url: CONFIG.API_PATH+'_Login',
+            data : obj,
+            headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
+        }).then(function successCallback(response) {
+        	var diff = (moment(response.data.Data.expiryDate).diff(response.data.Data.generateDate))-120000;
+            HEALTH_ADVISER.ACCESS_TOKEN_EXPIRES_IN = diff;
+            response.data.Data.expires_in = diff;
+            HealthAuth.setUser(response , obj);
+    		HealthAuth.save();
+            timer = $timeout(function() {
+	          	$rootScope.$emit('SESSION_EXPIRED');
+	         }, diff);
+            deferred.resolve(response);
+        }, function errorCallback(errorResponse) {
+            deferred.reject(errorResponse);
+        });
+        return deferred.promise;
+    };
+    var logout  = function(){
+    	var deferred = $q.defer();
+        $http({
+            method: 'POST',
+            url: CONFIG.API_PATH+'_Logout',
+            headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
+        }).then(function successCallback(response) {
+        	clearCredentials();
+            deferred.resolve(response);
+        }, function errorCallback(errorResponse) {
+        	clearCredentials();
+            deferred.reject(errorResponse);
+        });
+        return deferred.promise;
+    };
+
+    function clearCredentials() {
+    	clearTimeout(timer);
+        HealthAuth.clearUser();
+        HealthAuth.clearStorage();
+    }
+    return{
+    	checkTokenTime 		: checkTokenTime,
+    	validateUserName	: validateUserName,
+    	register			: register,
+    	login 				: login,
+    	logout				: logout
+	};
+}])
+app.factory("HealthAuth",["HEALTH_ADVISER", function(HEALTH_ADVISER){
+	var props = ['accessToken','currentUserData','expireTime','expiresIn','currentUserId'];
+    var propsPrefix = '$HealthAdviser$';
+	function HealthAuth() {
+        var self = this;
+        props.forEach(function (name) {
+            self[name] = load(name);
+        });
+        HEALTH_ADVISER.ACCESS_TOKEN_EXPIRES_IN = this.expiresIn;
+        this.currentUserData = this.currentUserData || null;
+    }
+    HealthAuth.prototype.save = function () {
+        var self = this;
+        var storage = localStorage ;
+        props.forEach(function (name) {
+            save(storage, name, self[name]);
+        });
+    };
+    HealthAuth.prototype.setUser = function (response , userInfo) {
+        var authData = response.data.Data;
+        this.accessToken = authData.tokenUId;
+        this.expiresIn = authData.expires_in;
+        this.currentUserId = userInfo.userId;
+        this.currentUserData = authData;
+        this.expireTime = moment().add(HEALTH_ADVISER.ACCESS_TOKEN_EXPIRES_IN, 'ms');
+    };
+    HealthAuth.prototype.clearUser = function () {
+      	this.accessToken = null;
+        this.expiresIn = null;
+        this.currentUserId = null;
+        this.currentUserData = null;
+        this.expireTime = null;
+    };
+    HealthAuth.prototype.clearStorage = function () {
+       	props.forEach(function (name) {
+            save(sessionStorage, name, null);
+            save(localStorage, name, null);
+        });
+    };
+    function load(name) {
+        var key = propsPrefix + name;
+        return localStorage[key] || sessionStorage[key] || null;
+    }
+    function save(storage, name, value) {
+        var key = propsPrefix + name;
+        if (value == null) value = '';
+        storage[key] = value;
+    }
+    return new HealthAuth();
+}]);app.factory("CommonService", ["$http", "$q", "CONFIG", function ($http,$q,CONFIG) {
   return{
     fetchLocation: function(params) {
       var response = $http.get(params);
@@ -721,7 +996,18 @@ app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){
     };
     return Util;
 }]);
-;app.factory("DoctorService",["$http", "CONFIG", function($http,CONFIG){
+;app.factory('DoctorDetailsService',["$http", "HealthAuth", "CONFIG", function($http,HealthAuth,CONFIG){
+	return{
+		doctorDetails : function(){
+		    var response = $http({
+		        method: 'GET',
+		        url: CONFIG.API_PATH+'_UserData',
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
+		    });
+		    return response;		
+		}
+	}
+}]);app.factory("DoctorService",["$http", "CONFIG", function($http,CONFIG){
 	var searchData = {};
   	var lawerList = {totalRecords : 0};
 	return{

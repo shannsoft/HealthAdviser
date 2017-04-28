@@ -6,6 +6,13 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
 	  	$(document).trigger("TemplateLoaded");
 	});
 	/****************************************************************************/
+    /****************THIS EVENT IS LISTEN AFTER SESSION EXPIRED******************/
+  	/****************************************************************************/
+  	$rootScope.$on('SESSION_EXPIRED',function(){
+  		alert('Sesstion Expired');
+  	})
+
+  	/****************************************************************************/
     /****************fUNCTION USE FOR FIND THE INITIAL LOCATION******************/
   	/****************************************************************************/
   	google = typeof google === 'undefined' ? "" : google;

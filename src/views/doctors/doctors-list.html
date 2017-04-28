@@ -29,8 +29,8 @@
 	</div>
 </section>
 <section class="page-section padd-v-60" ng-init="initListing()">
-	<div class="container">
-		<div class="row">
+	<div class="container" >
+		<div class="row" ng-show="doctorList.result.length > 0">
 			<div class="col-md-9">
 				<div class="row m-b-10">
 					<div class="col-md-9">
@@ -49,15 +49,16 @@
 						</paging>
 					</div>
 					<div class="col-md-3 sort-by">
-						<select class="form-control form-control-sm" ng-model="list.sortBy">
+						<select class="form-control form-control-sm" ng-model="filter.sorting" ng-change="sortList()">
 						  <option value="">Sort By</option>
 						  <option value="profile.name">Name</option>
 						  <option value="distance">Distance</option>
 						  <option value="avgRating">Rating</option>
 						</select>
+						{{list.sortBy}}
 					</div>
 				</div>
-				<div class="doctor-list-box" ng-repeat="doctor in doctorList.result | orderBy: list.sortBy" >
+				<div class="doctor-list-box" ng-repeat="doctor in doctorList.result" >
 					<div class="row">
 						<div class="m-l-10">
 							<div class="col-sm-2 m-t-10">

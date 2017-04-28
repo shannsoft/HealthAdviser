@@ -319,7 +319,7 @@ a:hover{ color:#000;}
     border-color: #10cfbd;
 }
 .checkbox.check-primary input[type=checkbox]:checked+label:before {
-    border-color: #6d5cae;
+    border-color: #0088a4;
 }
 .checkbox.check-complete input[type=checkbox]:checked+label:before {
     border-color: #48b0f7;

@@ -7,71 +7,98 @@
 		</div>
 	</div>
 </section>
-<section class="page-section padd-v-60">
+<section class="page-section padd-v-60" ng-init="initRegister()">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-6">
-				<div class="login-cardbox">
-					<div class="row">
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label>First Name</label>
-								<input type="text" class="form-control" id="" placeholder="First Name">
+				<form name="regFrm">
+					<div class="login-cardbox">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>First Name</label>
+									<input type="text" name="fname" class="form-control" placeholder="First Name" ng-model="user.first_name" required>
+									<span class="color-red" ng-if="regFrm.fname.$touched && regFrm.fname.$error.required">Please enter your first name</span>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Last Name</label>
+									<input type="text" name="lname" class="form-control" placeholder="Last Name" ng-model="user.last_name" required>
+									<span class="color-red" ng-if="regFrm.lname.$touched && regFrm.lname.$error.required">Please enter your last name</span>
+								</div>
 							</div>
 						</div>
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label>Last Name</label>
-								<input type="text" class="form-control" id="" placeholder="Last Name">
+						<div class="form-group">
+							<label>Email</label>
+							<input type="text" class="form-control" name="email" placeholder="Email" required ng-model="user.email" ng-pattern="/^[a-z]+[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}$/" ng-blur="validateUserInfo(user.email)">
+							<span class="color-red" ng-if="regFrm.email.$touched && regFrm.email.$error.required">Please enter your mail</span>
+							<span class="color-red" ng-if="regFrm.email.$touched && regFrm.email.$error.pattern">Please enter valid mail id</span>
+							<span class="color-red" ng-if="isExist">Mail already Exist</span>	
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Password</label>
+									<input type="password" class="form-control" name="password" ng-model="user.password" required placeholder="Password">
+									<span class="color-red" ng-if="regFrm.password.$touched && regFrm.password.$error.required">Please enter your password</span>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Confirm Password</label>
+									<input type="password" name="c_pass" ng-model="user.c_pass" class="form-control" required placeholder="Password" ng-blur="validatePassword()">
+									<span class="color-red" ng-show="showPasswordMisMatch">Password Mismatch</span>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="form-group">
-						<label>Email</label>
-						<input type="text" class="form-control" id="" placeholder="Email">
-					</div>
-					<div class="row">
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label>Password</label>
-								<input type="password" class="form-control" id="" placeholder="Password">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Phone</label>
+									<input class="form-control" name="phone" ui-mask="999-999-9999" placeholder="xxx-xxx-xxxx" ng-model="user.phone" required>
+									<span class="color-red" ng-if="regFrm.phone.$touched && regFrm.phone.$error.required">Please enter your mobile</span>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>City</label>
+									<input type="text" name="city" class="form-control" id="city" placeholder="City" ng-model="user.city" required>
+									<span class="color-red" ng-if="regFrm.city.$touched && regFrm.city.$error.required">Please enter your city</span>
+								</div>
 							</div>
 						</div>
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label>Confirm Password</label>
-								<input type="password" class="form-control" id="" placeholder="Password">
+						<div class="form-group">
+							<label>How did you hear about us</label>
+							<select class="form-control" name="hear_about" ng-model="user.hear_about" required>
+							  	<option value="">How did you hear about us?</option>
+								<option value="Facebook">Facebook</option>
+								<option value="Twitter">Twitter</option>
+								<option value="Google">Google</option>
+								<option value="Instagram">Instagram</option>
+								<option value="YouTube">YouTube</option>
+								<option value="Pinterest">Pinterest</option>
+								<option value="LinkedIn">LinkedIn</option>
+								<option value="Friend">Friend</option>
+								<option value="Other">Other</option>
+							</select>
+							<span class="color-red" ng-if="regFrm.hear_about.$touched && regFrm.hear_about.$error.required">Please select one</span>
+						</div>
+						<div class="form-group pull-left">
+							<div class="checkbox check-primary">
+								<input id="isLawyer" type="checkbox" value="true" ng-model="user.isDoctor">
+								<label for="isLawyer">Sign up as a Doctor</label>
 							</div>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label>Phone</label>
-								<input type="text" class="form-control" id="" placeholder="Phone">
-							</div>
+						<div class="form-group text-right">
+							<button ng-disabled="regFrm.$invalid || showPasswordMisMatch || isExist" class="btn btn-blue btn-md text-u-c m-r-5" ng-click="register()">Send <i class="fa fa-send-o"></i></button>
 						</div>
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label>City</label>
-								<input type="text" class="form-control" id="" placeholder="city">
-							</div>
+						<div class="gray-line-sm"></div>
+						<div class="clearfix">
+							Already have an account?  <a class="text-u-l" ui-sref="login">Login</a>
 						</div>
 					</div>
-					<div class="form-group">
-						<label>Questions</label>
-						<select class="form-control">
-						  <option value="">How did you hear about us</option>
-						</select>
-					</div>
-					<div class="form-group text-right">
-						<button class="btn btn-blue btn-md text-u-c m-r-5">Send <i class="fa fa-send-o"></i></button>
-					</div>
-					<div class="gray-line-sm"></div>
-					<div class="clearfix">
-						Already have an account?  <a class="text-u-l" ui-sref="login">Login</a>
-					</div>
-				</div>
+				</form>
 			</div>
 			<div class="col-sm-2 hidden-xs">
 				 <div id="orSeparator">

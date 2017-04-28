@@ -1,4 +1,4 @@
-var app = angular.module('health-advisor',['ui.router','ngAnimate','ui.bootstrap','ui.utils','bw.paging','timeRelative']);
+var app = angular.module('health-advisor',['ui.router','ngAnimate','ui.bootstrap','ui.utils','bw.paging','timeRelative','ngStorage']);
 app.config(function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/home');
   $stateProvider
@@ -16,6 +16,16 @@ app.config(function($stateProvider, $urlRouterProvider) {
     templateUrl: 'src/views/header/register.html',
     controller: "AuthenticationController",
     url: '/register'
+  })
+  .state('doctor-verify', {
+    templateUrl: 'src/views/doctors/doctor-verified.html',
+    controller: "AuthenticationController",
+    url: '/doctor-verify'
+  })
+  .state('updateDoctorProfile', {
+    templateUrl: 'src/views/doctors/doctor-profile.html',
+    controller: "DoctorProfileController",
+    url: '/updateDoctorProfile'
   })
   .state('specialization', {
     templateUrl: 'src/views/common/specialization.html',
@@ -64,14 +74,19 @@ app.config(function($stateProvider, $urlRouterProvider) {
     url: '/doctor-details/:profileName',
     controller: 'DoctorDetailsController'
   })
+  .state('signedDoctor', {
+    templateUrl: 'src/views/doctors/doctor-details.html',
+    url: '/signedDoctor',
+    controller: 'DoctorDetailsController'
+  })
   .state('doctor-compare', {
     templateUrl: 'src/views/doctors/doctor-compare.html',
     url: '/doctor-compare',
     controller: 'DoctorsController'
   })
 });
-app.run(function($http,$rootScope,$timeout){
-    moment.locale('en');
+app.run(function($http,$rootScope,$timeout,AuthorizeService){
+  AuthorizeService.checkTokenTime();
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
       $rootScope.stateName = toState.name;
       window.scrollTo(0, 0);

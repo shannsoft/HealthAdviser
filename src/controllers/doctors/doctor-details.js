@@ -1,4 +1,4 @@
-app.controller('DoctorDetailsController',function($scope,$rootScope,DoctorService,$stateParams){
+app.controller('DoctorDetailsController',function($scope,$rootScope,DoctorService,$stateParams,DoctorDetailsService){
 	$scope.loadDoctorDetails = function(){
 		$rootScope.showPreloader = true;
 		if($stateParams.profileName){
@@ -9,6 +9,14 @@ app.controller('DoctorDetailsController',function($scope,$rootScope,DoctorServic
 				$scope.initMap($scope.doctorDetails.address);
 			})
 		}
+    else{
+      DoctorDetailsService.doctorDetails().then(function(response){
+        $rootScope.showPreloader = false;
+        $scope.doctorDetails = response.data.Data.result;
+        console.log(response.data.Data);
+        $scope.initMap($scope.doctorDetails.address);
+      })
+    }
 	}
 	$scope.initMap = function(address) {
     if(document.getElementById('googleMap')){

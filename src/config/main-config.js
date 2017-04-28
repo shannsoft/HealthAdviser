@@ -8,3 +8,6 @@ app.factory("Config", function($rootScope) {
   	}
   }
 });
+app.constant("HEALTH_ADVISER",function(){
+	ACCESS_TOKEN_EXPIRES_IN:300
+})

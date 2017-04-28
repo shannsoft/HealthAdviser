@@ -26,6 +26,7 @@ module.exports = function(grunt) {
                 src: [
                     "lib/angular/angular.js",
                     "lib/angular/angular-animate.js",
+                    "lib/angular/ngStorage.min.js",
                     "lib/angular/angular-ui-router.js",
                     "lib/angular/ui-bootstrap.min.js",
                     "lib/angular/angular-ui-utils.min.js",

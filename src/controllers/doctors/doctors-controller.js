@@ -1,4 +1,4 @@
-app.controller('DoctorsController',function($scope,$rootScope,DoctorService,$stateParams,DoctorModel,$state){
+app.controller('DoctorsController',function($scope,$rootScope,DoctorService,$stateParams,DoctorModel,$state,orderByFilter){
 	$scope.compareDoctorArr = [{}, {}, {}, {}];
 	var map;
 	var directionService;
@@ -7,6 +7,7 @@ app.controller('DoctorsController',function($scope,$rootScope,DoctorService,$sta
 	var destination;
 	$scope.paging = {currentPage:1,totalPage:0,showResult:0};
 	$scope.filter = {};
+	$scope.filter.sorting = 'avgRating';
 	/****************************************************************************/
     /****************fUNCTION USE FOR ADD DOCTOR TO COMPARE BOX******************/
   	/****************************************************************************/
@@ -31,6 +32,7 @@ app.controller('DoctorsController',function($scope,$rootScope,DoctorService,$sta
   	/*************** Info - initListing() is called on init of lawer listing page***************/
   	/*******************************************************************************************/
   	$scope.initListing = function() {
+  		$scope.filter.sorting = 'avgRating';
       	$scope.doctorList = DoctorService.getDoctorLisitng();
       	$scope.searchData = DoctorService.getSearchData();
       	$scope.resetCompareDoctor();
@@ -150,6 +152,7 @@ app.controller('DoctorsController',function($scope,$rootScope,DoctorService,$sta
 		            break;
 		        case "distance":
 		        	filterObj.distance = value;
+		        	break;
 	        }
 	    })
 	    var obj = {
@@ -180,6 +183,10 @@ app.controller('DoctorsController',function($scope,$rootScope,DoctorService,$sta
   	}
   	$scope.numberToArray = function (n) {
         return new Array(parseInt(n));
+    };
+    $scope.sortList = function () {
+    	var ascending = ($scope.filter.sorting == 'profile.name') ? false : true;
+	    $scope.doctorList.result = orderByFilter($scope.doctorList.result, $scope.filter.sorting, ascending);
     };
     /*******************************************************************************************/
 	/************************Function use for download vcard details****************************/
