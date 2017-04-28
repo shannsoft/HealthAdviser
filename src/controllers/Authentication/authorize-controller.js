@@ -1,4 +1,4 @@
-app.controller('AuthenticationController',function($scope,$rootScope,$timeout,AuthorizeService,$state){
+app.controller('AuthenticationController',function($scope,$rootScope,$timeout,AuthorizeService,$state,$localStorage){
 	$scope.user = {};
 	google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
@@ -110,12 +110,26 @@ app.controller('AuthenticationController',function($scope,$rootScope,$timeout,Au
 			"userId": $scope.user.email,
 			"password": $scope.user.password
 		}
+		$localStorage.userId = $scope.user.email;
+		$localStorage.password = $scope.user.password,
 		$rootScope.showPreloader = true;
       	AuthorizeService.login(obj).then(function (response) {
       		$rootScope.showPreloader = false;
+			$rootScope.$emit('login-success');
       		if(response.data.StatusCode == 200){
+				if($scope.user.remember){
+					$localStorage.user = {
+						"uname" : $scope.user.email,
+						"password": $scope.user.password
+					}
+				}
       			$state.go('signedDoctor');
       		}
       	})
   	}
+	$scope.initLogin = function(){
+		$scope.user = {};
+		$scope.user.email = ($localStorage.user) ? $localStorage.user.uname : '';
+		$scope.user.password = ($localStorage.user) ? $localStorage.user.password : '';
+	}
 });

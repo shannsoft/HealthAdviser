@@ -7,7 +7,7 @@
 		</div>
 	</div>
 </section>
-<section class="page-section padd-v-60">
+<section class="page-section padd-v-60" ng-init="initLogin()">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-6">
@@ -23,7 +23,7 @@
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="checkbox check-black">
-								<input type="checkbox" value="6" id="checkbox6">
+								<input type="checkbox" value="6" id="checkbox6" ng-model="user.remember">
 								<label for="checkbox6">Remember me</label>
 							</div>
 						</div>

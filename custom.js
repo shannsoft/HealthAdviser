@@ -108,7 +108,7 @@ app.constant('CONFIG', {
 }]);
 app.constant("HEALTH_ADVISER",function(){
 	ACCESS_TOKEN_EXPIRES_IN:300
-});app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "AuthorizeService", "$state", function($scope,$rootScope,$timeout,AuthorizeService,$state){
+});app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "AuthorizeService", "$state", "$localStorage", function($scope,$rootScope,$timeout,AuthorizeService,$state,$localStorage){
 	$scope.user = {};
 	google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
@@ -202,14 +202,28 @@ app.constant("HEALTH_ADVISER",function(){
 			"userId": $scope.user.email,
 			"password": $scope.user.password
 		}
+		$localStorage.userId = $scope.user.email;
+		$localStorage.password = $scope.user.password,
 		$rootScope.showPreloader = true;
       	AuthorizeService.login(obj).then(function (response) {
       		$rootScope.showPreloader = false;
+			$rootScope.$emit('login-success');
       		if(response.data.StatusCode == 200){
+				if($scope.user.remember){
+					$localStorage.user = {
+						"uname" : $scope.user.email,
+						"password": $scope.user.password
+					}
+				}
       			$state.go('signedDoctor');
       		}
       	})
   	}
+	$scope.initLogin = function(){
+		$scope.user = {};
+		$scope.user.email = ($localStorage.user) ? $localStorage.user.uname : '';
+		$scope.user.password = ($localStorage.user) ? $localStorage.user.password : '';
+	}
 }]);;app.controller("CommonController",["$scope", "$rootScope", "CommonService", "Util", function($scope,$rootScope,CommonService,Util){
 	$scope.contact = {};
 	$scope.sendEnquiry = function(){
