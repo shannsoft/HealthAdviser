@@ -1,0 +1,36 @@
+<section class="inner-banner-section" ng-init="homeInit(true)">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4">
+				<div class="form-group">
+					<i class="fa fa-map-marker map-marker-icon"></i>
+					<input type="text" class="form-control" id="main_loc" placeholder="Location" ng-model="home.location" required>
+					<i class="fa fa-close input-icon" ng-click="clearInputs('loc')"></i>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group auto-complete" ng-init="getSpecializationList();">
+					<i class="fa fa-search search-icon"></i>
+					<input class="form-control" name="specialize" type="text" placeholder="Choose Specialization" ng-model="home.doctorName" typeahead="spe for spe in specialization | filter:$viewValue" class="form-control">
+					<i class="fa fa-close input-icon" ng-click="clearInputs('name')"></i>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<a href="" class="btn btn-red btn-md text-u-c">Search</a>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="page-section padd-v-60" ng-init="initSpecialization()">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="doctor-specialized">
+					<img ng-src="{{specializationDetails.image}}" alt="">
+					<h3>{{specializationDetails.name}}</h3>
+					{{specializationDetails.description}}
+				 </div>
+			</div>
+		</div>
+	</div>
+</section>
