@@ -1,7 +1,7 @@
 app.controller("CommonController",function($scope,$rootScope,CommonService,Util){
-	$scope.contact = {};
-	
-	/****************************************************************************/
+		$scope.contact = {};
+
+		/****************************************************************************/
     /*******************FUNCTION USE FOR SEND ENQUIRY DETAILS********************/
   	/****************************************************************************/
 	$scope.sendEnquiry = function(){

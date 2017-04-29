@@ -49,10 +49,54 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
   			$rootScope.showPreloader = false;
   			if(response.data.StatusCode == 200)
   				$scope.profileDetails = response.data.Data.result;
-  			$scope.initMapLocation();
+  				$scope.initMapLocation();
   		},function(error){
   			$rootScope.showPreloader = false;
   		})
+  	}
+    /****************************************************************************/
+    /*************FUNCTION USE FOR LOAD THE Specialization list******************/
+  	/****************************************************************************/
+  	$scope.loadSpecialization = function(){
+			CommonService.specialization().then(function(response){
+				if(response.data.StatusCode == 200){
+					$scope.specializationList = [];
+					angular.forEach(response.data.Data, function(item){
+						$scope.specializationList.push(item.name);
+					});
+				}
+			},function(errot){
+			})
+  	}
+    /****************************************************************************/
+    /**************FUNCTION USE FOR LOAD THE LANGUAGE LIST***********************/
+  	/****************************************************************************/
+  	$scope.loadLanguages = function(){
+			CommonService.languages().then(function(response){
+				if(response.data.StatusCode == 200){
+					$scope.languages = [];
+					angular.forEach(response.data.Data,function(item){
+						$scope.languages.push(item.name);
+					});
+				}
+			},function(error){
+			})
+  	}
+    /****************************************************************************/
+    /**************FUNCTION USE FOR LOAD THE LANGUAGE LIST***********************/
+  	/****************************************************************************/
+  	$scope.updateSpecialization = function(){
+			var obj = {};
+			obj.specializationOn = $scope.doctor.specialization;
+			obj.yearsOfExperience = $scope.doctor.year;
+			$scope.profileDetails.specialization.push(obj);
+			$scope.doctor = {};
+  	}
+    /****************************************************************************/
+    /**************FUNCTION USE FOR LOAD THE LANGUAGE LIST***********************/
+  	/****************************************************************************/
+  	$scope.clearSpecializationOn = function(index){
+			$scope.profileDetails.specialization.splice(index,1);
   	}
   	/****************************************************************************/
     /**************FUNCTION USE FOR LOAD THE GOOGLE MAPADDRESS*******************/

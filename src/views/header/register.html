@@ -34,7 +34,7 @@
 							<input type="text" class="form-control" name="email" placeholder="Email" required ng-model="user.email" ng-pattern="/^[a-z]+[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}$/" ng-blur="validateUserInfo(user.email)">
 							<span class="color-red" ng-if="regFrm.email.$touched && regFrm.email.$error.required">Please enter your mail</span>
 							<span class="color-red" ng-if="regFrm.email.$touched && regFrm.email.$error.pattern">Please enter valid mail id</span>
-							<span class="color-red" ng-if="isExist">Mail already Exist</span>	
+							<span class="color-red" ng-if="isExist">Mail already Exist</span>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
@@ -91,7 +91,7 @@
 							</div>
 						</div>
 						<div class="form-group text-right">
-							<button ng-disabled="regFrm.$invalid || showPasswordMisMatch || isExist" class="btn btn-blue btn-md text-u-c m-r-5" ng-click="register()">Send <i class="fa fa-send-o"></i></button>
+							<button ng-disabled="regFrm.$invalid || showPasswordMisMatch || isExist" class="btn btn-blue btn-md text-u-c m-r-5" ng-click="register()">Register <i class="fa fa-send-o"></i></button>
 						</div>
 						<div class="gray-line-sm"></div>
 						<div class="clearfix">

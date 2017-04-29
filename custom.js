@@ -119,7 +119,7 @@ app.constant('CONFIG', {
 app.constant("HEALTH_ADVISER",function(){
 	ACCESS_TOKEN_EXPIRES_IN:300
 });
-app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "AuthorizeService", "$state", "DoctorDetailsService", "$state", "$localStorage", function($scope,$rootScope,$timeout,AuthorizeService,$state,DoctorDetailsService,$state,$localStorage){
+app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "Util", "AuthorizeService", "$state", "DoctorDetailsService", "$state", "$localStorage", function($scope,$rootScope,$timeout,Util,AuthorizeService,$state,DoctorDetailsService,$state,$localStorage){
 	$scope.user = {};
 	google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
@@ -141,7 +141,6 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 		}
 	}
 	function populateAddressFields(place) {
-		console.log(place);
 	    if (place.geometry) {
 	      $scope.user.latLng = place.geometry.location.lat() + "," + place.geometry.location.lng();
 	    }
@@ -192,28 +191,30 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 	    $rootScope.showPreloader = true;
 	    AuthorizeService.register(userData).then(function (response) {
 	    	$rootScope.showPreloader = false;
-	    	console.log(response)
           if(response.data.StatusCode == 200){
           	var obj = {
-   				"userId": $scope.user.email,
-				"password": $scope.user.password
-   			}
+		   				"userId": $scope.user.email,
+							"password": $scope.user.password
+		   			}
           	AuthorizeService.login(obj).then(function (response) {
           		$rootScope.$emit('login-success');
           		if($scope.user.isDoctor == true){
-				    $state.go('doctor-verify');
+				    	$state.go('doctor-verify');
           		}
           		else{
 
           		}
           	},function(error){
-
+							$rootScope.showPreloader = false;
+							Util.alertMessage('danger',"Something went wrong! unable to register");
           	})
           }
           else{
-          	
+						Util.alertMessage('danger',"Something went wrong! unable to register");
           }
       	}, function (errorResponse) {
+					$rootScope.showPreloader = false;
+          Util.alertMessage('danger',"Something went wrong! unable to register");
       	});
 	}
   	$scope.login = function(){
@@ -226,17 +227,23 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 		$rootScope.showPreloader = true;
       	AuthorizeService.login(obj).then(function (response) {
       		$rootScope.showPreloader = false;
-			$rootScope.$emit('login-success');
+					$rootScope.$emit('login-success');
       		if(response.data.StatusCode == 200){
-				if($scope.user.remember){
-					$localStorage.user = {
-						"uname" : $scope.user.email,
-						"password": $scope.user.password
-					}
-				}
+						if($scope.user.remember){
+							$localStorage.user = {
+								"uname" : $scope.user.email,
+								"password": $scope.user.password
+							}
+						}
       			$state.go('signedDoctor');
       		}
-      	})
+					else{
+						Util.alertMessage('danger',"Something went wrong! unable to login");
+					}
+      	},function(error){
+					$rootScope.showPreloader = false;
+					Util.alertMessage('danger',"Authentication faild");
+				})
   	}
 	$scope.initLogin = function(){
 		$scope.user = {};
@@ -244,8 +251,9 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 		$scope.user.password = ($localStorage.user) ? $localStorage.user.password : '';
 	}
 
-}]);;app.controller("CommonController",["$scope", "$rootScope", "CommonService", "Util", function($scope,$rootScope,CommonService,Util){
-	$scope.contact = {};
+}]);
+;app.controller("CommonController",["$scope", "$rootScope", "CommonService", "Util", function($scope,$rootScope,CommonService,Util){
+		$scope.contact = {};
 	$scope.sendEnquiry = function(){
 		$scope.contact.actType = "I";
 		$rootScope.showPreloader = true;
@@ -259,7 +267,8 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 			$rootScope.showPreloader = false;
 		})
 	}
-}]);app.controller("SpecializationController", ["$scope", "$rootScope", "CommonService", function($scope,$rootScope,CommonService){
+}])
+;app.controller("SpecializationController", ["$scope", "$rootScope", "CommonService", function($scope,$rootScope,CommonService){
 	$scope.getSpecializationList = function(){
 		$rootScope.showPreloader = true;
 		CommonService.specialization().then(function(response){
@@ -393,10 +402,42 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
   			$rootScope.showPreloader = false;
   			if(response.data.StatusCode == 200)
   				$scope.profileDetails = response.data.Data.result;
-  			$scope.initMapLocation();
+  				$scope.initMapLocation();
   		},function(error){
   			$rootScope.showPreloader = false;
   		})
+  	}
+  	$scope.loadSpecialization = function(){
+			CommonService.specialization().then(function(response){
+				if(response.data.StatusCode == 200){
+					$scope.specializationList = [];
+					angular.forEach(response.data.Data, function(item){
+						$scope.specializationList.push(item.name);
+					});
+				}
+			},function(errot){
+			})
+  	}
+  	$scope.loadLanguages = function(){
+			CommonService.languages().then(function(response){
+				if(response.data.StatusCode == 200){
+					$scope.languages = [];
+					angular.forEach(response.data.Data,function(item){
+						$scope.languages.push(item.name);
+					});
+				}
+			},function(error){
+			})
+  	}
+  	$scope.updateSpecialization = function(){
+			var obj = {};
+			obj.specializationOn = $scope.doctor.specialization;
+			obj.yearsOfExperience = $scope.doctor.year;
+			$scope.profileDetails.specialization.push(obj);
+			$scope.doctor = {};
+  	}
+  	$scope.clearSpecializationOn = function(index){
+			$scope.profileDetails.specialization.splice(index,1);
   	}
   	var options = {
         componentRestrictions: {country: "IN"}
@@ -435,7 +476,8 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
             }
         }
 	}
-}]);app.controller('DoctorsController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorModel", "$state", "orderByFilter", function($scope,$rootScope,DoctorService,$stateParams,DoctorModel,$state,orderByFilter){
+}])
+;app.controller('DoctorsController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorModel", "$state", "orderByFilter", function($scope,$rootScope,DoctorService,$stateParams,DoctorModel,$state,orderByFilter){
 	$scope.compareDoctorArr = [{}, {}, {}, {}];
 	var map;
 	var directionService;
@@ -986,11 +1028,12 @@ app.filter('phonenumber', function() {
 		if(HealthAuth['currentUserId']){
 			var scheduleTime = moment(HealthAuth['expireTime']).local().format()
     		var now = moment().local().format();
-    		console.log(moment(scheduleTime).diff(now));
     		if(moment(scheduleTime).diff(now) < 0 ){
 	          logout().then(function(response){
+							$rootScope.$emit('login-success');
 	          	$state.go('login');
 	          },function(error){
+							$rootScope.$emit('login-success');
 	          	$state.go('login');
 	          })
 	        }
@@ -1120,7 +1163,8 @@ app.factory("HealthAuth",["HEALTH_ADVISER", function(HEALTH_ADVISER){
         storage[key] = value;
     }
     return new HealthAuth();
-}]);app.factory("CommonService", ["$http", "$q", "CONFIG", "HealthAuth", function ($http,$q,CONFIG,HealthAuth) {
+}])
+;app.factory("CommonService", ["$http", "$q", "CONFIG", "HealthAuth", function ($http,$q,CONFIG,HealthAuth) {
   return{
     fetchLocation: function(params) {
       var response = $http.get(params);
@@ -1143,13 +1187,21 @@ app.factory("HealthAuth",["HEALTH_ADVISER", function(HEALTH_ADVISER){
       });
       return response;
     },
+    languages : function(){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.API_PATH+'_ENUM_Language',
+          headers: {'Server': CONFIG.SERVER_PATH}
+      });
+      return response;
+    },
     userDetails : function(){
       var response = $http({
           method: 'GET',
           url: CONFIG.API_PATH+'_UserData',
           headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
       });
-      return response;    
+      return response;
     }
   }
 }]);

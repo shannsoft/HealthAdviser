@@ -23,7 +23,7 @@
 					  	<div id="collapseOne" class="panel-collapse collapse in" uib-collapse="signupCollapse.aboutme">
 							<div class="panel-body padd-0">
 								<ul class="nav nav-tabs nav-collapse">
-								  	<li role=presentation  id="l1" class=active><a href=""  ng-click="showtab('basic-tab')" id="basic-tab" role=tab data-toggle=tab aria-controls=basic aria-expanded=true>Basic Profile</a></li>
+								  <li role=presentation  id="l1" class=active><a href=""  ng-click="showtab('basic-tab')" id="basic-tab" role=tab data-toggle=tab aria-controls=basic aria-expanded=true>Basic Profile</a></li>
 									<li role=presentation  id="l2" ><a  href="" ng-click="showtab('specialization-tab')" role=tab id="specialization-tab" data-toggle=tab aria-controls=specialization>Specialization</a></li>
 									<li role=presentation  id="l3"><a   href="" ng-click="showtab('social-tab')" role=tab id="social-tab" data-toggle=tab aria-controls=social> Social Media</a></li>
 								</ul>
@@ -32,8 +32,8 @@
 										<div class="row">
 										  	<div class="col-sm-3">
 											  	<div class="profile-upload">
-												<!-- <h1>SM</h1> -->
-													<img class="img-responsive" src="images/doctor/doctor-1.jpg">
+													<h1 ng-if="!profileDetails.photo">{{profileDetails.profile.name | getShortName}}</h1>
+													<img ng-if="profileDetails.photo" class="img-responsive" src="{{profileDetails.photo}}">
 											  	</div>
 												<div class="row">
 													<div class="col-sm-12 m-t-10 text-center">
@@ -79,7 +79,7 @@
 													            </div>
 													            <div class="col-md-4">
 													            <input type="number" class="form-control" id="" placeholder="">
-													            </div>	
+													            </div>
 															</div>
 														</div>
 													</div>
@@ -122,44 +122,37 @@
 									</div>
 							  	</div>
 							  	<div role=tabpanel id="div_specialization-tab" class="tab-pane"  aria-labelledby=specialization-tab>
-									
-									
-									<div class="row">
+
+
+									<div class="row" ng-init="loadSpecialization();">
 										<div class="col-sm-5">
 											<div class="form-group">
-												<label>Practice Areas</label>
-												<input type="text" class="form-control" id="" placeholder="Choose Practice Area">
+												<label>Specialization</label>
+												<input class="form-control" name="specialize" type="text" placeholder="Choose Specialization" ng-model="doctor.specialization" typeahead="spe for spe in specializationList | filter:$viewValue" class="form-control">
 											</div>
 										</div>
 										<div class="col-sm-5">
 											<div class="form-group">
-												<label>Practice Area By Years</label>
-												<input type="text" class="form-control" id="" placeholder="Enter Practice Area Year">
+												<label>Specialization Years</label>
+												<input type="number" class="form-control" id="" placeholder="Enter Specialization Year" ng-model="doctor.year">
 											</div>
 										</div>
 										<div class="col-sm-2">
-											<button class="btn btn-blue spec-ok-btn"><i class="fa fa-check"></i></button>
+											<button ng-disabled="!doctor.specialization || !doctor.year" class="btn btn-blue spec-ok-btn" ng-click="updateSpecialization()"><i class="fa fa-check"></i></button>
 										</div>
 										<div class="col-sm-11">
 											<table class="table table-striped">
-												<tbody>
+												<tbody ng-repeat="spe in profileDetails.specialization">
 													<tr>
-														<td style="width:70%; vertical-align:middle;">Trusts And Estates</td>
-														<td style="width:20%; vertical-align:middle;">2</td>
-														<td align="right" style="padding: 8px 22px;"><button class="btn btn-danger spec-danger-btn"><i class="fa fa-close"></i></button></td>
-													</tr>
-												</tbody>
-												<tbody>
-													<tr>
-														<td style="width:70%; vertical-align:middle;">Personal Injury</td>
-														<td style="width:20%; vertical-align:middle;">3</td>
-														<td align="right" style="padding: 8px 22px;"><button class="btn btn-danger spec-danger-btn"><i class="fa fa-close"></i></button></td>
+														<td style="width:70%; vertical-align:middle;">{{spe.specializationOn}}</td>
+														<td style="width:20%; vertical-align:middle;">{{spe.yearsOfExperience}}</td>
+														<td align="right" style="padding: 8px 22px;"><button ng-click="clearSpecializationOn($index)"class="btn btn-danger spec-danger-btn"><i class="fa fa-close"></i></button></td>
 													</tr>
 												</tbody>
 											</table>
 										</div>
-										
-										
+
+
 									</div>
 									<div class="row">
 										<div class="col-sm-6">
@@ -168,7 +161,7 @@
 												<input type="text" class="form-control" id="" placeholder="Choose Practice Area">
 											</div>
 										</div>
-										<div class="col-sm-6">
+										<div class="col-sm-6" ng-init="loadLanguages();">
 											<div class="form-group">
 												<label>Enter Languages</label>
 												<input type="text" class="form-control" id="" placeholder="Enter Practice Area Year">
@@ -207,7 +200,7 @@
 					  	</div>
 					  	<div id="collapseTwo" class="panel-collapse collapse" uib-collapse="signupCollapse.workExperiance">
 							<div class="panel-body">
-									
+
 								<div class="tab-custom-icon">
 									<a href=""><i class="fa fa-edit"></i> </a>
 									<a href=""><i class="fa fa-trash"></i> </a>
@@ -254,7 +247,7 @@
 											</div>
 										</div>
 									</div>
-									<div class="row">	
+									<div class="row">
 										<div class="col-sm-12 m-t-10 text-right">
 										  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
 										  <button class="btn btn-red btn-md text-u-c">Cancel</button>
@@ -364,9 +357,9 @@
 												<label>Awarded Year</label>
 												<input type="text" class="form-control" id="" placeholder="">
 											</div>
-										</div>	
+										</div>
 									</div>
-									<div class="row">									
+									<div class="row">
 										<div class="col-sm-12 m-t-10 text-right">
 										  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
 										  <button class="btn btn-red btn-md text-u-c">Cancel</button>

@@ -4,11 +4,12 @@ app.factory("AuthorizeService", function($http,CONFIG,$q,HEALTH_ADVISER,$interva
 		if(HealthAuth['currentUserId']){
 			var scheduleTime = moment(HealthAuth['expireTime']).local().format()
     		var now = moment().local().format();
-    		console.log(moment(scheduleTime).diff(now));
     		if(moment(scheduleTime).diff(now) < 0 ){
 	          logout().then(function(response){
+							$rootScope.$emit('login-success');
 	          	$state.go('login');
 	          },function(error){
+							$rootScope.$emit('login-success');
 	          	$state.go('login');
 	          })
 	        }

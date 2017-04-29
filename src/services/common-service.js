@@ -21,13 +21,21 @@ app.factory("CommonService", function ($http,$q,CONFIG,HealthAuth) {
       });
       return response;
     },
+    languages : function(){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.API_PATH+'_ENUM_Language',
+          headers: {'Server': CONFIG.SERVER_PATH}
+      });
+      return response;
+    },
     userDetails : function(){
       var response = $http({
           method: 'GET',
           url: CONFIG.API_PATH+'_UserData',
           headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
       });
-      return response;    
+      return response;
     }
   }
 });
