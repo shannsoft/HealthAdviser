@@ -147,4 +147,5 @@ app.controller('AuthenticationController',function($scope,$rootScope,$timeout,Au
 		$scope.user.email = ($localStorage.user) ? $localStorage.user.uname : '';
 		$scope.user.password = ($localStorage.user) ? $localStorage.user.password : '';
 	}
+
 });

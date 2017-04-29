@@ -243,6 +243,7 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 		$scope.user.email = ($localStorage.user) ? $localStorage.user.uname : '';
 		$scope.user.password = ($localStorage.user) ? $localStorage.user.password : '';
 	}
+
 }]);;app.controller("CommonController",["$scope", "$rootScope", "CommonService", "Util", function($scope,$rootScope,CommonService,Util){
 	$scope.contact = {};
 	$scope.sendEnquiry = function(){

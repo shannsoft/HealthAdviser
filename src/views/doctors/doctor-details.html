@@ -64,7 +64,11 @@
 					<div class="address-block">
 						<p class="text-u-c"><i class="fa fa-user"></i> Social Profile</p>
 						<ul class="social-address">
-							<li ng-repeat="social in doctorDetails.socialLink"><a href="{{social.url}}"><i class="fa {{social.image}}"></i></a></li>
+							<li ng-if=doctorDetails.socialLink.FACEBOOK><a href="{{doctorDetails.socialLink.FACEBOOK}}" target="_blank"><i class="fa fa-facebook"></i></a></li>
+							<li ng-if=doctorDetails.socialLink.TWITTER><a href="{{doctorDetails.socialLink.TWITTER}}" target="_blank"><i class="fa fa-twitter"></i></a></li>
+							<li ng-if=doctorDetails.socialLink.GPLUS><a href="{{doctorDetails.socialLink.GPLUS}}" target="_blank"><i class="fa fa-google-plus"></i></a></li>
+							<li ng-if=doctorDetails.socialLink.PINTEREST><a href="{{doctorDetails.socialLink.PINTEREST}}" target="_blank"><i class="fa fa-pinterest"></i></a></li>
+							<li ng-if=doctorDetails.socialLink.LINKEDIN><a href="{{doctorDetails.socialLink.LINKEDIN}}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
 						<ul>
 					</div>
 					<div class="clearfix m-t-30">
