@@ -41,9 +41,11 @@
 						<address>{{doctorDetails.address.formatted}}</address>
 					</div>
 					<div class="address-line"></div>
-					<div class="address-block" ng-repeat="time in doctorDetails.timing">
-						<p class="text-u-c"><i class="fa fa-clock-o"></i>{{time.day}}</p>
-						{{time.from}} - {{time.to}}
+					<div class="address-block">
+						<div class="clearfix m-b-10" ng-repeat="time in doctorDetails.timing">
+							<strong class="text-u-c clearfix block">{{time.day}}</strong>
+							<span>{{time.from}} - {{time.to}}</span>
+						</div>
 					</div>
 					<div class="address-line" ng-if="doctorDetails.phone.length > 0"></div>
 					<div class="address-block" ng-if="doctorDetails.phone.length > 0">
@@ -132,6 +134,84 @@
 				</div>
 				<div class="details-cardbox m-b-20">
 					<div class="head">
+						<h3>License</h3>
+					</div>
+					<div class="content">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="profile-licence-box">
+									<dl class="dl-horizontal">
+										<dt>State :</dt>
+										<dd>Andhra</dd>
+									</dl>
+									<dl class="dl-horizontal">
+										<dt>Status :</dt>
+										<dd>active</dd>
+									</dl>
+									<dl class="dl-horizontal">
+										<dt>Issue On :</dt>
+										<dd>2016-12-28</dd>
+									</dl>
+									<dl class="dl-horizontal">
+										<dt>Updated Date :</dt>
+										<dd>2017-02-01</dd>
+									</dl>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="profile-licence-box">
+									<dl class="dl-horizontal">
+										<dt>State :</dt>
+										<dd>Andhra</dd>
+									</dl>
+									<dl class="dl-horizontal">
+										<dt>Status :</dt>
+										<dd>active</dd>
+									</dl>
+									<dl class="dl-horizontal">
+										<dt>Issue On :</dt>
+										<dd>2016-12-28</dd>
+									</dl>
+									<dl class="dl-horizontal">
+										<dt>Updated Date :</dt>
+										<dd>2017-02-01</dd>
+									</dl>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="details-cardbox m-b-20">
+					<div class="head">
+						<h3>Association</h3>
+					</div>
+					<div class="content">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="profile-licence-box">
+									<h4>LC Linked Data Service</h4>
+									<dl class="dl-horizontal">
+										<dt>Position :</dt>
+										<dd>sdgsdfg </dd>
+									</dl>
+									<dl class="dl-horizontal">
+										<dt>Start Month/Year :</dt>
+										<dd>2016-11-28</dd>
+									</dl>
+									<dl class="dl-horizontal">
+										<dt>End Month/Year :</dt>
+										<dd>2016-12-28</dd>
+									</dl>
+								
+								</div>
+							</div>
+						
+						</div>
+					</div>
+				</div>
+				
+				<div class="details-cardbox m-b-20">
+					<div class="head">
 						<h3>Reviews</h3>
 					</div>
 					<div class="content">
@@ -166,8 +246,8 @@
 						<div ng-repeat="award in doctorDetails.award">
 							<div class="row" >
 								<div class="col-sm-4">
-									<img ng-if="!award.image" src="images/award-1.jpg" />
-									<img ng-if="award.image" src="{{award.image}}" />
+									<img ng-if="!award.image" class="full-width" src="images/award-1.jpg" />
+									<img ng-if="award.image" class="full-width" src="{{award.image}}" />
 								</div>
 								<div class="col-sm-8">
 									<div class="award-content">

@@ -12,7 +12,7 @@
 		<div class="row">
 			<div class="col-sm-12 doctor-directory">
 				 <ul class="state-place-list">
-					<li ng-repeat="spe in specializationList"><a href=""><i class="fa fa-square"></i>{{spe.name}}</a></li>
+					<li ng-repeat="spe in specializationList"><a href="" ng-click="gotoSpecializationDetails(spe.name)"><i class="fa fa-square"></i>{{spe.name}}</a></li>
 				 </ul>
 			</div>
 		</div>

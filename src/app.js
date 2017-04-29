@@ -37,6 +37,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
     url: '/specialization',
     controller:'SpecializationController'
   })
+  .state('specialization-details', {
+    templateUrl: 'src/views/common/sepcialization-details.html',
+    url: '/specialization-details',
+    controller:'SpecializationController'
+  })
   .state('contact-us', {
     templateUrl: 'src/views/common/contact-us.html',
     url: '/contact-us',

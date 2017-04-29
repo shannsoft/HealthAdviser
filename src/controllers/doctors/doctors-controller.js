@@ -185,7 +185,7 @@ app.controller('DoctorsController',function($scope,$rootScope,DoctorService,$sta
         return new Array(parseInt(n));
     };
     $scope.sortList = function () {
-    	var ascending = ($scope.filter.sorting == 'profile.name') ? false : true;
+    	var ascending = ($scope.filter.sorting == 'profile.name' || $scope.filter.sorting == 'distance') ? false : true;
 	    $scope.doctorList.result = orderByFilter($scope.doctorList.result, $scope.filter.sorting, ascending);
     };
     /*******************************************************************************************/

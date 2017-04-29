@@ -21,6 +21,14 @@ app.factory("CommonService", function ($http,$q,CONFIG,HealthAuth) {
       });
       return response;
     },
+    specializationDetails : function(name){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.API_PATH+'_ENUM_Specialization?descRequired=true&specializationName='+name,
+          headers: {'Server': CONFIG.SERVER_PATH}
+      });
+      return response;
+    },
     languages : function(){
       var response = $http({
           method: 'GET',

@@ -91,7 +91,8 @@
 									<ul>
 										<li>{{doctor.yearsOfExperience}} years Experience</li>
 										<li ng-if="!doctor.consulation.is_free_consultation"><span class="font-bold">Fees</span> - INR  {{doctor.consulation.fees}} /-</li>
-										<li ng-if="doctor.consulation.is_free_consultation"><span class="font-bold">Free Consulation</li>
+										<li ng-if="doctor.consulation.is_free_consultation"><span class="font-bold">Free Consulation</span></li>
+										<li><span class="font-bold">Distance :</span>{{doctor.distance}}</li>
 									</ul>
 								</div>
 								<a href="book-appointment.html" class="btn btn-blue btn-sm text-u-c">Book Appointment</a>
@@ -185,7 +186,7 @@
 						<li ng-repeat="comDoc in compareDoctorArr">
 							<a class="buttonCloseIcon" href="" ng-if="comDoc.userCode" ng-click="closeDoctorCompare($index)"><i class="fa fa-close"></i></a> 
 							<a href="">
-								<img class="img-responsive" ng-if="comDoc.photo" src="comDoc.photo">
+								<img class="img-responsive" ng-if="comDoc.photo" src="{{comDoc.photo}}">
 								<span class="doctor-alfa" ng-if="!comDoc.photo">{{comDoc.profile.name | getShortName}}</span>
 							</a> 
 							<span class="text-ellipsis">{{comDoc.profile.name}}</span>
