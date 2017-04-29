@@ -68,12 +68,14 @@
 														<div class="form-group">
 															<label class="control-label">Can Provide Free Consulation?</label>
 															<div class="row">
-																<div class="onoffswitch h-40 col-md-8">
-													                <input type="checkbox" ng-model="lawyerProfile.consultation.free_consultation" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
-													                <label class="onoffswitch-label" for="myonoffswitch">
-													                    <span class="onoffswitch-inner"></span>
-													                    <span class="onoffswitch-switch"></span>
-													                </label>
+																<div class="h-40 col-md-3">
+																	<div class="onoffswitch">
+																		<input type="checkbox" ng-model="lawyerProfile.consultation.free_consultation" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+																		<label class="onoffswitch-label" for="myonoffswitch">
+																			<span class="onoffswitch-inner"></span>
+																			<span class="onoffswitch-switch"></span>
+																		</label>
+																	</div>
 													            </div>
 													            <div class="col-md-4">
 													            <input type="number" class="form-control" id="" placeholder="">
@@ -120,30 +122,55 @@
 									</div>
 							  	</div>
 							  	<div role=tabpanel id="div_specialization-tab" class="tab-pane"  aria-labelledby=specialization-tab>
+									
+									
 									<div class="row">
-										<div class="col-sm-6">
+										<div class="col-sm-5">
 											<div class="form-group">
 												<label>Practice Areas</label>
 												<input type="text" class="form-control" id="" placeholder="Choose Practice Area">
 											</div>
 										</div>
-										<div class="col-sm-6">
+										<div class="col-sm-5">
 											<div class="form-group">
 												<label>Practice Area By Years</label>
 												<input type="text" class="form-control" id="" placeholder="Enter Practice Area Year">
 											</div>
 										</div>
+										<div class="col-sm-2">
+											<button class="btn btn-blue spec-ok-btn"><i class="fa fa-check"></i></button>
+										</div>
+										<div class="col-sm-11">
+											<table class="table table-striped">
+												<tbody>
+													<tr>
+														<td style="width:70%; vertical-align:middle;">Trusts And Estates</td>
+														<td style="width:20%; vertical-align:middle;">2</td>
+														<td align="right" style="padding: 8px 22px;"><button class="btn btn-danger spec-danger-btn"><i class="fa fa-close"></i></button></td>
+													</tr>
+												</tbody>
+												<tbody>
+													<tr>
+														<td style="width:70%; vertical-align:middle;">Personal Injury</td>
+														<td style="width:20%; vertical-align:middle;">3</td>
+														<td align="right" style="padding: 8px 22px;"><button class="btn btn-danger spec-danger-btn"><i class="fa fa-close"></i></button></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										
+										
 									</div>
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label>Practice Areas</label>
+												<label>Year of Experience</label>
 												<input type="text" class="form-control" id="" placeholder="Choose Practice Area">
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label>Practice Area By Years</label>
+												<label>Enter Languages</label>
 												<input type="text" class="form-control" id="" placeholder="Enter Practice Area Year">
 											</div>
 										</div>
@@ -151,7 +178,7 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="form-group">
-												<label>Practice Area By Years</label>
+												<label>Life Event</label>
 												<input type="text" class="form-control" id="" placeholder="Enter Practice Area Year">
 											</div>
 										</div>
@@ -180,9 +207,15 @@
 					  	</div>
 					  	<div id="collapseTwo" class="panel-collapse collapse" uib-collapse="signupCollapse.workExperiance">
 							<div class="panel-body">
+									
 								<div class="tab-custom-icon">
 									<a href=""><i class="fa fa-edit"></i> </a>
 									<a href=""><i class="fa fa-trash"></i> </a>
+								</div>
+								<div class="form-block-wrap">
+									<h3 class="pull-left">Teknobiz</h3>
+									<span class="pull-right">2016, January</span>
+									<p class="p-t-40">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam maximus fringilla libero, non volutpat mi pretium sit amet. Aenean odio erat, commodo ut metus vel, malesuada mollis ipsum. Phasellus quis nunc a nibh gravida faucibus. </p>
 								</div>
 								<div class="form-block-wrap">
 									<div class="row">

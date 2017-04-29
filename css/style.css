@@ -1353,12 +1353,7 @@ a:hover{ color:#000;}
 .tab-content{
 	padding:20px;
 }
-.form-block-wrap {
-    background: #f4f9ff;
-    padding: 20px;
-    display: block;
-    clear: both;
-}
+
 .profile-upload{
 	position:relative;
 }
@@ -2106,7 +2101,7 @@ dl {
 }
 
 .headermenu .dropdown-menu li a:hover {
-   background: #15c4f0;
+   background: #0088a4;
    color: #fff;
 }
 
@@ -2165,4 +2160,51 @@ dl {
    background: none;
    color: #428BCA;
 	text-decoration: none;
+}
+.form-block-wrap{
+	background:#f4f9ff;
+	padding:20px;
+	margin-bottom:30px;
+	display: block;
+    clear: both;
+	position:relative;
+}
+.form-block-wrap h3{
+	margin:0;
+	padding:0;
+}
+.form-block-wrap h3:after{
+	top: 58px;
+    content: "";
+    height: 2px;
+    left: 2%;
+    position: absolute;
+    width: 100px;
+    background-color: #8795a1;
+}
+.form-block-wrap p{
+	clear:both;
+	display:block;
+}
+.form-block-wrap .checkbox label::after {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    left: 3.2px;
+    top: -2px;
+    font-size: 11px;
+    transition: border 0.2s linear 0s,color 0.2s linear 0s;
+}
+.p-t-40{
+	padding-top:40px;
+}
+.spec-ok-btn{
+	height: 42px;
+    line-height: 29px;
+    margin-top: 28px;
+}
+.spec-danger-btn{
+	height: 42px;
+    line-height: 29px;
 }
