@@ -1,4 +1,4 @@
-app.factory("CommonService", function ($http,$q,CONFIG) {
+app.factory("CommonService", function ($http,$q,CONFIG,HealthAuth) {
   return{
     fetchLocation: function(params) {
       var response = $http.get(params);
@@ -20,6 +20,14 @@ app.factory("CommonService", function ($http,$q,CONFIG) {
           headers: {'Server': CONFIG.SERVER_PATH}
       });
       return response;
+    },
+    userDetails : function(){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.API_PATH+'_UserData',
+          headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
+      });
+      return response;    
     }
   }
 });

@@ -1,4 +1,5 @@
-app.controller('AuthenticationController',function($scope,$rootScope,$timeout,AuthorizeService,$state,$localStorage){
+
+app.controller('AuthenticationController',function($scope,$rootScope,$timeout,AuthorizeService,$state,DoctorDetailsService,$state,$localStorage){
 	$scope.user = {};
 	google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
@@ -92,7 +93,21 @@ app.controller('AuthenticationController',function($scope,$rootScope,$timeout,Au
 				"password": $scope.user.password
    			}
           	AuthorizeService.login(obj).then(function (response) {
-          		console.log(response);
+          		$rootScope.$emit('login-success');
+          		if($scope.user.isDoctor == true){
+     		 		//	DoctorDetailsService.doctorDetails().then(function(response){
+				    //     $rootScope.showPreloader = false;
+				    //     $scope.doctorDetails = response.data.Data.result;
+				    //     console.log(response.data.Data);
+				    //     $scope.initMap($scope.doctorDetails.address);
+				    // })
+				    $state.go('doctor-verify');
+          		}
+          		else{
+
+          		}
+          	},function(error){
+
           	})
           }
           else{

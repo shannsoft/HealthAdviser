@@ -1,4 +1,4 @@
-app.controller('MainController',function($scope,$rootScope,CommonService,Config,$timeout,$state,DoctorService){
+app.controller('MainController',function($scope,$rootScope,CommonService,Config,$timeout,$state,DoctorService,$timeout,HealthAuth,DoctorDetailsService,AuthorizeService){
 	/****************************************************************************/
     /****************fUNCTION USE FOR FIRE A EVENT TO JAVASCRIPT*****************/
   	/****************************************************************************/
@@ -11,6 +11,67 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
   	$rootScope.$on('SESSION_EXPIRED',function(){
   		alert('Sesstion Expired');
   	})
+  	/****************************************************************************/
+    /****************THIS EVENT IS LISTEN ON LOGIN SUCCESS***********************/
+  	/****************************************************************************/
+	$rootScope.$on('login-success', function(event) {
+	    $scope.signedView = false;
+	    $scope.getUserDetails();
+	});
+	/****************************************************************************/
+    /****************THIS EVENT IS LISTEN ON LOGIN SUCCESS***********************/
+  	/****************************************************************************/
+	$scope.getUserDetails = function(){
+	    if(HealthAuth.accessToken) {
+	      	$timeout(function () {
+	      		$scope.signedView = true;
+	          	DoctorDetailsService.doctorDetails().then(function(response){
+			        $rootScope.logedInUser = response.data.Data.result;
+			    },function (errorResponse) {
+	              //TODO: Show error message in the Sign In Modal
+	              // $scope.errorMessage = "Invalid user Name.";
+	          	});
+	      	}, 500);
+	    }
+	}
+
+  	/****************************************************************************/
+    /****************fUNCTION USE FOR FIND THE INITIAL LOCATION******************/
+  	/****************************************************************************/
+  	$scope.gotoEditProfile = function(){
+	    if($rootScope.logedInUser.isDoctor){
+	      $state.go('updateDoctorProfile');
+	    }
+	    else{
+	      $state.go('updateUserProfile');
+	    }
+	}
+	/****************************************************************************/
+    /****************fUNCTION USE FOR FIND THE INITIAL LOCATION******************/
+  	/****************************************************************************/
+  	$scope.showMyProfile = function(){
+	    if($rootScope.logedInUser.isDoctor){
+	      $state.go('signedDoctor');
+	    }
+	    else{
+	      $state.go('signedUser');
+	    }
+	}
+  	/****************************************************************************/
+    /****************fUNCTION USE FOR FIND THE INITIAL LOCATION******************/
+  	/****************************************************************************/
+
+	$scope.logout = function () {
+	    AuthorizeService.logout().then(function (response) {
+	        $scope.signedView = false;
+	        $rootScope.logedInUser = {};
+	        $state.go('home');
+	    }, function (errorResponse) {
+	        $scope.signedView = false;
+	        $rootScope.logedInUser = {};
+	        $state.go('home');
+	    });
+	};
 
   	/****************************************************************************/
     /****************fUNCTION USE FOR FIND THE INITIAL LOCATION******************/

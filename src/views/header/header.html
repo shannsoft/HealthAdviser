@@ -1,13 +1,28 @@
 <section class="top_header">
-	<div class="container">
+	<div class="container" ng-init="getUserDetails();">
 		<div class="row">
 			<div class="col-xs-12 col-sm-5 hidden-xs">
 				<p>Welcome to My Health Adviser</p>
 			</div>
 			<div class="col-xs-12 col-sm-7">
-				<ul class="nav nav-pills">
-					<li><a ng-class="{'active' : stateName == 'login'}" ui-sref="login">Login</a></li>
-					<li><a ng-class="{'active' : stateName == 'register'}" ui-sref="register">Register</a></li>
+				<ul class="nav nav-pills headermenu">
+					<li ng-if="!signedView"><a ng-class="{'active' : stateName == 'login'}" ui-sref="login">Login</a></li>
+					<li ng-if="!signedView"><a ng-class="{'active' : stateName == 'register'}" ui-sref="register">Register</a></li>
+					<li ng-if="signedView">
+						<div class="btn-group">
+						  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+							 <img src="images/doctor/doctor-1.jpg" alt=""> 
+								{{logedInUser.profile.name}}
+							<span class="caret"></span>
+						  </button>
+						  <ul class="dropdown-menu dropdown-menu-usermenu">
+							<li><a href="" ng-click="showMyProfile()"><i class="fa fa-user"></i> My Profile</a></li>
+							<!-- <li><a href=""><i class="fa fa-cog"></i> Account Settings</a></li> -->
+							<li><a href="" ng-click="gotoEditProfile()"><i class="fa fa-info-circle"></i>Edit Profile</a></li>
+							<li><a href="" ng-click="logout()"><i class="fa fa-sign-out"></i> Log Out</a></li>
+						  </ul>
+						</div>
+					</li>
 				</ul>
 			</div>
 		</div>

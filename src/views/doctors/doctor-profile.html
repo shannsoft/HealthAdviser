@@ -7,56 +7,184 @@
 		</div>
 	</div>
 </section>
-<section class="page-section padd-v-60">
+<section class="page-section padd-v-60" ng-init="loadProfileDetails()">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="panel-group" id="accordion">
 					<div class="panel panel-default">
-					  <div class="panel-heading">
-						<h4 class="panel-title">
-						  <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="collapsed">
-							About Me
-						  </a>
-						</h4>
-					  </div>
-					  <div id="collapseOne" class="panel-collapse collapse in">
-						<div class="panel-body padd-0">
-							<ul class="nav nav-tabs nav-collapse">
-							  <li class="active"><a href="#basicProfile" data-toggle="tab"><strong>Basic Profile</strong></a></li>
-							  <li><a href="#specialization" data-toggle="tab"><strong>Specialization</strong></a></li>
-							  <li><a href="#socialMedia" data-toggle="tab"><strong>Social Media</strong></a></li>
-							</ul>
-							<div class="tab-content">
-							  <div class="tab-pane active" id="basicProfile">
-								<div class="row">
-								  <div class="col-sm-3">
-									  <div class="profile-upload">
-										<!-- <h1>SM</h1> -->
-										<img class="img-responsive" src="images/doctor/doctor-1.jpg">
-									  </div>
+					  	<div class="panel-heading">
+							<h4 class="panel-title">
+							  <a ng-click="collapseSignUp('aboutme')"  ng-class="{collapsed:signupCollapse.aboutme}">
+								About Me
+							  </a>
+							</h4>
+					  	</div>
+					  	<div id="collapseOne" class="panel-collapse collapse in" uib-collapse="signupCollapse.aboutme">
+							<div class="panel-body padd-0">
+								<ul class="nav nav-tabs nav-collapse">
+								  	<li role=presentation  id="l1" class=active><a href=""  ng-click="showtab('basic-tab')" id="basic-tab" role=tab data-toggle=tab aria-controls=basic aria-expanded=true>Basic Profile</a></li>
+									<li role=presentation  id="l2" ><a  href="" ng-click="showtab('specialization-tab')" role=tab id="specialization-tab" data-toggle=tab aria-controls=specialization>Specialization</a></li>
+									<li role=presentation  id="l3"><a   href="" ng-click="showtab('social-tab')" role=tab id="social-tab" data-toggle=tab aria-controls=social> Social Media</a></li>
+								</ul>
+								<div class="tab-content">
+							  		<div role=tabpanel id="div_basic-tab" class="tab-pane active" aria-labelledby=basic-tab>
 										<div class="row">
-											<div class="col-sm-12 m-t-10 text-center">
-											  <button class="btn btn-blue btn-sm">Upload</button>
-											  <button class="btn btn-red btn-sm">Cancel</button>
+										  	<div class="col-sm-3">
+											  	<div class="profile-upload">
+												<!-- <h1>SM</h1> -->
+													<img class="img-responsive" src="images/doctor/doctor-1.jpg">
+											  	</div>
+												<div class="row">
+													<div class="col-sm-12 m-t-10 text-center">
+													  <button class="btn btn-blue btn-sm">Upload</button>
+													  <button class="btn btn-red btn-sm">Cancel</button>
+													</div>
+												</div>
+										  	</div>
+								  			<div class="col-sm-9">
+												<div class="row">
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label>First Name</label>
+															<input type="text" class="form-control" id="" ng-model="profileDetails.profile.fName" placeholder="First Name">
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label>Last Name</label>
+															<input type="text" class="form-control" id="" ng-model="profileDetails.profile.lName" placeholder="Last Name">
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label>Email</label>
+															<input type="text" class="form-control" id="" placeholder="" ng-model="profileDetails.emailId" readonly>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label class="control-label">Can Provide Free Consulation?</label>
+															<div class="row">
+																<div class="onoffswitch h-40 col-md-8">
+													                <input type="checkbox" ng-model="lawyerProfile.consultation.free_consultation" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+													                <label class="onoffswitch-label" for="myonoffswitch">
+													                    <span class="onoffswitch-inner"></span>
+													                    <span class="onoffswitch-switch"></span>
+													                </label>
+													            </div>
+													            <div class="col-md-4">
+													            <input type="number" class="form-control" id="" placeholder="">
+													            </div>	
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="form-group">
+													<label>Street</label>
+													<input type="text" class="form-control" id="street" placeholder="" ng-model="profileDetails.address.streetAddress">
+												</div>
+												<div class="row">
+													<div class="col-sm-4">
+														<div class="form-group">
+															<label>City</label>
+															<input type="text" class="form-control" id="" placeholder="" ng-model="profileDetails.address.city">
+														</div>
+													</div>
+													<div class="col-sm-4">
+														<div class="form-group">
+															<label>State</label>
+															<input type="text" class="form-control" id="" placeholder="" ng-model="profileDetails.address.state">
+														</div>
+													</div>
+													<div class="col-sm-4">
+														<div class="form-group">
+															<label>Zip</label>
+															<input type="text" class="form-control" id="" placeholder="" ng-model="profileDetails.address.postalCode">
+														</div>
+													</div>
+												</div>
+											<div class="form-group">
+												<label>Address</label>
+												<textarea class="form-control" rows="4" placeholder="Comments..."></textarea>
 											</div>
-										</div>
-								  </div>
-								  <div class="col-sm-9">
+											<div class="row">
+												<div class="col-sm-12 m-t-10 text-right">
+												  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
+												  <button class="btn btn-red btn-md text-u-c">Cancel</button>
+												</div>
+											</div>
+								  		</div>
+									</div>
+							  	</div>
+							  	<div role=tabpanel id="div_specialization-tab" class="tab-pane"  aria-labelledby=specialization-tab>
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label>First Name</label>
-												<input type="text" class="form-control" id="" placeholder="First Name">
+												<label>Practice Areas</label>
+												<input type="text" class="form-control" id="" placeholder="Choose Practice Area">
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label>Last Name</label>
-												<input type="text" class="form-control" id="" placeholder="Last Name">
+												<label>Practice Area By Years</label>
+												<input type="text" class="form-control" id="" placeholder="Enter Practice Area Year">
 											</div>
 										</div>
 									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label>Practice Areas</label>
+												<input type="text" class="form-control" id="" placeholder="Choose Practice Area">
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label>Practice Area By Years</label>
+												<input type="text" class="form-control" id="" placeholder="Enter Practice Area Year">
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="form-group">
+												<label>Practice Area By Years</label>
+												<input type="text" class="form-control" id="" placeholder="Enter Practice Area Year">
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12 m-t-10 text-right">
+										  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
+										  <button class="btn btn-red btn-md text-u-c">Cancel</button>
+										</div>
+									</div>
+							  	</div>
+							  	<div role=tabpanel class="tab-pane fade" id="div_social-tab" aria-labelledby=social-tab>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat</p>
+							  	</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-default">
+					  	<div class="panel-heading">
+							<h4 class="panel-title">
+							  	<a ng-click="collapseSignUp('workExperiance')"  ng-class="{collapsed:signupCollapse.workExperiance}">
+									Work Experience
+							  	</a>
+							</h4>
+					  	</div>
+					  	<div id="collapseTwo" class="panel-collapse collapse" uib-collapse="signupCollapse.workExperiance">
+							<div class="panel-body">
+								<div class="tab-custom-icon">
+									<a href=""><i class="fa fa-edit"></i> </a>
+									<a href=""><i class="fa fa-trash"></i> </a>
+								</div>
+								<div class="form-block-wrap">
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="form-group">
@@ -66,7 +194,7 @@
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label>Can Provide Free Consulation?</label>
+												<label>Designation</label>
 												<input type="text" class="form-control" id="" placeholder="">
 											</div>
 										</div>
@@ -74,181 +202,45 @@
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label>Phone</label>
+												<label>Start Month/Year</label>
 												<input type="text" class="form-control" id="" placeholder="">
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label>Email</label>
+												<label>End Month/Year</label>
 												<input type="text" class="form-control" id="" placeholder="">
 											</div>
 										</div>
-									</div>
-									<div class="form-group">
-										<label>Street</label>
-										<input type="text" class="form-control" id="" placeholder="">
 									</div>
 									<div class="row">
-										<div class="col-sm-4">
+										<div class="col-sm-12">
 											<div class="form-group">
-												<label>City</label>
-												<input type="text" class="form-control" id="" placeholder="">
-											</div>
-										</div>
-										<div class="col-sm-4">
-											<div class="form-group">
-												<label>State</label>
-												<input type="text" class="form-control" id="" placeholder="">
-											</div>
-										</div>
-										<div class="col-sm-4">
-											<div class="form-group">
-												<label>Zip</label>
+												<label>Work experience description</label>
 												<input type="text" class="form-control" id="" placeholder="">
 											</div>
 										</div>
 									</div>
-									<div class="form-group">
-										<label>Address</label>
-										<textarea class="form-control" rows="4" placeholder="Comments..."></textarea>
-									</div>
-									<div class="row">
+									<div class="row">	
 										<div class="col-sm-12 m-t-10 text-right">
 										  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
 										  <button class="btn btn-red btn-md text-u-c">Cancel</button>
 										</div>
 									</div>
-									
-								  </div>
 								</div>
-								
-							  </div>
-							  <div class="tab-pane" id="specialization">
-								<div class="row">
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label>Practice Areas</label>
-											<input type="text" class="form-control" id="" placeholder="Choose Practice Area">
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label>Practice Area By Years</label>
-											<input type="text" class="form-control" id="" placeholder="Enter Practice Area Year">
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label>Practice Areas</label>
-											<input type="text" class="form-control" id="" placeholder="Choose Practice Area">
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label>Practice Area By Years</label>
-											<input type="text" class="form-control" id="" placeholder="Enter Practice Area Year">
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-sm-12">
-										<div class="form-group">
-											<label>Practice Area By Years</label>
-											<input type="text" class="form-control" id="" placeholder="Enter Practice Area Year">
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-sm-12 m-t-10 text-right">
-									  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-									  <button class="btn btn-red btn-md text-u-c">Cancel</button>
-									</div>
-								</div>
-							  </div>
-							  <div class="tab-pane" id="socialMedia">
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat</p>
-						
-							  </div>
-						
+								<a href="" class="btn btn-success btn-md text-u-c m-t-10"><i class="fa fa-plus"></i> Add New Work Experience</a>
 							</div>
-						  
-						</div>
-					  </div>
+					  	</div>
 					</div>
 					<div class="panel panel-default">
-					  <div class="panel-heading">
-						<h4 class="panel-title">
-						  <a data-toggle="collapse" class="collapsed" data-parent="#accordion" href="#collapseTwo">
-							Work Experience
-						  </a>
-						</h4>
-					  </div>
-					  <div id="collapseTwo" class="panel-collapse collapse">
-						<div class="panel-body">
-							<div class="tab-custom-icon">
-								<a href=""><i class="fa fa-edit"></i> </a>
-								<a href=""><i class="fa fa-trash"></i> </a>
-							</div>
-							<div class="form-block-wrap">
-								<div class="row">
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label>Company Name</label>
-											<input type="text" class="form-control" id="" placeholder="">
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label>Designation</label>
-											<input type="text" class="form-control" id="" placeholder="">
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label>Start Month/Year</label>
-											<input type="text" class="form-control" id="" placeholder="">
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label>End Month/Year</label>
-											<input type="text" class="form-control" id="" placeholder="">
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-sm-12">
-										<div class="form-group">
-											<label>Work experience description</label>
-											<input type="text" class="form-control" id="" placeholder="">
-										</div>
-									</div>
-								</div>
-								<div class="row">	
-									<div class="col-sm-12 m-t-10 text-right">
-									  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-									  <button class="btn btn-red btn-md text-u-c">Cancel</button>
-									</div>
-								</div>
-							</div>
-							<a href="" class="btn btn-success btn-md text-u-c m-t-10"><i class="fa fa-plus"></i> Add New Work Experience</a>
-						</div>
-					  </div>
-					</div>
-						<div class="panel panel-default">
-						  <div class="panel-heading">
+						<div class="panel-heading">
 							<h4 class="panel-title">
-							  <a data-toggle="collapse" class="collapsed" data-parent="#accordion" href="#collapseThree">
+							  <a ng-click="collapseSignUp('education')"  ng-class="{collapsed:signupCollapse.education}">
 								Education
 							  </a>
 							</h4>
-						  </div>
-						  <div id="collapseThree" class="panel-collapse collapse">
+						</div>
+						<div id="collapseThree" class="panel-collapse collapse" uib-collapse="signupCollapse.education">
 							<div class="panel-body">
 								<div class="tab-custom-icon">
 									<a href=""><i class="fa fa-edit"></i> </a>
@@ -292,18 +284,18 @@
 								</div>
 								<a href="" class="btn btn-success btn-md text-u-c m-t-10"><i class="fa fa-plus"></i> Add New Work Experience</a>
 							</div>
-						  </div>
 						</div>
+					</div>
 
-						<div class="panel panel-default">
-						  <div class="panel-heading">
+					<div class="panel panel-default">
+						<div class="panel-heading">
 							<h4 class="panel-title">
-							  <a data-toggle="collapse" class="collapsed" data-parent="#accordion" href="#collapseFour">
+							  <a ng-click="collapseSignUp('awards')"  ng-class="{collapsed:signupCollapse.awards}">
 								Awards
 							  </a>
 							</h4>
-						  </div>
-						  <div id="collapseFour" class="panel-collapse collapse">
+						</div>
+						<div id="collapseFour" class="panel-collapse collapse" uib-collapse="signupCollapse.awards">
 							<div class="panel-body">
 								<div class="tab-custom-icon">
 									<a href=""><i class="fa fa-edit"></i> </a>
@@ -350,9 +342,9 @@
 								</div>
 								<a href="" class="btn btn-success btn-md text-u-c m-t-10"><i class="fa fa-plus"></i> Add New Work Experience</a>
 							</div>
-						  </div>
 						</div>
-				  </div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

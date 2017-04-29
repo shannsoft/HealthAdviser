@@ -27,6 +27,11 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     controller: "DoctorProfileController",
     url: '/updateDoctorProfile'
   })
+  .state('updateUserProfile', {
+    templateUrl: 'src/views/doctors/doctor-profile.html',
+    controller: "DoctorProfileController",
+    url: '/updateUserProfile'
+  })
   .state('specialization', {
     templateUrl: 'src/views/common/specialization.html',
     url: '/specialization',
@@ -79,6 +84,11 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
     url: '/signedDoctor',
     controller: 'DoctorDetailsController'
   })
+  .state('signedUser', {
+    templateUrl: 'src/views/doctors/doctor-details.html',
+    url: '/signedUser',
+    controller: 'DoctorDetailsController'
+  })
   .state('doctor-compare', {
     templateUrl: 'src/views/doctors/doctor-compare.html',
     url: '/doctor-compare',
@@ -108,7 +118,8 @@ app.constant('CONFIG', {
 }]);
 app.constant("HEALTH_ADVISER",function(){
 	ACCESS_TOKEN_EXPIRES_IN:300
-});app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "AuthorizeService", "$state", "$localStorage", function($scope,$rootScope,$timeout,AuthorizeService,$state,$localStorage){
+});
+app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "AuthorizeService", "$state", "DoctorDetailsService", "$state", "$localStorage", function($scope,$rootScope,$timeout,AuthorizeService,$state,DoctorDetailsService,$state,$localStorage){
 	$scope.user = {};
 	google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
@@ -188,7 +199,15 @@ app.constant("HEALTH_ADVISER",function(){
 				"password": $scope.user.password
    			}
           	AuthorizeService.login(obj).then(function (response) {
-          		console.log(response);
+          		$rootScope.$emit('login-success');
+          		if($scope.user.isDoctor == true){
+				    $state.go('doctor-verify');
+          		}
+          		else{
+
+          		}
+          	},function(error){
+
           	})
           }
           else{
@@ -331,6 +350,90 @@ app.constant("HEALTH_ADVISER",function(){
       }
     }
   }
+}]);app.controller("DoctorProfileController",["$scope", "$rootScope", "CommonService", "$timeout", function($scope, $rootScope,CommonService,$timeout){
+	google = typeof google === 'undefined' ? "" : google;
+  	var googleTime;
+	$scope.signupCollapse = {
+        aboutme: false,
+        workExperiance: true,
+        education: true,
+        license: true,
+        awards: true,
+        associations: true,
+        publications: true,
+        engagements: true
+    };
+    $scope.collapseSignUp = function (filter) {
+        angular.forEach($scope.signupCollapse, function(value, key) {
+            if(key == filter){
+                $scope.signupCollapse[key] = !$scope.signupCollapse[key];
+            } else {
+                $scope.signupCollapse[key] = true;
+            }
+        });
+    };
+    $scope.showtab = function(obj) {
+        $("div[id^='div_']").each(function (i, el) {
+            $(el).removeClass("in active");
+        });
+        $("div[id=div_" + obj +"]").addClass("in active");
+        $( "ul[id='myTabs']").children().each(function (i, el) {
+            $(el).removeClass("active");
+            $("li[id="+el.id+"]").children().each(function(i,ay) {
+                if(ay.id == obj) {
+                    $(el).addClass("active");
+                }
+            })
+        });
+    }
+  	$scope.loadProfileDetails = function(){
+  		$rootScope.showPreloader = true;
+  		CommonService.userDetails().then(function(response){
+  			$rootScope.showPreloader = false;
+  			if(response.data.StatusCode == 200)
+  				$scope.profileDetails = response.data.Data.result;
+  			$scope.initMapLocation();
+  		},function(error){
+  			$rootScope.showPreloader = false;
+  		})
+  	}
+  	var options = {
+        componentRestrictions: {country: "IN"}
+    };
+  	$scope.initMapLocation = function(){
+  		if(google == "" || !google.maps || !google.maps.places)
+        	googleTime = $timeout($scope.initMapLocation , 3000);
+	    else {
+	      	clearTimeout(googleTime);
+			var inputFrom = document.getElementById('street');
+			var autocompleteFrom = new google.maps.places.Autocomplete(inputFrom, options);
+			google.maps.event.addListener(autocompleteFrom, 'place_changed', function() {
+			    populateAddressFields(autocompleteFrom.getPlace());
+			    $scope.$apply();
+			});
+		}
+  	};
+  	function populateAddressFields(place) {
+		var address_components = place.address_components;
+		$scope.profileDetails.address.streetAddress = place.name;
+		$scope.profileDetails.address.formatted = place.formatted_address;
+        if (place.geometry) {
+          $scope.profileDetails.address.lat = place.geometry.location.lat();
+          $scope.profileDetails.address.lng = place.geometry.location.lng();
+        }
+        for(var i = 0; i < address_components.length; i++) {
+            var types = address_components[i].types;
+            if(types[0] == 'postal_code') {
+                $scope.profileDetails.address.postalCode = address_components[i].long_name;
+            } else if (types[0] == 'administrative_area_level_1' ) {
+                $scope.profileDetails.address.state = address_components[i].long_name;
+            } else if(types[0] == 'locality') {
+                $scope.profileDetails.address.city = address_components[i].long_name;
+            } else if(types[0] == 'country') {
+                $scope.profileDetails.address.country = address_components[i].long_name;
+            }
+        }
+	}
 }]);app.controller('DoctorsController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorModel", "$state", "orderByFilter", function($scope,$rootScope,DoctorService,$stateParams,DoctorModel,$state,orderByFilter){
 	$scope.compareDoctorArr = [{}, {}, {}, {}];
 	var map;
@@ -589,13 +692,56 @@ app.constant("HEALTH_ADVISER",function(){
 }]);app.controller("HomeController",["$scope", function($scope){
 	$scope.name = "adfasdfa";
 }])
-;app.controller('MainController',["$scope", "$rootScope", "CommonService", "Config", "$timeout", "$state", "DoctorService", function($scope,$rootScope,CommonService,Config,$timeout,$state,DoctorService){
+;app.controller('MainController',["$scope", "$rootScope", "CommonService", "Config", "$timeout", "$state", "DoctorService", "$timeout", "HealthAuth", "DoctorDetailsService", "AuthorizeService", function($scope,$rootScope,CommonService,Config,$timeout,$state,DoctorService,$timeout,HealthAuth,DoctorDetailsService,AuthorizeService){
   	$scope.$on('$viewContentLoaded', function(event) {
 	  	$(document).trigger("TemplateLoaded");
 	});
   	$rootScope.$on('SESSION_EXPIRED',function(){
   		alert('Sesstion Expired');
   	})
+	$rootScope.$on('login-success', function(event) {
+	    $scope.signedView = false;
+	    $scope.getUserDetails();
+	});
+	$scope.getUserDetails = function(){
+	    if(HealthAuth.accessToken) {
+	      	$timeout(function () {
+	      		$scope.signedView = true;
+	          	DoctorDetailsService.doctorDetails().then(function(response){
+			        $rootScope.logedInUser = response.data.Data.result;
+			    },function (errorResponse) {
+	          	});
+	      	}, 500);
+	    }
+	}
+  	$scope.gotoEditProfile = function(){
+	    if($rootScope.logedInUser.isDoctor){
+	      $state.go('updateDoctorProfile');
+	    }
+	    else{
+	      $state.go('updateUserProfile');
+	    }
+	}
+  	$scope.showMyProfile = function(){
+	    if($rootScope.logedInUser.isDoctor){
+	      $state.go('signedDoctor');
+	    }
+	    else{
+	      $state.go('signedUser');
+	    }
+	}
+
+	$scope.logout = function () {
+	    AuthorizeService.logout().then(function (response) {
+	        $scope.signedView = false;
+	        $rootScope.logedInUser = {};
+	        $state.go('home');
+	    }, function (errorResponse) {
+	        $scope.signedView = false;
+	        $rootScope.logedInUser = {};
+	        $state.go('home');
+	    });
+	};
   	google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
   	$scope.home = {};
@@ -973,7 +1119,7 @@ app.factory("HealthAuth",["HEALTH_ADVISER", function(HEALTH_ADVISER){
         storage[key] = value;
     }
     return new HealthAuth();
-}]);app.factory("CommonService", ["$http", "$q", "CONFIG", function ($http,$q,CONFIG) {
+}]);app.factory("CommonService", ["$http", "$q", "CONFIG", "HealthAuth", function ($http,$q,CONFIG,HealthAuth) {
   return{
     fetchLocation: function(params) {
       var response = $http.get(params);
@@ -995,6 +1141,14 @@ app.factory("HealthAuth",["HEALTH_ADVISER", function(HEALTH_ADVISER){
           headers: {'Server': CONFIG.SERVER_PATH}
       });
       return response;
+    },
+    userDetails : function(){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.API_PATH+'_UserData',
+          headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
+      });
+      return response;    
     }
   }
 }]);

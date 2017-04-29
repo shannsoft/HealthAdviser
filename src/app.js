@@ -27,6 +27,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
     controller: "DoctorProfileController",
     url: '/updateDoctorProfile'
   })
+  .state('updateUserProfile', {
+    templateUrl: 'src/views/doctors/doctor-profile.html',
+    controller: "DoctorProfileController",
+    url: '/updateUserProfile'
+  })
   .state('specialization', {
     templateUrl: 'src/views/common/specialization.html',
     url: '/specialization',
@@ -77,6 +82,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
   .state('signedDoctor', {
     templateUrl: 'src/views/doctors/doctor-details.html',
     url: '/signedDoctor',
+    controller: 'DoctorDetailsController'
+  })
+  .state('signedUser', {
+    templateUrl: 'src/views/doctors/doctor-details.html',
+    url: '/signedUser',
     controller: 'DoctorDetailsController'
   })
   .state('doctor-compare', {
