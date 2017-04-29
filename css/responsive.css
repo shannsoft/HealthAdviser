@@ -164,7 +164,11 @@
 		font-size:18px!important;
 		word-break: break-all;
 	}
- 
+	 .spec-ok-btn {
+		float: right;
+		margin-bottom: 20px;
+		margin-top: 0px;
+	}
 }
 
 

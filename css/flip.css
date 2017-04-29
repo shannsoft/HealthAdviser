@@ -11,6 +11,7 @@
     cursor: pointer;
     border: 2px solid #ddd;
     border-radius: 4px;
+	width:100%;
 }
 .onoffswitch-inner {
     display: block; width: 200%; margin-left: -100%;
@@ -36,6 +37,7 @@
 .onoffswitch-switch {
     display: block;
     width: 35px;
+	height:30px;
     background: #ffffff!important;
     position: absolute;
     top: 2px;
