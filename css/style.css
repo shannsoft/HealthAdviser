@@ -2330,3 +2330,72 @@ dl {
 		border-radius:0px!important;
 	}
 }
+
+.bs-example{
+	border: 1px solid #ddd!important;
+}
+.bs-example-tabs .nav-tabs.nav-justified > li > a {
+	border: none!important;
+    border-bottom: 1px solid #ddd!important;
+    border-right: 1px solid #ddd!important;
+	border-radius:0!important;
+	padding: 20px 25px;
+}
+.bs-example-tabs .nav-tabs.nav-justified > li > a.last-child{
+    border-right: none!important;
+}
+
+.userProfile-section{
+	display:block;
+}
+
+.userProfile-padd{
+	padding:60px 0px 0px;
+}
+.userProfile-section .profile-left{
+
+}
+.userProfile-section .profile-left .prof-img{
+    background: #f4f9ff;
+    font-size: 50px;
+    color: #444;
+    text-transform: uppercase;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 252px;
+}
+.userProfile-section .profile-left .prof-img img{
+    width:100%;
+}
+.userProfile-section .profile-left .prof-img .doctor-alfas{
+  height: 100px;
+  width: 100px;
+  line-height: 80px;
+}
+.userProfile-section .profile-left .prof-content{
+    padding: 10px 20px 30px;
+    display: block;
+    background: #fff;
+	width:100%;
+}
+.userProfile-section .profile-left .prof-content h3{
+	font-size:20px;
+	display:block;
+	margin:10px 0px;
+}
+.userProfile-section .prof-content-wrap{
+    padding: 20px 20px 20px;
+    display: block;
+    background: #f4f9ff;
+	width:100%;
+}
+.userProfile-section .prof-content-wrap h3{
+    font-size:22px;
+	margin:0px 0px 10px;
+}
+.userProfile-section .prof-content-wrap .line{
+    display:block;
+	height:2px;
+	background:#ddd;
+	width:100px;
+}
