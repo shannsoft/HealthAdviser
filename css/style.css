@@ -554,7 +554,7 @@ a:hover{ color:#000;}
 }
 .home-step3-section .app-view{
 	position: absolute;
-    top: -169px;
+    top: -150px;
 }
 .home-step3-section .block-list{
 	margin:20px 0px 0px;
@@ -2155,6 +2155,7 @@ dl {
 }
 .headermenu .btn{
 	line-height: 20px;
+	font-size:14px;
 }
 
 .headermenu .dropdown-menu-head ul {
