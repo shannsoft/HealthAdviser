@@ -549,7 +549,7 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
         awards: true,
         associations: true,
         publications: true,
-        engagements: true
+        conference: true
     };
     $scope.collapseSignUp = function (filter) {
         angular.forEach($scope.signupCollapse, function(value, key) {
@@ -653,6 +653,12 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
                 $scope.profileDetails.address.country = address_components[i].long_name;
             }
         }
+	}
+	$scope.processForm = function() {
+		$scope.showTheForm = false;
+	}
+	$scope.processForm1 = function() {
+		$scope.showTheForm1 = false;
 	}
 }])
 ;app.controller('ReviewController',["$scope", "$rootScope", "$stateParams", "DoctorService", function($scope, $rootScope, $stateParams, DoctorService){
@@ -1216,6 +1222,13 @@ app.filter('dateformat3', function(){
   return function(date){
     if(date){
       return moment(date).format("MM-DD-YYYY");
+    }
+  }
+})
+app.filter('dateformat4', function(){
+  return function(date){
+    if(date){
+      return moment(date).format("YYYY/MMM");
     }
   }
 })

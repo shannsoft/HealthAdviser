@@ -9,7 +9,7 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
         awards: true,
         associations: true,
         publications: true,
-        engagements: true
+        conference: true
     };
     /****************************************************************************/
     /***********************fUNCTION USE FOR COLLAPSEMENU************************/
@@ -137,5 +137,14 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
                 $scope.profileDetails.address.country = address_components[i].long_name;
             }
         }
+	}
+	/****************************************************************************/
+    /**************FUNCTION HIDE EDIT FORM***********************/
+  	/****************************************************************************/
+	$scope.processForm = function() {
+		$scope.showTheForm = false;
+	}
+	$scope.processForm1 = function() {
+		$scope.showTheForm1 = false;
 	}
 })

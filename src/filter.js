@@ -43,6 +43,13 @@ app.filter('dateformat3', function(){
     }
   }
 })
+app.filter('dateformat4', function(){
+  return function(date){
+    if(date){
+      return moment(date).format("YYYY/MMM");
+    }
+  }
+})
 app.filter('phonenumber', function() {
   return function (number) {
     if (!number) { return ''; }
