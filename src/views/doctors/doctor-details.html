@@ -22,7 +22,7 @@
 					<p ng-if="!doctorDetails.consulation.is_free_consultation">Fees - INR {{doctorDetails.consulation.fees}} /-</p>
 					<div class="m-t-30 m-b-20">
 						<a href="book-appointment.html" class="btn btn-blue btn-md m-r-5">Book Appointment</a>
-						<a href="review.html" class="btn btn-white btn-md">Review a Doctor</a>
+						<a ui-sref="review-doctor({profileName:doctorDetails.profile.profileName})" class="btn btn-white btn-md">Review a Doctor</a>
 					</div>
 				</div>
 			</div>
@@ -209,7 +209,40 @@
 						</div>
 					</div>
 				</div>
-				
+				<div class="details-cardbox m-b-20">
+					<div class="head">
+						<h3>Engagements</h3>
+					</div>
+					<div class="content">
+						<ul class="timeline-v2 timeline-me">
+							<li>
+								<time datetime="" class="cbp_tmtime"><span>Association Name </span> <span>2017 May</span></time>
+								<i class="cbp_tmicon rounded-x hidden-xs"></i>
+								<div class="cbp_tmlabel">
+									<h2>Location - Bhubaneswar</h2>
+									<p>Winter purslane courgette pumpkin quandong komatsuna fennel green bean cucumber watercress. Peasprouts wattle seed rutabaga okra yarrow.</p>
+								</div>
+							</li>
+							<li>
+								<time datetime="" class="cbp_tmtime"><span>Association Name </span> <span>2017 May</span></time>
+								<i class="cbp_tmicon rounded-x hidden-xs"></i>
+								<div class="cbp_tmlabel">
+									<h2>Location - Bhubaneswar</h2>
+									<p>Winter purslane courgette pumpkin quandong komatsuna fennel green bean cucumber watercress. Peasprouts wattle seed rutabaga okra.</p>
+								</div>
+							</li>
+							<li>
+								<time datetime="" class="cbp_tmtime"><span>Association Name </span> <span>2017 May</span></time>
+								<i class="cbp_tmicon rounded-x hidden-xs"></i>
+								<div class="cbp_tmlabel">
+									<h2>Location - Bhubaneswar</h2>
+									<p>Winter purslane courgette pumpkin quandong komatsuna fennel green bean cucumber watercress. Peasprouts.</p>
+								</div>
+							</li>
+						
+						</ul>
+					</div>
+				</div>
 				<div class="details-cardbox m-b-20">
 					<div class="head">
 						<h3>Reviews</h3>

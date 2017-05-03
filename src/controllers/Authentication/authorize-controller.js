@@ -1,5 +1,5 @@
 
-app.controller('AuthenticationController',function($scope,$rootScope,$timeout,Util,AuthorizeService,$state,DoctorDetailsService,$state,$localStorage){
+app.controller('AuthenticationController',function($scope,$rootScope,$timeout,Util,AuthorizeService,$state,DoctorDetailsService,$state,$localStorage,$location){
 	$scope.user = {};
 	google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
@@ -85,36 +85,30 @@ app.controller('AuthenticationController',function($scope,$rootScope,$timeout,Ut
 	    $rootScope.showPreloader = true;
 	    AuthorizeService.register(userData).then(function (response) {
 	    	$rootScope.showPreloader = false;
-          if(response.data.StatusCode == 200){
+          	if(response.data.StatusCode == 200){
           	var obj = {
-		   				"userId": $scope.user.email,
-							"password": $scope.user.password
-		   			}
-          	AuthorizeService.login(obj).then(function (response) {
-          		$rootScope.$emit('login-success');
-          		if($scope.user.isDoctor == true){
-     		 		//	DoctorDetailsService.doctorDetails().then(function(response){
-				    //     $rootScope.showPreloader = false;
-				    //     $scope.doctorDetails = response.data.Data.result;
-				    //     console.log(response.data.Data);
-				    //     $scope.initMap($scope.doctorDetails.address);
-				    // })
-				    	$state.go('doctor-verify');
-          		}
-          		else{
-
-          		}
-          	},function(error){
-							$rootScope.showPreloader = false;
-							Util.alertMessage('danger',"Something went wrong! unable to register");
-          	})
-          }
-          else{
-						Util.alertMessage('danger',"Something went wrong! unable to register");
-          }
-      	}, function (errorResponse) {
+					"userId": $scope.user.email,
+					"password": $scope.user.password
+	   			}
+	          	AuthorizeService.login(obj).then(function (response) {
+	          		$rootScope.$emit('login-success');
+	          		if($scope.user.isDoctor == true){
+					    $state.go('doctor-verify');
+	          		}
+	          		else{
+	          			$state.go('updateUserProfile');
+	          		}
+	          	},function(error){
 					$rootScope.showPreloader = false;
-          Util.alertMessage('danger',"Something went wrong! unable to register");
+					Util.alertMessage('danger',"Something went wrong! unable to register");
+	          	})
+          	}
+	        else{
+				Util.alertMessage('danger',"Something went wrong! unable to register");
+	        }
+      	}, function (errorResponse) {
+			$rootScope.showPreloader = false;
+          	Util.alertMessage('danger',"Something went wrong! unable to register");
       	});
 	}
 	/****************************************************************************/
@@ -125,28 +119,31 @@ app.controller('AuthenticationController',function($scope,$rootScope,$timeout,Ut
 			"userId": $scope.user.email,
 			"password": $scope.user.password
 		}
-		$localStorage.userId = $scope.user.email;
-		$localStorage.password = $scope.user.password,
 		$rootScope.showPreloader = true;
       	AuthorizeService.login(obj).then(function (response) {
       		$rootScope.showPreloader = false;
-					$rootScope.$emit('login-success');
+			$rootScope.$emit('login-success');
       		if(response.data.StatusCode == 200){
-						if($scope.user.remember){
-							$localStorage.user = {
-								"uname" : $scope.user.email,
-								"password": $scope.user.password
-							}
-						}
-      			$state.go('signedDoctor');
-      		}
-					else{
-						Util.alertMessage('danger',"Something went wrong! unable to login");
+				if($scope.user.remember){
+					$localStorage.user = {
+						"uname" : $scope.user.email,
+						"password": $scope.user.password
 					}
+				}
+				if($rootScope.isReload){
+					$location.path($rootScope.reloadState);
+				}
+				else{
+					$state.go('signedDoctor');
+				}
+      		}
+			else{
+				Util.alertMessage('danger',"Something went wrong! unable to login");
+			}
       	},function(error){
-					$rootScope.showPreloader = false;
-					Util.alertMessage('danger',"Authentication faild");
-				})
+			$rootScope.showPreloader = false;
+			Util.alertMessage('danger',"Authentication faild");
+		})
   	}
 	$scope.initLogin = function(){
 		$scope.user = {};

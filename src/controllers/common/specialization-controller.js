@@ -1,9 +1,9 @@
 app.controller("SpecializationController", function($scope,$rootScope,CommonService,$localStorage,$state){
 	$scope.getSpecializationList = function(){
 		$scope.specialization = [];
-		// $rootScope.showPreloader = true;
+		$rootScope.showPreloader = true;
 		CommonService.specialization().then(function(response){
-			// $rootScope.showPreloader = false;
+			$rootScope.showPreloader = false;
 			if(response.data.StatusCode == 200){
 				$scope.specializationList = response.data.Data;
 				angular.forEach($scope.specializationList,function(item){

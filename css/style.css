@@ -530,6 +530,7 @@ a:hover{ color:#000;}
 .home-step2-section{
 	display:block;
 }
+
 .home-step2-section .card-block{
 	background:#f4f9ff;
 	border-top:3px solid #0088a4;
@@ -1513,6 +1514,17 @@ a:hover{ color:#000;}
     display: inline-block;
     cursor: pointer;
 }
+.star-rating .star {
+    padding: 1px;
+    color: #ddd;
+    font-size: 20px;
+    list-style-type: none;
+    display: inline-block;
+    cursor: pointer;
+}
+.star-rating .star.filled {
+    color: #ffb103;
+}
 .doctor-fees{
 	display:block;
 }
@@ -2399,3 +2411,4 @@ dl {
 	background:#ddd;
 	width:100px;
 }
+

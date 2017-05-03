@@ -1,5 +1,5 @@
-var app = angular.module('health-advisor',['ui.router','ngAnimate','ui.bootstrap','ui.utils','bw.paging','timeRelative','ngStorage']);
-app.config(function($stateProvider, $urlRouterProvider) {
+var app = angular.module('health-advisor',['ui.router','ngAnimate','ui.bootstrap','ui.utils','bw.paging','timeRelative','ngStorage','ngSanitize']);
+app.config(function($stateProvider, $urlRouterProvider,$provide) {
   $urlRouterProvider.otherwise('/home');
   $stateProvider
   .state('home', {
@@ -10,12 +10,18 @@ app.config(function($stateProvider, $urlRouterProvider) {
   .state('login', {
     templateUrl: 'src/views/header/login.html',
     controller: "AuthenticationController",
-    url: '/login'
+    url: '/login',
+    resolve: {
+      loggedout: checkLoggedin
+    }
   })
   .state('register', {
     templateUrl: 'src/views/header/register.html',
     controller: "AuthenticationController",
-    url: '/register'
+    url: '/register',
+    resolve: {
+      loggedout: checkLoggedin
+    }
   })
   .state('doctor-verify', {
     templateUrl: 'src/views/doctors/doctor-verified.html',
@@ -25,12 +31,18 @@ app.config(function($stateProvider, $urlRouterProvider) {
   .state('updateDoctorProfile', {
     templateUrl: 'src/views/doctors/doctor-profile.html',
     controller: "DoctorProfileController",
-    url: '/updateDoctorProfile'
+    url: '/updateDoctorProfile',
+    resolve: {
+      loggedout: checkLoggedout
+    }
   })
   .state('updateUserProfile', {
-    templateUrl: 'src/views/doctors/doctor-profile.html',
-    controller: "DoctorProfileController",
-    url: '/updateUserProfile'
+    templateUrl: 'src/views/customer/update-profile.html',
+    controller: "UserProfileController",
+    url: '/updateUserProfile',
+    resolve: {
+      loggedout: checkLoggedout
+    }
   })
   .state('specialization', {
     templateUrl: 'src/views/common/specialization.html',
@@ -87,18 +99,79 @@ app.config(function($stateProvider, $urlRouterProvider) {
   .state('signedDoctor', {
     templateUrl: 'src/views/doctors/doctor-details.html',
     url: '/signedDoctor',
-    controller: 'DoctorDetailsController'
+    controller: 'DoctorDetailsController',
+    resolve: {
+      loggedout: checkLoggedout
+    }
   })
   .state('signedUser', {
-    templateUrl: 'src/views/doctors/doctor-details.html',
+    templateUrl: 'src/views/customer/customer-profile.html',
     url: '/signedUser',
-    controller: 'DoctorDetailsController'
+    controller: 'UserProfileController'
   })
   .state('doctor-compare', {
     templateUrl: 'src/views/doctors/doctor-compare.html',
     url: '/doctor-compare',
     controller: 'DoctorsController'
   })
+  .state('review-doctor', {
+    templateUrl: 'src/views/doctors/review/review-doctor.html',
+    url: '/review-doctor/:profileName',
+    controller:"ReviewController",
+    resolve: {
+      loggedout: confirmLogin
+    }
+  })
+
+
+  function checkLoggedout($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
+    var deferred = $q.defer();
+    $timeout(function(){
+      if(HealthAuth.accessToken){
+        deferred.resolve();
+      }
+      else{
+        deferred.resolve();
+        $state.go('login');
+      }
+    },100)  
+  }
+  function checkLoggedin($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
+    var deferred = $q.defer();
+    $timeout(function(){
+      if(HealthAuth.accessToken){
+        deferred.resolve();
+        $state.go('home');
+      }
+      else{
+        deferred.resolve();
+      }
+    },100)  
+  }
+  function confirmLogin($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
+    var deferred = $q.defer();
+    $timeout(function(){
+      if(!HealthAuth.accessToken){
+        $rootScope.isReload = true;
+        $rootScope.reloadState = $state.next.name;
+        for(var key in $state.toParams){
+          $rootScope.reloadState += '/'+$state.toParams[key];
+        }
+        deferred.resolve();
+        $state.go('login');
+      }
+      else{
+        deferred.resolve();
+      }
+    })  
+  }
+  $provide.decorator('$state', function($delegate, $rootScope) {
+    $rootScope.$on('$stateChangeStart', function(event, state, params) {
+      $delegate.next = state;
+      $delegate.toParams = params;
+    });
+    return $delegate;
+  });
 });
 app.run(function($http,$rootScope,$timeout,AuthorizeService){
   AuthorizeService.checkTokenTime();

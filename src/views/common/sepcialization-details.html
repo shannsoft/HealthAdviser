@@ -21,14 +21,14 @@
 		</div>
 	</div>
 </section>
-<section class="page-section padd-v-60" ng-init="initSpecialization()">
+<section class="page-section" ng-init="initSpecialization()">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="doctor-specialized">
 					<img ng-src="{{specializationDetails.image}}" alt="">
 					<h3>{{specializationDetails.name}}</h3>
-					{{specializationDetails.description}}
+					<p ng-bind-html="specializationDetails.description"></p>
 				 </div>
 			</div>
 		</div>

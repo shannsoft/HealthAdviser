@@ -1,0 +1,97 @@
+<section class="inner-banner-section" ng-init="getDoctorDetails()">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Review Your Doctor</h2>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="page-section padd-v-60" ng-if="doctorDetails">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-3">
+				<div class="doctor-profile-pic">
+					<img ng-if="doctorDetails.photo" class="img-responsive" ng-src="{{doctorDetails.photo}}">
+					<span ng-if="!doctorDetails.photo">{{doctorDetails.profile.name | getShortName}}</span>
+				</div>
+				
+				<div class="rating-card m-t-10">
+					<h3 class="ng-binding">{{doctorDetails.avgRating}}</h3>
+					<ul ng-init="getRatings(doctorDetails)">
+						<li ng-repeat="star in doctorDetails.ratingArr track by $index"><i class="{{star}}"></i></li>
+					</ul>
+					<p>{{doctorDetails.totalReview}} Review(s)</p>
+				</div>
+					
+			</div>
+			<div class="col-sm-9">
+				<form name="reviewFrm">
+					<div class="clearfix">
+						<h2>{{doctorDetails.profile.name}}</h2>
+						<address class="ng-binding">
+							<i class="fa fa-map-marker"></i> {{doctorDetails.address.streetAddress}}</br>
+							{{doctorDetails.address.city}},  {{doctorDetails.address.state}} {{doctorDetails.address.postalCode}} </br>{{doctorDetails.address.country}}</br>
+							<div ng-if="doctorDetails.phone.length > 0">
+								<abbr title="Phone">P:</abbr>
+								<a href="tel:{{doctorDetails.phone[0].number}}">+91 {{doctorDetails.phone[0].number | phonenumber}}</a>
+							</div>
+						</address>
+					</div>
+					<div class="txt-btn-wrap">
+						<div class="row m-t-10">
+							<label class="control-label col-md-5 col-sm-7 m-b-10">Have you consulted with Doctor? </label>
+							<div class="col-sm-5"> 
+								<div class="btn-group btn-group-sm" role="group" aria-label="Small button group"> 
+									<button type="button" ng-class="{'btn-blue':review.hasConsulted,'btn-gray':!review.hasConsulted}" class="btn switch-button text-u-c" ng-click="review.hasConsulted=true">Yes</button>
+									<button type="button" ng-class="{'btn-gray':review.hasConsulted,'btn-blue':!review.hasConsulted}" class="btn switch-button text-u-c" ng-click="review.hasConsulted=false">No</button>
+								</div>
+							</div>
+						</div>
+						<div class="row m-t-10">
+							<label class="control-label col-md-5 col-sm-7">Would you recommend this Doctor ? </label>
+							<div class="col-sm-5"> 
+								<div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+									<button type="button" ng-class="{'btn-blue':review.willRecommend,'btn-gray':!review.willRecommend}" class="btn switch-button text-u-c" ng-click="review.willRecommend=true">Yes</button>
+									<button type="button" ng-class="{'btn-gray':review.willRecommend,'btn-blue':!review.willRecommend}" class="btn switch-button text-u-c" ng-click="review.willRecommend=false">No</button>
+								</div>							
+							</div>							
+						</div>
+						<div class="row m-t-10">
+							<label class="control-label col-md-5 m-b-10 col-sm-7">Do you want to post anonymously? </label>
+							<div class="col-sm-5"> 
+								<div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+									<button type="button" ng-class="{'btn-blue':review.postAnonymous,'btn-gray':!review.postAnonymous}" class="btn switch-button text-u-c" ng-click="review.postAnonymous=true">Yes</button>
+									<button type="button" ng-class="{'btn-gray':review.postAnonymous,'btn-blue':!review.postAnonymous}" class="btn switch-button text-u-c" ng-click="review.postAnonymous=false">No</button>
+								</div>
+							</div>
+						</div>
+						<div class="row m-t-10">
+							<label class="control-label col-md-5 m-b-10 col-xs-7">Rate this Doctor </label>
+							<div class="col-sm-5"> 
+								<star-rating ng-model="rating.ratings" current-rating="1" readonly="false"></star-rating>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label>Review Title</label>
+						<input type="text" name="title" class="form-control" id="" placeholder="Review Title" ng-model="review.title" required>
+					</div>		
+					<div class="form-group">
+						<label>Your Comments</label>
+						<textarea class="form-control" name="comment" rows="4" placeholder="content goes here..." ng-model="review.comment" required></textarea>
+					</div>	
+					<div class="row">
+						<!-- <div class="col-sm-8">
+							<div class="text-green">Submission Successful !</div>
+						</div> -->
+						<div class="col-sm-12 text-right">
+							<button ng-disabled="reviewFrm.$invalid" class="btn btn-blue btn-md text-u-c">Submit</button>	
+						</div>				
+					</div>
+				</form>			
+			</div>
+			
+		</div>
+	</div>
+</section>

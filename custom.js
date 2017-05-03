@@ -1,5 +1,8 @@
-var app = angular.module('health-advisor',['ui.router','ngAnimate','ui.bootstrap','ui.utils','bw.paging','timeRelative','ngStorage']);
-app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $urlRouterProvider) {
+var app = angular.module('health-advisor',['ui.router','ngAnimate','ui.bootstrap','ui.utils','bw.paging','timeRelative','ngStorage','ngSanitize']);
+app.config(["$stateProvider", "$urlRouterProvider", "$provide", function($stateProvider, $urlRouterProvider,$provide) {
+  checkLoggedin.$inject = ["$q", "$timeout", "$rootScope", "$state", "$localStorage", "HealthAuth"];
+  checkLoggedout.$inject = ["$q", "$timeout", "$rootScope", "$state", "$localStorage", "HealthAuth"];
+  confirmLogin.$inject = ["$q", "$timeout", "$rootScope", "$state", "$localStorage", "HealthAuth"];
   $urlRouterProvider.otherwise('/home');
   $stateProvider
   .state('home', {
@@ -10,12 +13,18 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
   .state('login', {
     templateUrl: 'src/views/header/login.html',
     controller: "AuthenticationController",
-    url: '/login'
+    url: '/login',
+    resolve: {
+      loggedout: checkLoggedin
+    }
   })
   .state('register', {
     templateUrl: 'src/views/header/register.html',
     controller: "AuthenticationController",
-    url: '/register'
+    url: '/register',
+    resolve: {
+      loggedout: checkLoggedin
+    }
   })
   .state('doctor-verify', {
     templateUrl: 'src/views/doctors/doctor-verified.html',
@@ -25,12 +34,18 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
   .state('updateDoctorProfile', {
     templateUrl: 'src/views/doctors/doctor-profile.html',
     controller: "DoctorProfileController",
-    url: '/updateDoctorProfile'
+    url: '/updateDoctorProfile',
+    resolve: {
+      loggedout: checkLoggedout
+    }
   })
   .state('updateUserProfile', {
-    templateUrl: 'src/views/doctors/doctor-profile.html',
-    controller: "DoctorProfileController",
-    url: '/updateUserProfile'
+    templateUrl: 'src/views/customer/update-profile.html',
+    controller: "UserProfileController",
+    url: '/updateUserProfile',
+    resolve: {
+      loggedout: checkLoggedout
+    }
   })
   .state('specialization', {
     templateUrl: 'src/views/common/specialization.html',
@@ -87,18 +102,79 @@ app.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $ur
   .state('signedDoctor', {
     templateUrl: 'src/views/doctors/doctor-details.html',
     url: '/signedDoctor',
-    controller: 'DoctorDetailsController'
+    controller: 'DoctorDetailsController',
+    resolve: {
+      loggedout: checkLoggedout
+    }
   })
   .state('signedUser', {
-    templateUrl: 'src/views/doctors/doctor-details.html',
+    templateUrl: 'src/views/customer/customer-profile.html',
     url: '/signedUser',
-    controller: 'DoctorDetailsController'
+    controller: 'UserProfileController'
   })
   .state('doctor-compare', {
     templateUrl: 'src/views/doctors/doctor-compare.html',
     url: '/doctor-compare',
     controller: 'DoctorsController'
   })
+  .state('review-doctor', {
+    templateUrl: 'src/views/doctors/review/review-doctor.html',
+    url: '/review-doctor/:profileName',
+    controller:"ReviewController",
+    resolve: {
+      loggedout: confirmLogin
+    }
+  })
+
+
+  function checkLoggedout($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
+    var deferred = $q.defer();
+    $timeout(function(){
+      if(HealthAuth.accessToken){
+        deferred.resolve();
+      }
+      else{
+        deferred.resolve();
+        $state.go('login');
+      }
+    },100)  
+  }
+  function checkLoggedin($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
+    var deferred = $q.defer();
+    $timeout(function(){
+      if(HealthAuth.accessToken){
+        deferred.resolve();
+        $state.go('home');
+      }
+      else{
+        deferred.resolve();
+      }
+    },100)  
+  }
+  function confirmLogin($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
+    var deferred = $q.defer();
+    $timeout(function(){
+      if(!HealthAuth.accessToken){
+        $rootScope.isReload = true;
+        $rootScope.reloadState = $state.next.name;
+        for(var key in $state.toParams){
+          $rootScope.reloadState += '/'+$state.toParams[key];
+        }
+        deferred.resolve();
+        $state.go('login');
+      }
+      else{
+        deferred.resolve();
+      }
+    })  
+  }
+  $provide.decorator('$state', ["$delegate", "$rootScope", function($delegate, $rootScope) {
+    $rootScope.$on('$stateChangeStart', function(event, state, params) {
+      $delegate.next = state;
+      $delegate.toParams = params;
+    });
+    return $delegate;
+  }]);
 }]);
 app.run(["$http", "$rootScope", "$timeout", "AuthorizeService", function($http,$rootScope,$timeout,AuthorizeService){
   AuthorizeService.checkTokenTime();
@@ -124,7 +200,7 @@ app.constant('CONFIG', {
 app.constant("HEALTH_ADVISER",function(){
 	ACCESS_TOKEN_EXPIRES_IN:300
 });
-app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "Util", "AuthorizeService", "$state", "DoctorDetailsService", "$state", "$localStorage", function($scope,$rootScope,$timeout,Util,AuthorizeService,$state,DoctorDetailsService,$state,$localStorage){
+app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "Util", "AuthorizeService", "$state", "DoctorDetailsService", "$state", "$localStorage", "$location", function($scope,$rootScope,$timeout,Util,AuthorizeService,$state,DoctorDetailsService,$state,$localStorage,$location){
 	$scope.user = {};
 	google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
@@ -196,30 +272,30 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 	    $rootScope.showPreloader = true;
 	    AuthorizeService.register(userData).then(function (response) {
 	    	$rootScope.showPreloader = false;
-          if(response.data.StatusCode == 200){
+          	if(response.data.StatusCode == 200){
           	var obj = {
-		   				"userId": $scope.user.email,
-							"password": $scope.user.password
-		   			}
-          	AuthorizeService.login(obj).then(function (response) {
-          		$rootScope.$emit('login-success');
-          		if($scope.user.isDoctor == true){
-				    	$state.go('doctor-verify');
-          		}
-          		else{
-
-          		}
-          	},function(error){
-							$rootScope.showPreloader = false;
-							Util.alertMessage('danger',"Something went wrong! unable to register");
-          	})
-          }
-          else{
-						Util.alertMessage('danger',"Something went wrong! unable to register");
-          }
-      	}, function (errorResponse) {
+					"userId": $scope.user.email,
+					"password": $scope.user.password
+	   			}
+	          	AuthorizeService.login(obj).then(function (response) {
+	          		$rootScope.$emit('login-success');
+	          		if($scope.user.isDoctor == true){
+					    $state.go('doctor-verify');
+	          		}
+	          		else{
+	          			$state.go('updateUserProfile');
+	          		}
+	          	},function(error){
 					$rootScope.showPreloader = false;
-          Util.alertMessage('danger',"Something went wrong! unable to register");
+					Util.alertMessage('danger',"Something went wrong! unable to register");
+	          	})
+          	}
+	        else{
+				Util.alertMessage('danger',"Something went wrong! unable to register");
+	        }
+      	}, function (errorResponse) {
+			$rootScope.showPreloader = false;
+          	Util.alertMessage('danger',"Something went wrong! unable to register");
       	});
 	}
   	$scope.login = function(){
@@ -227,28 +303,31 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 			"userId": $scope.user.email,
 			"password": $scope.user.password
 		}
-		$localStorage.userId = $scope.user.email;
-		$localStorage.password = $scope.user.password,
 		$rootScope.showPreloader = true;
       	AuthorizeService.login(obj).then(function (response) {
       		$rootScope.showPreloader = false;
-					$rootScope.$emit('login-success');
+			$rootScope.$emit('login-success');
       		if(response.data.StatusCode == 200){
-						if($scope.user.remember){
-							$localStorage.user = {
-								"uname" : $scope.user.email,
-								"password": $scope.user.password
-							}
-						}
-      			$state.go('signedDoctor');
-      		}
-					else{
-						Util.alertMessage('danger',"Something went wrong! unable to login");
+				if($scope.user.remember){
+					$localStorage.user = {
+						"uname" : $scope.user.email,
+						"password": $scope.user.password
 					}
+				}
+				if($rootScope.isReload){
+					$location.path($rootScope.reloadState);
+				}
+				else{
+					$state.go('signedDoctor');
+				}
+      		}
+			else{
+				Util.alertMessage('danger',"Something went wrong! unable to login");
+			}
       	},function(error){
-					$rootScope.showPreloader = false;
-					Util.alertMessage('danger',"Authentication faild");
-				})
+			$rootScope.showPreloader = false;
+			Util.alertMessage('danger',"Authentication faild");
+		})
   	}
 	$scope.initLogin = function(){
 		$scope.user = {};
@@ -276,7 +355,9 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 ;app.controller("SpecializationController", ["$scope", "$rootScope", "CommonService", "$localStorage", "$state", function($scope,$rootScope,CommonService,$localStorage,$state){
 	$scope.getSpecializationList = function(){
 		$scope.specialization = [];
+		$rootScope.showPreloader = true;
 		CommonService.specialization().then(function(response){
+			$rootScope.showPreloader = false;
 			if(response.data.StatusCode == 200){
 				$scope.specializationList = response.data.Data;
 				angular.forEach($scope.specializationList,function(item){
@@ -299,6 +380,84 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 		localStorage.setItem('specialization',name);
 		$state.go('specialization-details');
 	}
+}]);app.controller('UserProfileController', ["$scope", "$rootScope", "$state", "CommonService", function($scope, $rootScope, $state, CommonService){
+    google = typeof google === 'undefined' ? "" : google;
+    var googleTime;
+    $scope.showtab = function(obj) {
+        $("div[id^='div_']").each(function (i, el) {
+            $(el).removeClass("in active");
+        });
+        $("div[id=div_" + obj +"]").addClass("in active");
+        $( "ul[id='myTabs']").children().each(function (i, el) {
+            $(el).removeClass("active");
+            $("li[id="+el.id+"]").children().each(function(i,ay) {
+                if(ay.id == obj) {
+                    $(el).addClass("active");
+                }
+            })
+        });
+    }
+    $scope.profileDetails = function(){
+        $rootScope.showPreloader = true;
+        CommonService.userDetails().then(function(response){
+            $rootScope.showPreloader = false;
+            if(response.data.StatusCode == 200){
+                $scope.profileDetails = response.data.Data.result;
+                $scope.initMapLocation();
+                if($scope.profileDetails.isDoctor){
+                    $state.go('home');
+                }
+            }
+        })
+    }
+    $scope.loadLanguages = function(){
+        CommonService.languages().then(function(response){
+            if(response.data.StatusCode == 200){
+                $scope.languages = [];
+                angular.forEach(response.data.Data,function(item){
+                    $scope.languages.push(item.name);
+                });
+            }
+        },function(error){
+        })
+    }
+    var options = {
+        componentRestrictions: {country: "IN"}
+    };
+    $scope.initMapLocation = function(){
+        if(google == "" || !google.maps || !google.maps.places)
+            googleTime = $timeout($scope.initMapLocation , 3000);
+        else {
+            clearTimeout(googleTime);
+            var inputFrom = document.getElementById('street');
+            var autocompleteFrom = new google.maps.places.Autocomplete(inputFrom, options);
+            google.maps.event.addListener(autocompleteFrom, 'place_changed', function() {
+                populateAddressFields(autocompleteFrom.getPlace());
+                $scope.$apply();
+            });
+        }
+    };
+    function populateAddressFields(place) {
+        var address_components = place.address_components;
+        $scope.profileDetails.address.streetAddress = place.name;
+        $scope.profileDetails.address.formatted = place.formatted_address;
+        if (place.geometry) {
+          $scope.profileDetails.address.lat = place.geometry.location.lat();
+          $scope.profileDetails.address.lng = place.geometry.location.lng();
+        }
+        for(var i = 0; i < address_components.length; i++) {
+            var types = address_components[i].types;
+            if(types[0] == 'postal_code') {
+                $scope.profileDetails.address.postalCode = address_components[i].long_name;
+            } else if (types[0] == 'administrative_area_level_1' ) {
+                $scope.profileDetails.address.state = address_components[i].long_name;
+            } else if(types[0] == 'locality') {
+                $scope.profileDetails.address.city = address_components[i].long_name;
+            } else if(types[0] == 'country') {
+                $scope.profileDetails.address.country = address_components[i].long_name;
+            }
+        }
+    }
 }]);app.controller('DirectoryController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorModel", "$state", "$timeout", function($scope,$rootScope,DoctorService,$stateParams,DoctorModel,$state,$timeout){
 	$scope.getStateList = function(){
 		$rootScope.showPreloader = true;
@@ -495,6 +654,18 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
             }
         }
 	}
+}])
+;app.controller('ReviewController',["$scope", "$rootScope", "$stateParams", "DoctorService", function($scope, $rootScope, $stateParams, DoctorService){
+	$rootScope.isReload = false;
+  	$scope.getDoctorDetails = function(){
+  		$rootScope.showPreloader = true;
+  		if($stateParams.profileName){
+			DoctorService.doctorDetails($stateParams.profileName).then(function(response){
+				$rootScope.showPreloader = false;
+				$scope.doctorDetails = response.data.Data.result;
+			})
+		}
+  	}
 }])
 ;app.controller('DoctorsController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorModel", "$state", "orderByFilter", function($scope,$rootScope,DoctorService,$stateParams,DoctorModel,$state,orderByFilter){
 	$scope.compareDoctorArr = [{}, {}, {}, {}];
@@ -961,7 +1132,49 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 		},
 		template: '<input ng-model="inputValue" name="phone" type="tel" class="{{class}}" placeholder="{{phonenumberPlaceholder}}" title="Phonenumber (Format: (999) 9999-9999)">',
 	};
-}]);app.filter('getShortName', function () {
+}]);
+app.directive("starRating",function(){
+    return {
+      restrict: 'EA',
+      template:
+        '<ul class="star-rating" ng-class="{readonly: readonly}">' +
+        '  <li ng-repeat="star in stars" class="star" ng-class="{filled: star.filled}" ng-click="toggle($index)">' +
+        '    <i class="fa fa-star"></i>' + // or &#9733
+        '  </li>' +
+        '</ul>',
+      scope: {
+        ratingValue: '=ngModel',
+        max: '=?', // optional (default is 5)
+        onRatingSelect: '&?',
+        readonly: '=?',
+        currentRating:'='
+      },
+      link: function(scope, element, attributes) {
+        if (scope.max == undefined) {
+          scope.max = 5;
+        }
+        function updateStars() {
+          scope.stars = [];
+          for (var i = 0; i < scope.max; i++) {
+            scope.stars.push({
+              filled: i < scope.ratingValue
+            });
+          }
+        };
+        scope.toggle = function(index) {
+          if (scope.readonly == undefined || scope.readonly === false){
+            scope.ratingValue = index + 1;
+            scope.currentRating = index + 1;
+          }
+        };
+        scope.$watch('currentRating', function(oldValue, newValue) {
+          if (newValue) {
+            updateStars();
+          }
+        });
+      }
+    };
+});;app.filter('getShortName', function () {
     return function (value) {
       if(value){
         var temp = angular.copy(value);
