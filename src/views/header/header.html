@@ -11,7 +11,8 @@
 					<li ng-if="signedView">
 						<div class="btn-group">
 						  <button type="button" class="btn btn-default dropdown-toggle btn-transparent" data-toggle="dropdown">
-							 <img src="images/doctor/doctor-1.jpg" alt=""> 
+							 	<img  ng-if="logedInUser.photo" ng-src="{{logedInUser.photo}}" alt=""> 
+							 	<span ng-if="!logedInUser.photo">{{logedInUser.profile.name | getShortName}}</span>
 								{{logedInUser.profile.name}}
 							<span class="caret"></span>
 						  </button>

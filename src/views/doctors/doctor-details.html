@@ -98,7 +98,7 @@
 								<time datetime="" class="cbp_tmtime"><span>{{edu.educationType}}</span> <span>{{edu.date | dateYear}}</span></time>
 								<i class="cbp_tmicon rounded-x hidden-xs"></i>
 								<div class="cbp_tmlabel">
-									<h2>The Oxford Dental College</h2>
+									<h2>{{edu.university}}</h2>
 									<p>{{edu.description}}</p>
 								</div>
 							</li>
@@ -138,43 +138,19 @@
 					</div>
 					<div class="content">
 						<div class="row">
-							<div class="col-sm-6">
+							<div class="col-sm-6" ng-repeat="license in doctorDetails.license">
 								<div class="profile-licence-box">
 									<dl class="dl-horizontal">
-										<dt>State :</dt>
-										<dd>Andhra</dd>
-									</dl>
-									<dl class="dl-horizontal">
-										<dt>Status :</dt>
-										<dd>active</dd>
+										<dt>No :</dt>
+										<dd>{{license.licenseNumber}}</dd>
 									</dl>
 									<dl class="dl-horizontal">
 										<dt>Issue On :</dt>
-										<dd>2016-12-28</dd>
+										<dd>{{license.issueDate | dateformat1}}</dd>
 									</dl>
 									<dl class="dl-horizontal">
-										<dt>Updated Date :</dt>
-										<dd>2017-02-01</dd>
-									</dl>
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="profile-licence-box">
-									<dl class="dl-horizontal">
-										<dt>State :</dt>
-										<dd>Andhra</dd>
-									</dl>
-									<dl class="dl-horizontal">
-										<dt>Status :</dt>
-										<dd>active</dd>
-									</dl>
-									<dl class="dl-horizontal">
-										<dt>Issue On :</dt>
-										<dd>2016-12-28</dd>
-									</dl>
-									<dl class="dl-horizontal">
-										<dt>Updated Date :</dt>
-										<dd>2017-02-01</dd>
+										<dt>Expired On :</dt>
+										<dd>{{license.expiryDate | dateformat1}}</dd>
 									</dl>
 								</div>
 							</div>
@@ -187,22 +163,21 @@
 					</div>
 					<div class="content">
 						<div class="row">
-							<div class="col-sm-6">
+							<div class="col-sm-6" ng-repeat="asso in doctorDetails.association">
 								<div class="profile-licence-box">
-									<h4>LC Linked Data Service</h4>
+									<h4>{{asso.associationName}}</h4>
 									<dl class="dl-horizontal">
 										<dt>Position :</dt>
-										<dd>sdgsdfg </dd>
+										<dd>{{asso.position}}</dd>
 									</dl>
 									<dl class="dl-horizontal">
 										<dt>Start Month/Year :</dt>
-										<dd>2016-11-28</dd>
+										<dd>{{asso.startDate | dateformat1}}</dd>
 									</dl>
 									<dl class="dl-horizontal">
 										<dt>End Month/Year :</dt>
-										<dd>2016-12-28</dd>
+										<dd>{{asso.endDate | dateformat1}}</dd>
 									</dl>
-								
 								</div>
 							</div>
 						
@@ -215,31 +190,14 @@
 					</div>
 					<div class="content">
 						<ul class="timeline-v2 timeline-me">
-							<li>
-								<time datetime="" class="cbp_tmtime"><span>Association Name </span> <span>2017 May</span></time>
+							<li ng-repeat="conference in doctorDetails.conference">
+								<time datetime="" class="cbp_tmtime"><span>{{conference.conferenceName}} </span> <span>{{conference.startDate | yearMonth}}</span></time>
 								<i class="cbp_tmicon rounded-x hidden-xs"></i>
 								<div class="cbp_tmlabel">
-									<h2>Location - Bhubaneswar</h2>
-									<p>Winter purslane courgette pumpkin quandong komatsuna fennel green bean cucumber watercress. Peasprouts wattle seed rutabaga okra yarrow.</p>
+									<h2>Location - {{conference.location}}</h2>
+									<p>{{conference.topic}}</p>
 								</div>
 							</li>
-							<li>
-								<time datetime="" class="cbp_tmtime"><span>Association Name </span> <span>2017 May</span></time>
-								<i class="cbp_tmicon rounded-x hidden-xs"></i>
-								<div class="cbp_tmlabel">
-									<h2>Location - Bhubaneswar</h2>
-									<p>Winter purslane courgette pumpkin quandong komatsuna fennel green bean cucumber watercress. Peasprouts wattle seed rutabaga okra.</p>
-								</div>
-							</li>
-							<li>
-								<time datetime="" class="cbp_tmtime"><span>Association Name </span> <span>2017 May</span></time>
-								<i class="cbp_tmicon rounded-x hidden-xs"></i>
-								<div class="cbp_tmlabel">
-									<h2>Location - Bhubaneswar</h2>
-									<p>Winter purslane courgette pumpkin quandong komatsuna fennel green bean cucumber watercress. Peasprouts.</p>
-								</div>
-							</li>
-						
 						</ul>
 					</div>
 				</div>

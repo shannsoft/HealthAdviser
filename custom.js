@@ -1197,6 +1197,13 @@ app.filter('dateformat', function(){
     }
   }
 })
+app.filter('yearMonth', function(){
+  return function(date){
+    if(date){
+      return moment(date).format("YYYY MMM");
+    }
+  }
+})
 app.filter('dateYear', function(){
   return function(date){
     if(date){
