@@ -247,6 +247,7 @@
 							</div>
 						</div>
 					</div>
+<!----------------------------------------------------Work Experence------------------------------------------------------------------>					
 					<div class="panel panel-default">
 					  	<div class="panel-heading">
 							<h4 class="panel-title">
@@ -310,7 +311,7 @@
 										<div class="row">
 											<div class="col-sm-12 m-t-10 text-right">
 											  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-											  <button class="btn btn-red btn-md text-u-c" ng-click="clearExperience()">Cancel</button>
+											  <button class="btn btn-red btn-md text-u-c" ng-click="showTheForm = !showTheForm">Cancel</button>
 											</div>
 										</div>
 									</div>
@@ -363,61 +364,138 @@
 					  		</div>
 						</div>
 					</div>
+<!------------------------------------------------------Education--------------------------------------------------------------------------->
 					<div class="panel panel-default">
-						<div class="panel-heading">
+					  	<div class="panel-heading">
 							<h4 class="panel-title">
-							  <a ng-click="collapseSignUp('education')"  ng-class="{collapsed:signupCollapse.education}">
-								Education
-							  </a>
+							  	<a ng-click="collapseSignUp('education')"  ng-class="{collapsed:signupCollapse.education}">
+									Education
+							  	</a>
 							</h4>
-						</div>
-						<div id="collapseThree" class="panel-collapse collapse" uib-collapse="signupCollapse.education">
+					  	</div>
+					  	<div id="collapseThree" class="panel-collapse collapse" uib-collapse="signupCollapse.education">			
 							<div class="panel-body">
-								<div class="tab-custom-icon">
-									<a href=""><i class="fa fa-edit"></i> </a>
-									<a href=""><i class="fa fa-trash"></i> </a>
+								<div class="m-b-20" ng-repeat="edu in profileDetails.education">
+									<div>
+										<div class="tab-custom-icon">
+											<a href="" ng-click="showTheForm = !showTheForm"><i class="fa fa-edit"></i> </a>
+											<a href="" ng-click="deleteEducation('md',work.id)" ><i class="fa fa-trash"></i></a>
+										</div>
+										<div class="form-block-wrap">
+											<h3 class="pull-left">{{edu.educationType}}</h3>
+											<span class="pull-right">{{edu.year | dateYear}}</span>
+											<p class="p-t-40">{{edu.university}}</p>
+											<p  ng-if=edu.major> Major: {{edu.major}}</p>
+											<p>Score: {{edu.score}}%</p>										
+											<p>{{edu.description}} </p>
+										</div>
+									</div>
+									<div class="form-block-wrap" ng-show="showTheForm" ng-submit="processForm()">
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label class="control-label">University</label>
+													<input type="text" name="university" class="form-control b-a h-40" placeholder="University" ng-model="edu.university" required>												
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Degree</label>
+													<input type="text" name="degree" class="form-control b-a h-40" placeholder="Degree" ng-model="edu.educationType" required>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="form-group">
+													<label>Major</label>
+													<input type="text" class="form-control b-a h-40" name="major" placeholder="" ng-model="edu.major" >													
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="form-group">
+													<label>Year</label>
+													<input type="text" class="form-control b-a h-40" name="year" placeholder="" ng-model="edu.year | dateYear" required>
+												</div>
+											</div>	
+											<div class="col-sm-4">
+												<div class="form-group">
+													<label>Score</label>
+													<input type="text" class="form-control b-a h-40" name="score" placeholder="Score in %" ng-model="edu.score" required >
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12">
+												<div class="form-group">
+													<label>Description</label>
+													<input type="text" class="form-control  b-a h-40" name="description" placeholder="" ng-model="edu.description">
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12 m-t-10 text-right">
+											  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
+											  <button class="btn btn-red btn-md text-u-c" ng-click="showTheForm = !showTheForm">Cancel</button>
+											</div>
+										</div>
+									</div>
 								</div>
-								<div class="form-block-wrap">
+								<div class="form-block-wrap"  ng-show="showTheForm1" ng-submit="processForm1()">
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label>School Name</label>
-												<input type="text" class="form-control" id="" placeholder="">
+												<label class="control-label">University</label>
+												<input type="text" name="schoolname" class="form-control b-a h-40" placeholder="University"  required>													
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group">
 												<label>Degree</label>
-												<input type="text" class="form-control" id="" placeholder="">
+												<input type="text" name="degree" class="form-control b-a h-40" placeholder="Degree" required>
 											</div>
 										</div>
 									</div>
 									<div class="row">
-										<div class="col-sm-6">
+										<div class="col-sm-4">
 											<div class="form-group">
 												<label>Major</label>
-												<input type="text" class="form-control" id="" placeholder="">
+												<input type="text" class="form-control b-a h-40" name="major" placeholder="Major" >													
 											</div>
 										</div>
-										<div class="col-sm-6">
+										<div class="col-sm-4">
 											<div class="form-group">
-												<label>Graduation Year</label>
-												<input type="text" class="form-control" id="" placeholder="">
+												<label>Year</label>
+												<input type="text" class="form-control b-a h-40" name="year" placeholder="Passing Year" >
+											</div>
+										</div>	
+										<div class="col-sm-4">
+											<div class="form-group">
+												<label>Score</label>
+												<input type="text" class="form-control b-a h-40" name="score" placeholder="Score in %" >
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="form-group">
+												<label>Description</label>
+												<input type="text" class="form-control  b-a h-40" name="description" placeholder="">
 											</div>
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-sm-12 m-t-10 text-right">
 										  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-										  <button class="btn btn-red btn-md text-u-c">Cancel</button>
+										  <button class="btn btn-red btn-md text-u-c" ng-click="showTheForm = !showTheForm">Cancel</button>
 										</div>
 									</div>
-								</div>
-								<a href="" class="btn btn-success btn-md text-u-c m-t-10"><i class="fa fa-plus"></i> Add New Education Qualifications</a>
+								</div>					
+								<a href="" class="btn btn-success btn-md text-u-c m-t-10" ng-click="showTheForm1 = !showTheForm1"><i class="fa fa-plus"></i> Add New Education Qualification</a>
 							</div>
-						</div>
+						</div>					  						
 					</div>
-
+<!--------------------------------------------Awards------------------------------------------------------------------------------------>					
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title">
@@ -426,15 +504,82 @@
 							  </a>
 							</h4>
 						</div>
-						<div id="collapseFour" class="panel-collapse collapse" uib-collapse="signupCollapse.awards">
+						<div id="collapseFour" class="panel-collapse collapse" uib-collapse="signupCollapse.awards">			
 							<div class="panel-body">
-								<div class="tab-custom-icon">
-									<a href=""><i class="fa fa-edit"></i> </a>
-									<a href=""><i class="fa fa-trash"></i> </a>
+								<div class="m-b-20" ng-repeat="awards in profileDetails.award">
+									<div>
+										<div class="tab-custom-icon">
+											<a href="" ng-click="showTheForm = !showTheForm"><i class="fa fa-edit"></i> </a>
+											<a href="" ng-click="deleteAwards('md',work.id)" ><i class="fa fa-trash"></i></a>
+										</div>
+										<div class="form-block-wrap">
+											<div class="row">
+												<div class="col-sm-2">
+													<img ng-if="!awards.image" class="full-width" src="images/awards-1.jpg" />
+													<img ng-if="awards.image" class="full-width" src="{{awards.image}}" />
+												</div>
+												<div class="col-sm-10">
+													<div class="awards-content">
+														<h3>{{awards.awardFor}}</h3>
+														<p class="p-t-40">{{awards.awardDate | dateYear}}</span>
+														<p>{{awards.organizationName}}</p>
+														<p>{{awards.description}}</p>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="form-block-wrap" ng-show="showTheForm" ng-submit="processForm()">
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Upload Logo</label>
+													<div class="fileUpload btn btn-md btn-block btn-white b-a">
+														<span>Upload Logo</span>
+														<input type="file" class="upload" name="resume">
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Award For</label>
+													<input type="text" class="form-control" id="" placeholder="" ng-model="awards.awardFor">
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Awarded By</label>
+													<input type="text" class="form-control" id="" placeholder="" ng-model="awards.organizationName">
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Awarded Year</label>
+													<input type="text" class="form-control" id="" placeholder="" ng-model="awards.awardDate | dateYear">
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12">
+												<div class="form-group">
+													<label>Description</label>
+													<input type="text" class="form-control" id="" placeholder="" ng-model="awards.description">
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12 m-t-10 text-right">
+											  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
+											  <button class="btn btn-red btn-md text-u-c">Cancel</button>
+											</div>
+										</div>
+									</div>		
 								</div>
-								<div class="form-block-wrap">
+								<div class="form-block-wrap" ng-show="showTheForm1" ng-submit="processForm1()">
 									<div class="row">
-										<div class="col-sm-4">
+										<div class="col-sm-6">
 											<div class="form-group">
 												<label>Upload Logo</label>
 												<div class="fileUpload btn btn-md btn-block btn-white b-a">
@@ -443,10 +588,10 @@
 												</div>
 											</div>
 										</div>
-										<div class="col-sm-8">
+										<div class="col-sm-6">
 											<div class="form-group">
-												<label>Award Name</label>
-												<input type="text" class="form-control" id="" placeholder="">
+												<label>Award For</label>
+												<input type="text" class="form-control" id="" placeholder="Award For">
 											</div>
 										</div>
 									</div>
@@ -454,12 +599,20 @@
 										<div class="col-sm-6">
 											<div class="form-group">
 												<label>Awarded By</label>
-												<input type="text" class="form-control" id="" placeholder="">
+												<input type="text" class="form-control" id="" placeholder="Organization Name">
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group">
 												<label>Awarded Year</label>
+												<input type="text" class="form-control" id="" placeholder="Year">
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="form-group">
+												<label>Description</label>
 												<input type="text" class="form-control" id="" placeholder="">
 											</div>
 										</div>
@@ -470,11 +623,12 @@
 										  <button class="btn btn-red btn-md text-u-c">Cancel</button>
 										</div>
 									</div>
-								</div>
-								<a href="" class="btn btn-success btn-md text-u-c m-t-10"><i class="fa fa-plus"></i> Add New Work Experience</a>
+								</div>			
+								<a href="" class="btn btn-success btn-md text-u-c m-t-10" ng-click="showTheForm1 = !showTheForm1"><i class="fa fa-plus"></i> Add New Awards</a>
 							</div>
-						</div>
+						</div>								
 					</div>
+<!--------------------------------------------Associations------------------------------------------------------------------------------->					
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title">
@@ -483,55 +637,99 @@
 							  </a>
 							</h4>
 						</div>
-						<div id="collapseFive" class="panel-collapse collapse" uib-collapse="signupCollapse.associations">
+						<div id="collapseFive" class="panel-collapse collapse" uib-collapse="signupCollapse.associations">			
 							<div class="panel-body">
-								<div class="tab-custom-icon">
-									<a href=""><i class="fa fa-edit"></i> </a>
-									<a href=""><i class="fa fa-trash"></i> </a>
-								</div>
-								<div class="form-block-wrap">
-									<div class="row">
-										<div class="col-sm-4">
-											<div class="form-group">
-												<label>Upload Logo</label>
-												<div class="fileUpload btn btn-md btn-block btn-white b-a">
-													<span>Upload Logo</span>
-													<input type="file" class="upload" name="resume">
+								<div class="m-b-20" ng-repeat="associate in profileDetails.association">
+									<div>
+										<div class="tab-custom-icon">
+											<a href="" ng-click="showTheForm = !showTheForm"><i class="fa fa-edit"></i> </a>
+											<a href="" ng-click="deleteAwards('md',work.id)" ><i class="fa fa-trash"></i></a>
+										</div>
+										<div class="form-block-wrap">											
+											<div class="associate-content">
+												<h3>{{associate.associationName}}</h3>
+												<p class="p-t-40">{{associate.position}} ({{associate.startDate | dateformat1}}   {{associate.endDate | dateformat1}})</p>																					
+											</div>																						
+										</div>
+									</div>
+									<div class="form-block-wrap" ng-show="showTheForm" ng-submit="processForm()">
+										<div class="row">											
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Association Name</label>
+													<input type="text" class="form-control" id="" placeholder="" ng-modal="associate.associationName">
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Position</label>
+													<input type="text" class="form-control" id="" placeholder="" ng-modal="associate.position">
 												</div>
 											</div>
 										</div>
-										<div class="col-sm-8">
-											<div class="form-group">
-												<label>Association Name</label>
-												<input type="text" class="form-control" id="" placeholder="">
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Start Date</label>
+													<input type="text" class="form-control" id="" placeholder="" ng-modal="associate.startDate">
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>End Date</label>
+													<input type="text" class="form-control" id="" placeholder="" ng-modal="associate.endDate">
+												</div>
 											</div>
 										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Associated By</label>
-												<input type="text" class="form-control" id="" placeholder="">
+										<div class="row">
+											<div class="col-sm-12 m-t-10 text-right">
+											  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
+											  <button class="btn btn-red btn-md text-u-c">Cancel</button>
 											</div>
 										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Year</label>
-												<input type="text" class="form-control" id="" placeholder="">
+									</div>		
+								</div>
+								<div class="form-block-wrap" ng-show="showTheForm1" ng-submit="processForm1()">
+									<div class="row">											
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Association Name</label>
+													<input type="text" class="form-control" id="" placeholder="Association Name">
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Position</label>
+													<input type="text" class="form-control" id="" placeholder="Position">
+												</div>
 											</div>
 										</div>
-									</div>
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Start Date</label>
+													<input type="text" class="form-control" id="" placeholder="Start Date">
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>End Date</label>
+													<input type="text" class="form-control" id="" placeholder="End Date">
+												</div>
+											</div>
+										</div>
 									<div class="row">
 										<div class="col-sm-12 m-t-10 text-right">
 										  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
 										  <button class="btn btn-red btn-md text-u-c">Cancel</button>
 										</div>
 									</div>
-								</div>
-								<a href="" class="btn btn-success btn-md text-u-c m-t-10"><i class="fa fa-plus"></i> Add New Association</a>
+								</div>			
+								<a href="" class="btn btn-success btn-md text-u-c m-t-10" ng-click="showTheForm1 = !showTheForm1"><i class="fa fa-plus"></i> Add New Awards</a>
 							</div>
-						</div>
+						</div>								
 					</div>
+<!--------------------------------------------Publications-------------------------------------------------------------------------------->					
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title">
@@ -539,42 +737,72 @@
 								Publications
 							  </a>
 							</h4>
-						</div>
-						<div id="collapseSix" class="panel-collapse collapse" uib-collapse="signupCollapse.publications">
+						</div>	
+						<div id="collapseSix" class="panel-collapse collapse" uib-collapse="signupCollapse.publications">			
 							<div class="panel-body">
-								<div class="tab-custom-icon">
-									<a href=""><i class="fa fa-edit"></i> </a>
-									<a href=""><i class="fa fa-trash"></i> </a>
-								</div>
-								<div class="form-block-wrap">
-									<div class="row">
-										<div class="col-sm-4">
-											<div class="form-group">
-												<label>Upload Logo</label>
-												<div class="fileUpload btn btn-md btn-block btn-white b-a">
-													<span>Upload Logo</span>
-													<input type="file" class="upload" name="resume">
+								<div class="m-b-20" ng-repeat="publications in profileDetails.publication">
+									<div>
+										<div class="tab-custom-icon">
+											<a href="" ng-click="showTheForm = !showTheForm"><i class="fa fa-edit"></i> </a>
+											<a href="" ng-click="deleteAwards('md',work.id)" ><i class="fa fa-trash"></i></a>
+										</div>
+										<div class="form-block-wrap">											
+											<div class="publications-content">
+												<h3>{{publications.publicaitonName}}</h3>
+												<p class="p-t-40">{{publications.date | dateformat1}}</p>
+												<p>{{publications.description}}</p>
+											</div>																						
+										</div>
+									</div>
+									<div class="form-block-wrap" ng-show="showTheForm" ng-submit="processForm()">
+										<div class="row">											
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>publications Name</label>
+													<input type="text" class="form-control" id="" placeholder="" ng-modal="publications.publicaitonName">
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Date</label>
+													<input type="text" class="form-control" id="" placeholder="" ng-modal="publications.date">
 												</div>
 											</div>
 										</div>
-										<div class="col-sm-8">
+										<div class="row">									
+											<div class="form-group">
+												<label>Description</label>
+												<input type="text" class="form-control" id="" placeholder="" ng-modal="publications.description">
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12 m-t-10 text-right">
+											  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
+											  <button class="btn btn-red btn-md text-u-c">Cancel</button>
+											</div>
+										</div>
+									</div>		
+								</div>
+								<div class="form-block-wrap" ng-show="showTheForm1" ng-submit="processForm1()">
+									<div class="row">											
+										<div class="col-sm-6">
 											<div class="form-group">
 												<label>Publication Name</label>
-												<input type="text" class="form-control" id="" placeholder="">
+												<input type="text" class="form-control" id="" placeholder="Association Name">
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label>Publication Date</label>
+												<input type="text" class="form-control" id="" placeholder="Date">
 											</div>
 										</div>
 									</div>
-									<div class="row">
-										<div class="col-sm-6">
+									<div class="row">	
+										<div class="col-sm-12">
 											<div class="form-group">
-												<label>Publised By</label>
-												<input type="text" class="form-control" id="" placeholder="">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Year</label>
-												<input type="text" class="form-control" id="" placeholder="">
+												<label>Description</label>
+												<input type="text" class="form-control" id="" placeholder="Description">
 											</div>
 										</div>
 									</div>
@@ -584,11 +812,12 @@
 										  <button class="btn btn-red btn-md text-u-c">Cancel</button>
 										</div>
 									</div>
-								</div>
-								<a href="" class="btn btn-success btn-md text-u-c m-t-10"><i class="fa fa-plus"></i> Add New Publication</a>
+								</div>			
+								<a href="" class="btn btn-success btn-md text-u-c m-t-10" ng-click="showTheForm1 = !showTheForm1"><i class="fa fa-plus"></i> Add New Awards</a>
 							</div>
-						</div>
+						</div>							
 					</div>	
+<!-----------------------------------------Conferences----------------------------------------------------------------------------------->					
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title">
@@ -597,42 +826,99 @@
 							  </a>
 							</h4>
 						</div>
-						<div id="collapseSeven" class="panel-collapse collapse" uib-collapse="signupCollapse.conference">
+						<div id="collapseSeven" class="panel-collapse collapse" uib-collapse="signupCollapse.conference">			
 							<div class="panel-body">
-								<div class="tab-custom-icon">
-									<a href=""><i class="fa fa-edit"></i> </a>
-									<a href=""><i class="fa fa-trash"></i> </a>
-								</div>
-								<div class="form-block-wrap">
-									<div class="row">
-										<div class="col-sm-4">
-											<div class="form-group">
-												<label>Upload Logo</label>
-												<div class="fileUpload btn btn-md btn-block btn-white b-a">
-													<span>Upload Logo</span>
-													<input type="file" class="upload" name="resume">
+								<div class="m-b-20" ng-repeat="conferences in profileDetails.conference">
+									<div>
+										<div class="tab-custom-icon">
+											<a href="" ng-click="showTheForm = !showTheForm"><i class="fa fa-edit"></i> </a>
+											<a href="" ng-click="deleteAwards('md',work.id)" ><i class="fa fa-trash"></i></a>
+										</div>
+										<div class="form-block-wrap">											
+											<div class="conferences-content">
+												<h3>{{conferences.conferenceName}}</h3>
+												<p class="p-t-40">{{conferences.startDate | dateformat1}} - {{conferences.endDate | dateformat1}}</p>
+												<p>{{conferences.location}}</p>
+												<p>{{conferences.topic}}</p>
+											</div>																						
+										</div>
+									</div>
+									<div class="form-block-wrap" ng-show="showTheForm" ng-submit="processForm()">
+										<div class="row">											
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Conference Name</label>
+													<input type="text" class="form-control" id="" placeholder="" ng-modal="conferences.conferenceName">
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Location</label>
+													<input type="text" class="form-control" id="" placeholder="" ng-modal="conferences.location">
 												</div>
 											</div>
 										</div>
-										<div class="col-sm-8">
+										<div class="row">											
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Start Date</label>
+													<input type="text" class="form-control" id="" placeholder="" ng-modal="conferences.startDate">
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>End Date</label>
+													<input type="text" class="form-control" id="" placeholder="" ng-modal="conferences.endDate">
+												</div>
+											</div>
+										</div>
+										<div class="row">									
+											<div class="form-group">
+												<label>Topic</label>
+												<input type="text" class="form-control" id="" placeholder="" ng-modal="conferences.topic">
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12 m-t-10 text-right">
+											  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
+											  <button class="btn btn-red btn-md text-u-c">Cancel</button>
+											</div>
+										</div>
+									</div>		
+								</div>
+								<div class="form-block-wrap" ng-show="showTheForm1" ng-submit="processForm1()">
+									<div class="row">											
+										<div class="col-sm-6">
 											<div class="form-group">
 												<label>Conference Name</label>
 												<input type="text" class="form-control" id="" placeholder="">
 											</div>
 										</div>
-									</div>
-									<div class="row">
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label>Conference By</label>
+												<label>Location</label>
+												<input type="text" class="form-control" id="" placeholder="">
+											</div>
+										</div>
+									</div>
+									<div class="row">											
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label>Start Date</label>
 												<input type="text" class="form-control" id="" placeholder="">
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label>Date</label>
+												<label>End Date</label>
 												<input type="text" class="form-control" id="" placeholder="">
 											</div>
+										</div>
+									</div>
+									<div class="row">									
+										<div class="form-group">
+											<label>Topic</label>
+											<input type="text" class="form-control" id="" placeholder="">
 										</div>
 									</div>
 									<div class="row">
@@ -640,12 +926,13 @@
 										  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
 										  <button class="btn btn-red btn-md text-u-c">Cancel</button>
 										</div>
-									</div>
-								</div>
-								<a href="" class="btn btn-success btn-md text-u-c m-t-10"><i class="fa fa-plus"></i> Add New Conference</a>
+									</div>									
+								</div>			
+								<a href="" class="btn btn-success btn-md text-u-c m-t-10" ng-click="showTheForm1 = !showTheForm1"><i class="fa fa-plus"></i> Add New Awards</a>
 							</div>
-						</div>
-					</div>						
+						</div>								
+					</div>	
+<!------------------------------------------------------------------------------------------------------------------------------------>					
 				</div>
 			</div>
 		</div>
