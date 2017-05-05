@@ -1,4 +1,4 @@
-var app = angular.module('health-advisor',['ui.router','ngAnimate','ui.bootstrap','ui.utils','bw.paging','timeRelative','ngStorage','ngSanitize']);
+var app = angular.module('health-advisor',['ui.router','ngAnimate','ImageCropper','ui.bootstrap','ui.utils','bw.paging','timeRelative','ngStorage','ngSanitize','ngTagsInput','autocomplete']);
 app.config(function($stateProvider, $urlRouterProvider,$provide) {
   $urlRouterProvider.otherwise('/home');
   $stateProvider

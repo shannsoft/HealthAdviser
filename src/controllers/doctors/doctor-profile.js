@@ -1,7 +1,7 @@
-app.controller("DoctorProfileController",function($scope, $rootScope,CommonService,$timeout){
+app.controller("DoctorProfileController",function($scope, $rootScope,CommonService,$timeout,DoctorDetailsService,Util,$filter){
 	google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
-	$scope.signupCollapse = {
+	  $scope.signupCollapse = {
         aboutme: false,
         workExperiance: true,
         education: true,
@@ -49,11 +49,22 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
   			$rootScope.showPreloader = false;
   			if(response.data.StatusCode == 200)
   				$scope.profileDetails = response.data.Data.result;
+          // angular.forEach($scope.profileDetails.phone,function(item){
+          //   item.isPreffered = (item.isPreffered ) ? 'true' : 'false';
+          // })
   				$scope.initMapLocation();
   		},function(error){
   			$rootScope.showPreloader = false;
   		})
   	}
+    $scope.changeOnPreffered = function(index) {
+      angular.forEach($scope.profileDetails.phone, function(contact,key) {
+        if (key !== index) {
+          contact.isPreffered = false;
+        }
+      });
+      console.log($scope.profileDetails.phone);
+    }
     /****************************************************************************/
     /*************FUNCTION USE FOR LOAD THE Specialization list******************/
   	/****************************************************************************/
@@ -71,7 +82,7 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
     /****************************************************************************/
     /**************FUNCTION USE FOR LOAD THE LANGUAGE LIST***********************/
   	/****************************************************************************/
-  	$scope.loadLanguages = function(){
+  	$scope.loadLanguagesList = function(){
 			CommonService.languages().then(function(response){
 				if(response.data.StatusCode == 200){
 					$scope.languages = [];
@@ -138,13 +149,109 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
             }
         }
 	}
+
+  /****************************************************************************/
+  /**************************Read the image file*******************************/
+  /****************************************************************************/
+  function readAddImage(input) {
+    if (input.files && input.files[0]) {
+      var fileReader = new FileReader();
+      fileReader.onload = function(e) {
+        $scope.imageSrc = e.target.result;
+        $scope.imagename= input.files[0].name;
+        $scope.is_crop_image = true;
+        $scope.$apply();
+      };
+      fileReader.readAsDataURL(input.files[0]);
+    }
+  }
+  $("#addImg").change(function() {
+      readAddImage(this);
+  });
+  /****************************************************************************/
+  /**************************loads the croped image****************************/
+  /****************************************************************************/
+  $("#cropped_img").load(function() {
+      $scope.is_crop_image = false;
+      $scope.profile_image = $('#cropped_img').attr( "src");
+      $scope.imageCropStep = 1;
+      $scope.$apply();
+  });
+  $scope.clearimage = function(){
+    $scope.profile_image = '';
+  }
+  $scope.addMobile = function(){
+    $scope.profileDetails.phone.push($scope.mobile);
+    $scope.mobile = {};
+  }
+  $scope.removeMobile = function(index){
+    $scope.profileDetails.phone.splice(index,1);
+  }
+  /****************************************************************************/
+  /******************************To update the basic info**********************/
+  /****************************************************************************/
+  $scope.updatePersonalProfile = function () {
+    $rootScope.showPreloader = true;
+    var personalDetails = {};
+    personalDetails.profile = $scope.profileDetails.profile;
+    personalDetails.address = $scope.profileDetails.address;
+    personalDetails.phone = $scope.profileDetails.phone;
+    personalDetails.consulation = $scope.profileDetails.consulation;
+    if($scope.profile_image){
+      personalDetails.fileData = {
+        "fileName" : $scope.imagename,
+        "inputStream" : $scope.imageSrc.split(";base64,")[1]
+      };
+    }
+    DoctorDetailsService.updatePersonalProfile(personalDetails).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        Util.alertMessage('success', 'your information successfully updated. Thank you.');
+        $scope.$emit('login-success');
+      }
+      else{
+        Util.alertMessage('danger', 'Somthing went wrong ! unable to update your information.');
+      }
+    }, function (errorResponse) {
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger','Somthing went wrong ! unable to update your information.');
+    });
+  };
+  $scope.loadLanguages = function (query) {
+      var result = $filter('filter')($scope.languages, query);
+      return result;
+  };
 	/****************************************************************************/
-    /**************FUNCTION HIDE EDIT FORM***********************/
-  	/****************************************************************************/
+  /**************FUNCTION HIDE EDIT FORM***********************/
+	/****************************************************************************/
 	$scope.processForm = function() {
 		$scope.showTheForm = false;
 	}
 	$scope.processForm1 = function() {
 		$scope.showTheForm1 = false;
 	}
+  $scope.changeSelect = function(option,start,end){
+      if(start && end){
+        if(moment(start).isAfter(end)){
+          if(option == 'start'){
+            $scope.is_startError = true;
+          }
+          else if(option == 'end'){
+            $scope.is_endError = true;
+          }
+          else if(option == 'e_start'){
+            $scope.is_EstartError = true;
+          }
+          else if(option == 'e_end'){
+            $scope.is_EendError = true;
+          }
+        }
+        else{
+          $scope.is_startError = false;
+          $scope.is_EstartError = false;
+          $scope.is_endError = false;
+          $scope.is_EendError = false;
+        }
+      }
+    }
 })

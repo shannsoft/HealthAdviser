@@ -1,4 +1,4 @@
-var app = angular.module('health-advisor',['ui.router','ngAnimate','ui.bootstrap','ui.utils','bw.paging','timeRelative','ngStorage','ngSanitize']);
+var app = angular.module('health-advisor',['ui.router','ngAnimate','ImageCropper','ui.bootstrap','ui.utils','bw.paging','timeRelative','ngStorage','ngSanitize','ngTagsInput','autocomplete']);
 app.config(["$stateProvider", "$urlRouterProvider", "$provide", function($stateProvider, $urlRouterProvider,$provide) {
   checkLoggedin.$inject = ["$q", "$timeout", "$rootScope", "$state", "$localStorage", "HealthAuth"];
   checkLoggedout.$inject = ["$q", "$timeout", "$rootScope", "$state", "$localStorage", "HealthAuth"];
@@ -365,7 +365,7 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 				})
 			}
 		},function(errot){
-			$$rootScope.showPreloader = false;
+			$rootScope.showPreloader = false;
 		})
 	}
 	$scope.initSpecialization = function(isSearched){
@@ -380,7 +380,45 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 		localStorage.setItem('specialization',name);
 		$state.go('specialization-details');
 	}
-}]);app.controller('UserProfileController', ["$scope", "$rootScope", "$state", "CommonService", function($scope, $rootScope, $state, CommonService){
+}])
+.controller('DatePickerCtrl' , ['$scope', function ($scope) {
+        $scope.today = function() {
+            $scope.dt = new Date();
+        };
+        $scope.today();
+
+        $scope.clear = function () {
+            $scope.dt = null;
+        };
+
+        $scope.toggleMin = function() {
+            $scope.minDate = null; //$scope.minDate = null || new Date();
+            $scope.maxDate = new Date();
+            $scope.dateMin = null || new Date();
+        };
+        $scope.toggleMin();
+
+        $scope.open1 = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            $scope.opened = true;
+        };
+
+        $scope.dateOptions = {
+            formatYear: 'yy',
+            startingDay: 1
+        };
+
+        $scope.mode = 'month';
+
+        $scope.initDate = new Date();
+        $scope.formats = ['MM-dd-yyyy', 'dd-MMM-yyyy', 'dd-MMMM-yyyy', 'yyyy-MM-dd', 'dd/MM/yyyy', 'yyyy-MMM','shortDate'];
+        $scope.format = $scope.formats[4];
+        $scope.format1=$scope.formats[5];
+
+    }
+    ]);;app.controller('UserProfileController', ["$scope", "$rootScope", "$state", "CommonService", function($scope, $rootScope, $state, CommonService){
     google = typeof google === 'undefined' ? "" : google;
     var googleTime;
     $scope.showtab = function(obj) {
@@ -538,10 +576,10 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
       }
     }
   }
-}]);app.controller("DoctorProfileController",["$scope", "$rootScope", "CommonService", "$timeout", function($scope, $rootScope,CommonService,$timeout){
+}]);app.controller("DoctorProfileController",["$scope", "$rootScope", "CommonService", "$timeout", "DoctorDetailsService", "Util", "$filter", function($scope, $rootScope,CommonService,$timeout,DoctorDetailsService,Util,$filter){
 	google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
-	$scope.signupCollapse = {
+	  $scope.signupCollapse = {
         aboutme: false,
         workExperiance: true,
         education: true,
@@ -585,6 +623,14 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
   			$rootScope.showPreloader = false;
   		})
   	}
+    $scope.changeOnPreffered = function(index) {
+      angular.forEach($scope.profileDetails.phone, function(contact,key) {
+        if (key !== index) {
+          contact.isPreffered = false;
+        }
+      });
+      console.log($scope.profileDetails.phone);
+    }
   	$scope.loadSpecialization = function(){
 			CommonService.specialization().then(function(response){
 				if(response.data.StatusCode == 200){
@@ -596,7 +642,7 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 			},function(errot){
 			})
   	}
-  	$scope.loadLanguages = function(){
+  	$scope.loadLanguagesList = function(){
 			CommonService.languages().then(function(response){
 				if(response.data.StatusCode == 200){
 					$scope.languages = [];
@@ -654,12 +700,98 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
             }
         }
 	}
+  function readAddImage(input) {
+    if (input.files && input.files[0]) {
+      var fileReader = new FileReader();
+      fileReader.onload = function(e) {
+        $scope.imageSrc = e.target.result;
+        $scope.imagename= input.files[0].name;
+        $scope.is_crop_image = true;
+        $scope.$apply();
+      };
+      fileReader.readAsDataURL(input.files[0]);
+    }
+  }
+  $("#addImg").change(function() {
+      readAddImage(this);
+  });
+  $("#cropped_img").load(function() {
+      $scope.is_crop_image = false;
+      $scope.profile_image = $('#cropped_img').attr( "src");
+      $scope.imageCropStep = 1;
+      $scope.$apply();
+  });
+  $scope.clearimage = function(){
+    $scope.profile_image = '';
+  }
+  $scope.addMobile = function(){
+    $scope.profileDetails.phone.push($scope.mobile);
+    $scope.mobile = {};
+  }
+  $scope.removeMobile = function(index){
+    $scope.profileDetails.phone.splice(index,1);
+  }
+  $scope.updatePersonalProfile = function () {
+    $rootScope.showPreloader = true;
+    var personalDetails = {};
+    personalDetails.profile = $scope.profileDetails.profile;
+    personalDetails.address = $scope.profileDetails.address;
+    personalDetails.phone = $scope.profileDetails.phone;
+    personalDetails.consulation = $scope.profileDetails.consulation;
+    if($scope.profile_image){
+      personalDetails.fileData = {
+        "fileName" : $scope.imagename,
+        "inputStream" : $scope.imageSrc.split(";base64,")[1]
+      };
+    }
+    DoctorDetailsService.updatePersonalProfile(personalDetails).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        Util.alertMessage('success', 'your information successfully updated. Thank you.');
+        $scope.$emit('login-success');
+      }
+      else{
+        Util.alertMessage('danger', 'Somthing went wrong ! unable to update your information.');
+      }
+    }, function (errorResponse) {
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger','Somthing went wrong ! unable to update your information.');
+    });
+  };
+  $scope.loadLanguages = function (query) {
+      var result = $filter('filter')($scope.languages, query);
+      return result;
+  };
 	$scope.processForm = function() {
 		$scope.showTheForm = false;
 	}
 	$scope.processForm1 = function() {
 		$scope.showTheForm1 = false;
 	}
+  $scope.changeSelect = function(option,start,end){
+      if(start && end){
+        if(moment(start).isAfter(end)){
+          if(option == 'start'){
+            $scope.is_startError = true;
+          }
+          else if(option == 'end'){
+            $scope.is_endError = true;
+          }
+          else if(option == 'e_start'){
+            $scope.is_EstartError = true;
+          }
+          else if(option == 'e_end'){
+            $scope.is_EendError = true;
+          }
+        }
+        else{
+          $scope.is_startError = false;
+          $scope.is_EstartError = false;
+          $scope.is_endError = false;
+          $scope.is_EendError = false;
+        }
+      }
+    }
 }])
 ;app.controller('ReviewController',["$scope", "$rootScope", "$stateParams", "DoctorService", function($scope, $rootScope, $stateParams, DoctorService){
 	$rootScope.isReload = false;
@@ -1491,6 +1623,15 @@ app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){
 		    var response = $http({
 		        method: 'GET',
 		        url: CONFIG.API_PATH+'_Profile_Education?type=GET_EDUCATION',
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
+		    })
+		    return response;
+		},
+		updatePersonalProfile : function(dataDetails){
+		    var response = $http({
+		        method: 'PUT',
+		        url: CONFIG.API_PATH+'_User',
+		        data: dataDetails,
 		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
 		    });
 		    return response;		

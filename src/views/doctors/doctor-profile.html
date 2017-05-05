@@ -31,218 +31,280 @@
 							  		<div role=tabpanel id="div_basic-tab" class="tab-pane active" aria-labelledby=basic-tab>
 										<div class="row">
 										  	<div class="col-sm-3">
-											  	<div class="profile-upload">
-													<h1 ng-if="!profileDetails.photo">{{profileDetails.profile.name | getShortName}}</h1>
-													<img ng-if="profileDetails.photo" class="img-responsive" src="{{profileDetails.photo}}">
+											  	<div class="profile-upload" ng-show="!is_crop_image">
+											  		<img id="imgadd" class="img-responsive" ng-src="{{profile_image}}" ng-if="profile_image">
+													<h1 ng-if="!profileDetails.photo && !profile_image">{{profileDetails.profile.name | getShortName}}</h1>
+													<img ng-if="profileDetails.photo && !profile_image" class="img-responsive" src="{{profileDetails.photo}}">
 											  	</div>
-												<div class="row">
+												<div class="row" ng-show="!is_crop_image">
 													<div class="col-sm-12 m-t-10 text-center">
-													  <button class="btn btn-blue btn-sm">Upload</button>
-													  <button class="btn btn-red btn-sm">Cancel</button>
+													  	<div class="img-fileUpload btn btn-primary">
+															<span>Upload</span>
+															<input id="addImg" type="file" class="upload" />
+														</div>
+														<a class="btn update-cancel-btn" href="" role="button" ng-click="clearimage()">Cancel</a>
 													</div>
 												</div>
+												<div class="prof-position profile-upload" ng-show="imageCropStep == 2">
+					                              <image-crop
+					                                      data-height="150"
+					                                      data-width="150"
+					                                      data-shape="square"
+					                                      data-step="imageCropStep"
+					                                      src="imageSrc"
+					                                      data-result="result"
+					                                      data-result-blob="resultBlob"
+					                                      crop="initCrop"
+					                                      padding="40"
+					                                      max-size="1024">
+													</image-crop>
+				                                  <button class="btn-block btn-primary" ng-click="initCrop = true"><i class="glyphicon glyphicon-scissors"></i> &nbsp;&nbsp;&nbsp;& &nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-floppy-save"></i></button>
+				                                </div>
+				                                <div ng-show="imageCropStep == 3" style="display:none;">
+				                                    <img ng-src="{{result}}" id="cropped_img" />
+				                                </div>
 										  	</div>
 								  			<div class="col-sm-9">
-												<div class="row">
-													<div class="col-sm-6">
-														<div class="form-group">
-															<label>First Name</label>
-															<input type="text" class="form-control" id="" ng-model="profileDetails.profile.fName" placeholder="First Name">
+									  			<form name="basicProf">
+													<div class="row">
+														<div class="col-sm-6">
+															<div class="form-group">
+																<label>First Name</label>
+																<input type="text" class="form-control" name="fname" ng-model="profileDetails.profile.fName" placeholder="First Name" required>
+															</div>
 														</div>
-													</div>
-													<div class="col-sm-6">
-														<div class="form-group">
-															<label>Last Name</label>
-															<input type="text" class="form-control" id="" ng-model="profileDetails.profile.lName" placeholder="Last Name">
-														</div>
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-sm-6">
-														<div class="form-group">
-															<label>Email</label>
-															<input type="text" class="form-control" id="" placeholder="" ng-model="profileDetails.emailId" readonly>
-														</div>
-													</div>
-													<div class="col-sm-6">
-														<div class="form-group">
-															<label class="control-label">Can Provide Free Consulation?</label>
-															<div class="row">
-																<div class="h-40 col-md-3">
-																	<div class="onoffswitch">
-																		<input type="checkbox" ng-model="lawyerProfile.consultation.free_consultation" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
-																		<label class="onoffswitch-label" for="myonoffswitch">
-																			<span class="onoffswitch-inner"></span>
-																			<span class="onoffswitch-switch"></span>
-																		</label>
-																	</div>
-													            </div>
-													            <div class="col-md-4">
-													            <input type="number" class="form-control" id="" placeholder="">
-													            </div>
+														<div class="col-sm-6">
+															<div class="form-group">
+																<label>Last Name</label>
+																<input type="text" class="form-control" name="lname" ng-model="profileDetails.profile.lName" placeholder="Last Name" required>
 															</div>
 														</div>
 													</div>
+													<div class="row">
+														<div class="col-sm-6">
+															<div class="form-group">
+																<label>Email</label>
+																<input type="text" class="form-control" ng-model="profileDetails.emailId" readonly>
+															</div>
+														</div>
+														<div class="col-sm-6">
+															<div class="form-group">
+																<label class="control-label">Can Provide Free Consulation?</label>
+																<div class="row">
+																	<div class="h-40 col-md-3">
+																		<div class="onoffswitch">
+																			<input type="checkbox" ng-model="profileDetails.consulation.is_free_consultation" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+																			<label class="onoffswitch-label" for="myonoffswitch">
+																				<span class="onoffswitch-inner"></span>
+																				<span class="onoffswitch-switch"></span>
+																			</label>
+																		</div>
+														            </div>
+														            <div class="col-md-4" ng-if="profileDetails.consulation.is_free_consultation">
+														            	<input type="number" ng-model="profileDetails.consulation.fees" class="form-control" placeholder="Fees">
+														            </div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-sm-5">
+															<div class="form-group">
+																<label>Number</label>
+																<input type="text" class="form-control" ui-mask="999-999-9999" placeholder="xxx-xxx-xxxx" ng-model="mobile.number">
+															</div>
+														</div>
+														<div class="col-sm-5">
+															<div class="form-group">
+																<label>Type</label>
+																<input type="text" class="form-control" id="" placeholder="Number Type" ng-model="mobile.type">
+															</div>
+														</div>
+														<div class="col-sm-2">
+															<button ng-disabled="!mobile.number || !mobile.type" class="btn btn-primary btn-md m-t-28" ng-click="addMobile()">Add</button>
+														</div>
+
+														<div class="col-sm-12">
+															<table class="table table-striped">
+																<tbody ng-repeat="phone in profileDetails.phone">
+																	<tr>
+																		<td style="width:40%; vertical-align:middle;">+91 {{phone.number | phonenumber}}</td>
+																		<td style="width:30%; vertical-align:middle;">{{phone.type}}</td>
+																		<td style="width:30%; vertical-align:middle;">
+																			<div class="">
+																				<div class="radio radio-primary">
+																					<input id="isPrefered_{{$index}}" ng-model="phone.isPreffered" name="prefered" type="radio" ng-change='changeOnPreffered($index)' ng-value="true">
+																					<label style="margin-bottom:0" for="isPrefered_{{$index}}">Preffered</label>
+																				</div>
+																			</div>
+																		</td>
+																		<td align="right" style="padding: 14px 22px;">
+																			<button class="btn btn-danger btn-sm" ng-click="removeMobile($index)"><i class="fa fa-close"></i></button>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+													<div class="form-group">
+														<label>Street</label>
+														<input type="text" class="form-control" id="street" name="street" placeholder="Street Address" ng-model="profileDetails.address.streetAddress" required>
+													</div>
+													<div class="row">
+														<div class="col-sm-4">
+															<div class="form-group">
+																<label>City</label>
+																<input type="text" class="form-control" name="city" placeholder="City" ng-model="profileDetails.address.city" required>
+															</div>
+														</div>
+														<div class="col-sm-4">
+															<div class="form-group">
+																<label>State</label>
+																<input type="text" class="form-control" name="state" placeholder="State" ng-model="profileDetails.address.state" required>
+															</div>
+														</div>
+														<div class="col-sm-4">
+															<div class="form-group">
+																<label>Zip</label>
+																<input type="text" class="form-control" name="zipcode" placeholder="Postal Code" ng-model="profileDetails.address.postalCode" required>
+															</div>
+														</div>
+													</div>
+													<div class="form-group">
+														<label>About me</label>
+														<textarea ng-model="profileDetails.profile.about" class="form-control" rows="4" placeholder="Write something about you......"></textarea>
+													</div>
+													<div class="row">
+														<div class="col-sm-12 m-t-10 text-right">
+														  <button class="btn btn-blue btn-md text-u-c" ng-disabled="basicProf.$invalid" ng-click="updatePersonalProfile()">Save Change</button>
+														  <button class="btn btn-red btn-md text-u-c">Cancel</button>
+														</div>
+													</div>
+												</form>
+								  			</div>
+										</div>
+							  		</div>
+								  	<div role=tabpanel id="div_specialization-tab" class="tab-pane"  aria-labelledby=specialization-tab>
+										<div class="row" ng-init="loadSpecialization();">
+											<div class="col-sm-5">
+												<div class="form-group auto-complete">
+													<label>Specialization</label>
+													<input class="form-control" name="specialize" type="text" placeholder="Choose Specialization" ng-model="doctor.specialization" typeahead="spe for spe in specializationList | filter:$viewValue" class="form-control">
 												</div>
+											</div>
+											<div class="col-sm-5">
 												<div class="form-group">
-													<label>Street</label>
-													<input type="text" class="form-control" id="street" placeholder="" ng-model="profileDetails.address.streetAddress">
+													<label>Specialization Years</label>
+													<input type="number" class="form-control" id="" placeholder="Enter Specialization Year" ng-model="doctor.year">
 												</div>
+											</div>
+											<div class="col-sm-2">
+												<button ng-disabled="!doctor.specialization || !doctor.year" class="btn btn-blue spec-ok-btn" ng-click="updateSpecialization()"><i class="fa fa-check"></i></button>
+											</div>
+											<div class="col-sm-11">
+												<table class="table table-striped">
+													<tbody ng-repeat="spe in profileDetails.specialization">
+														<tr>
+															<td style="width:70%; vertical-align:middle;">{{spe.specializationOn}}</td>
+															<td style="width:20%; vertical-align:middle;">{{spe.yearsOfExperience}}</td>
+															<td align="right" style="padding: 8px 22px;"><button ng-click="clearSpecializationOn($index)"class="btn btn-danger spec-danger-btn"><i class="fa fa-close"></i></button></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+
+
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Year of Experience</label>
+													<input type="text" class="form-control" id="" placeholder="Choose Practice Area">
+												</div>
+											</div>
+											<div class="col-sm-6" ng-init="loadLanguagesList();">
+												<div class="form-group">
+													<label>Enter Languages</label>
+													<tags-input ng-model="specialize.languageTags" placeholder="Enter Languages" required name="LangArea">
+													<auto-complete source="loadLanguages($query)" min-length="0" load-on-focus="true" load-on-empty="false" max-results-to-show="70" template="autocomplete-template"></auto-complete>
+													</tags-input>
+													<span style="color:red;font-size: 10px" ng-show="languages" class="help-block">Please Enter Languages</span>
+												</div>
+											</div>
+										</div>
+										<!-- <div class="row">
+											<div class="col-sm-12">
+												<div class="form-group">
+													<label>Life Event</label>
+													<input type="text" class="form-control" id="" placeholder="Enter Practice Area Year">
+												</div>
+											</div>
+										</div> -->
+										<div class="row">
+											<div class="col-sm-12 m-t-10 text-right">
+											  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
+											  <button class="btn btn-red btn-md text-u-c">Cancel</button>
+											</div>
+										</div>
+								  	</div>
+								  	<div role=tabpanel class="tab-pane fade" id="div_social-tab" aria-labelledby=social-tab>
+										<div class="row">
+											<div class="col-sm-7">
+												<h3 class="m-t-0">YouTube video</h3>
+												<div class="social-line"></div>
+												<p>
+													To add video, select YouTube icon to the right and insert video link
+												</p>
+												<iframe width="560" height="315" src="https://www.youtube.com/embed/Q3SvIX0Jf04" frameborder="0" allowfullscreen></iframe>
+											</div>
+											<div class="col-sm-5">
+												<h3 class="m-t-0">Social Link</h3>
+												<div class="social-line"></div>
+												<small>Click on Social Icon to add personal social media information.</small>
+												<ul class="social-media">
+													<li><a href=""><span class="facebook-bg-default"><i class="fa fa-facebook"></i></span></a></li>
+													<li><a href=""><span class="twitter-bg-default"><i class="fa fa-twitter"></i></span></a></li>
+													<li><a href=""><span class="gplus-bg-default"><i class="fa fa-google-plus"></i></span></a></li>
+													<li><a href=""><span class="instagram-bg-default"><i class="fa fa-instagram"></i></span></a></li>
+													<li><a href=""><span class="youtube-bg-default"><i class="fa fa-youtube"></i></span></a></li>
+													<li><a href=""><span class="pinterest-bg-default"><i class="fa fa-pinterest-square"></i></span></a></li>
+												</ul>
 												<div class="row">
-													<div class="col-sm-4">
-														<div class="form-group">
-															<label>City</label>
-															<input type="text" class="form-control" id="" placeholder="" ng-model="profileDetails.address.city">
+													<div class="col-sm-8">
+														<div class="form-group m-b-20">
+														  <label class="control-label">Social Link</label>
+														  <input type="url" name="social" class="form-control b-a h-40" placeholder="" required="">
+														  <span style="color:red;font-size: 10px">URL shold be like http://www.example.com</span>
 														</div>
 													</div>
-													<div class="col-sm-4">
-														<div class="form-group">
-															<label>State</label>
-															<input type="text" class="form-control" id="" placeholder="" ng-model="profileDetails.address.state">
+													<button class="btn btn-blue social-link-btn m-t-30" role="button" ng-click="updateSocialMediaURL()" ng-disabled="aboutMeForm.social.$invalid" disabled="disabled"><i class="fa fa-check"></i></button>
+													<button class="btn btn-danger social-link-btn m-t-30" role="button" ng-click="clearSocialMedia()"><i class="fa fa-times"></i></button>
+												</div>
+												<div class="row m-t-20">
+													<div class="col-sm-8">
+														<h3 class="m-t-0">Website Link</h3>
+														<div class="social-line"></div>
+														<small class="m-b-5 block">You can add your Website link</small>
+													</div>
+													<div class="col-xs-8">
+														<div class="form-group m-b-20">
+														  <input type="text" name="website" class="form-control b-a h-40 ng-pristine ng-invalid ng-invalid-required ng-valid-pattern ng-touched" placeholder="http://www.example.com" ng-model="lawyerProfile.website" ng-pattern="/(?:https?:\/\/)?(?:www\.)?(?:https?:\/\/)?(?:www\.)(?:https?:\/\/)?(?:www\.)?(\/\S*)?/" required="" style="">
+														  <span style="color:red;font-size: 10px" ng-show="aboutMeForm.website.$error.pattern" class="ng-hide">Please enter correct URL</span>
 														</div>
 													</div>
-													<div class="col-sm-4">
-														<div class="form-group">
-															<label>Zip</label>
-															<input type="text" class="form-control" id="" placeholder="" ng-model="profileDetails.address.postalCode">
-														</div>
+													<div class="col-xs-4 p-l-0">
+														<button class="btn btn-blue social-link-btn" role="button" ng-click="updateWebsiteUrl()" ng-disabled="aboutMeForm.website.$invalid" disabled="disabled"><i class="fa fa-check"></i></button>
+														<button class="btn btn-danger social-link-btn" role="button" ng-click="clearWebsiteUrl()"><i class="fa fa-times"></i></button>
 													</div>
 												</div>
-											<div class="form-group">
-												<label>Address</label>
-												<textarea class="form-control" rows="4" placeholder="Comments..."></textarea>
 											</div>
-											<div class="row">
-												<div class="col-sm-12 m-t-10 text-right">
-												  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-												  <button class="btn btn-red btn-md text-u-c">Cancel</button>
-												</div>
-											</div>
-								  		</div>
-									</div>
-							  	</div>
-							  	<div role=tabpanel id="div_specialization-tab" class="tab-pane"  aria-labelledby=specialization-tab>
-
-
-									<div class="row" ng-init="loadSpecialization();">
-										<div class="col-sm-5">
-											<div class="form-group auto-complete">
-												<label>Specialization</label>
-												<input class="form-control" name="specialize" type="text" placeholder="Choose Specialization" ng-model="doctor.specialization" typeahead="spe for spe in specializationList | filter:$viewValue" class="form-control">
+											<div class="col-sm-12">
+												<section align="center">
+													<!-- ngRepeat: alert in alerts -->
+												</section>
 											</div>
 										</div>
-										<div class="col-sm-5">
-											<div class="form-group">
-												<label>Specialization Years</label>
-												<input type="number" class="form-control" id="" placeholder="Enter Specialization Year" ng-model="doctor.year">
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<button ng-disabled="!doctor.specialization || !doctor.year" class="btn btn-blue spec-ok-btn" ng-click="updateSpecialization()"><i class="fa fa-check"></i></button>
-										</div>
-										<div class="col-sm-11">
-											<table class="table table-striped">
-												<tbody ng-repeat="spe in profileDetails.specialization">
-													<tr>
-														<td style="width:70%; vertical-align:middle;">{{spe.specializationOn}}</td>
-														<td style="width:20%; vertical-align:middle;">{{spe.yearsOfExperience}}</td>
-														<td align="right" style="padding: 8px 22px;"><button ng-click="clearSpecializationOn($index)"class="btn btn-danger spec-danger-btn"><i class="fa fa-close"></i></button></td>
-													</tr>
-												</tbody>
-											</table>
-										</div>
-
-
-									</div>
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Year of Experience</label>
-												<input type="text" class="form-control" id="" placeholder="Choose Practice Area">
-											</div>
-										</div>
-										<div class="col-sm-6" ng-init="loadLanguages();">
-											<div class="form-group">
-												<label>Enter Languages</label>
-												<input type="text" class="form-control" id="" placeholder="Enter Practice Area Year">
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-12">
-											<div class="form-group">
-												<label>Life Event</label>
-												<input type="text" class="form-control" id="" placeholder="Enter Practice Area Year">
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-12 m-t-10 text-right">
-										  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-										  <button class="btn btn-red btn-md text-u-c">Cancel</button>
-										</div>
-									</div>
-							  	</div>
-							  	<div role=tabpanel class="tab-pane fade" id="div_social-tab" aria-labelledby=social-tab>
-									
-									<div class="row">
-										<div class="col-sm-7">
-											<h3 class="m-t-0">YouTube video</h3>
-											<div class="social-line"></div>
-											<p>
-												To add video, select YouTube icon to the right and insert video link
-											</p>
-											<iframe width="560" height="315" src="https://www.youtube.com/embed/Q3SvIX0Jf04" frameborder="0" allowfullscreen></iframe>
-										</div>
-										<div class="col-sm-5">
-											<h3 class="m-t-0">Social Link</h3>
-											<div class="social-line"></div>
-											<small>Click on Social Icon to add personal social media information.</small>
-											<ul class="social-media">
-												<li><a href=""><span class="facebook-bg-default"><i class="fa fa-facebook"></i></span></a></li>
-												<li><a href=""><span class="twitter-bg-default"><i class="fa fa-twitter"></i></span></a></li>
-												<li><a href=""><span class="gplus-bg-default"><i class="fa fa-google-plus"></i></span></a></li>
-												<li><a href=""><span class="instagram-bg-default"><i class="fa fa-instagram"></i></span></a></li>
-												<li><a href=""><span class="youtube-bg-default"><i class="fa fa-youtube"></i></span></a></li>
-												<li><a href=""><span class="pinterest-bg-default"><i class="fa fa-pinterest-square"></i></span></a></li>
-											</ul>
-											<div class="row">
-												<div class="col-sm-8">
-													<div class="form-group m-b-20">
-													  <label class="control-label">Social Link</label>
-													  <input type="url" name="social" class="form-control b-a h-40" placeholder="" required="">
-													  <span style="color:red;font-size: 10px">URL shold be like http://www.example.com</span>
-													</div>
-												</div>
-												<button class="btn btn-blue social-link-btn m-t-30" role="button" ng-click="updateSocialMediaURL()" ng-disabled="aboutMeForm.social.$invalid" disabled="disabled"><i class="fa fa-check"></i></button>
-												<button class="btn btn-danger social-link-btn m-t-30" role="button" ng-click="clearSocialMedia()"><i class="fa fa-times"></i></button>
-											</div>
-											<div class="row m-t-20">
-												<div class="col-sm-8">
-													<h3 class="m-t-0">Website Link</h3>
-													<div class="social-line"></div>
-													<small class="m-b-5 block">You can add your Website link</small>
-												</div>
-												<div class="col-xs-8">
-													<div class="form-group m-b-20">
-													  <input type="text" name="website" class="form-control b-a h-40 ng-pristine ng-invalid ng-invalid-required ng-valid-pattern ng-touched" placeholder="http://www.example.com" ng-model="lawyerProfile.website" ng-pattern="/(?:https?:\/\/)?(?:www\.)?(?:https?:\/\/)?(?:www\.)(?:https?:\/\/)?(?:www\.)?(\/\S*)?/" required="" style="">
-													  <span style="color:red;font-size: 10px" ng-show="aboutMeForm.website.$error.pattern" class="ng-hide">Please enter correct URL</span>
-													</div>
-												</div>
-												<div class="col-xs-4 p-l-0">
-													<button class="btn btn-blue social-link-btn" role="button" ng-click="updateWebsiteUrl()" ng-disabled="aboutMeForm.website.$invalid" disabled="disabled"><i class="fa fa-check"></i></button>
-													<button class="btn btn-danger social-link-btn" role="button" ng-click="clearWebsiteUrl()"><i class="fa fa-times"></i></button>
-												</div>
-											</div>
-										</div>
-										<div class="col-sm-12">
-											<section align="center">
-												<!-- ngRepeat: alert in alerts -->
-											</section>
-										</div>
-									</div>
-									
-							  	</div>
+								  	</div>
 								</div>
 							</div>
 						</div>
@@ -290,13 +352,13 @@
 											<div class="col-sm-6">
 												<div class="form-group">
 													<label>Start Month/Year</label>
-													<input type="text" class="form-control b-a h-40" name="dateFrom" placeholder="" ng-model="work.dateFrom | dateformat4" required>
+													<input type="text" class="form-control b-a h-40" name="dateFrom" placeholder=""  required>
 												</div>
 											</div>
 											<div class="col-sm-6">
 												<div class="form-group">
 													<label>End Month/Year</label>
-													<input type="text" class="form-control b-a h-40" name="dateTo" placeholder="" ng-model="work.dateTo | dateformat4" >													
+													<input type="text" class="form-control b-a h-40" name="dateTo" placeholder="">													
 												</div>
 											</div>
 										</div>
@@ -321,27 +383,29 @@
 										<div class="col-sm-6">
 											<div class="form-group">
 												<label class="control-label">Company Name</label>
-												<input type="text" name="companyname" class="form-control b-a h-40" placeholder="Company Name" ng-model="work.organizationName" required>													
+												<input type="text" name="companyname" class="form-control" placeholder="Company Name" ng-model="workexperience.organizationName" required>			
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group">
 												<label>Designation</label>
-												<input type="text" name="designation" class="form-control b-a h-40" placeholder="Doctor" ng-model="work.designation" required>
+												<input type="text" name="designation" class="form-control" placeholder="Doctor" ng-model="workexperience.designation" required>
 											</div>
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-sm-6">
-											<div class="form-group">
+											<div class="form-group" ng-controller="DatePickerCtrl">
 												<label>Start Month/Year</label>
-												<input type="text" class="form-control" id="" placeholder="">
+												<input type="text" class="form-control" name="startDate" ng-change="changeSelect('start',workexperience.dateFrom,workexperience.dateTo)" placeholder="2016, January" ng-model="workexperience.dateFrom" datepicker-popup="yyyy, MMMM" datepicker-options="{minMode: 'month'}" datepicker-mode="'month'" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)"  ng-required="true" close-text="Close" required/>
+												<span class="color-red" ng-if="is_endError">Start date sholud not be more than End date</span>
 											</div>
 										</div>
 										<div class="col-sm-6">
-											<div class="form-group">
+											<div class="form-group" ng-controller="DatePickerCtrl">
 												<label>End Month/Year</label>
-												<input type="text" class="form-control" id="" placeholder="">
+												<input type="text" class="form-control b-a h-40" name="endDate" ng-change="changeSelect('end',workexperience.dateFrom,workexperience.dateTo)" placeholder="2016, January" ng-model="workexperience.dateTo" datepicker-popup="yyyy, MMMM" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)"  datepicker-options="{minMode: 'month'}" datepicker-mode="'month'" ng-required="true" close-text="Close" />
+												<span class="color-red" ng-if="is_endError">End date sholud not be less than Start date</span>
 											</div>
 										</div>
 									</div>
@@ -365,6 +429,7 @@
 						</div>
 					</div>
 <!------------------------------------------------------Education--------------------------------------------------------------------------->
+					
 					<div class="panel panel-default">
 					  	<div class="panel-heading">
 							<h4 class="panel-title">
@@ -769,10 +834,12 @@
 												</div>
 											</div>
 										</div>
-										<div class="row">									
-											<div class="form-group">
-												<label>Description</label>
-												<input type="text" class="form-control" id="" placeholder="" ng-modal="publications.description">
+										<div class="row">	
+											<div class="col-sm-12">									
+												<div class="form-group">
+													<label>Description</label>
+													<input type="text" class="form-control" id="" placeholder="" ng-modal="publications.description">
+												</div>
 											</div>
 										</div>
 										<div class="row">
@@ -872,10 +939,12 @@
 												</div>
 											</div>
 										</div>
-										<div class="row">									
-											<div class="form-group">
-												<label>Topic</label>
-												<input type="text" class="form-control" id="" placeholder="" ng-modal="conferences.topic">
+										<div class="row">	
+											<div class="col-sm-12">									
+												<div class="form-group">
+													<label>Topic</label>
+													<input type="text" class="form-control" id="" placeholder="" ng-modal="conferences.topic">
+												</div>
 											</div>
 										</div>
 										<div class="row">
@@ -915,10 +984,12 @@
 											</div>
 										</div>
 									</div>
-									<div class="row">									
-										<div class="form-group">
-											<label>Topic</label>
-											<input type="text" class="form-control" id="" placeholder="">
+									<div class="row">	
+										<div class="col-sm-12">								
+											<div class="form-group">
+												<label>Topic</label>
+												<input type="text" class="form-control" id="" placeholder="">
+											</div>
 										</div>
 									</div>
 									<div class="row">

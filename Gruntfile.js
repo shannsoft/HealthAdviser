@@ -29,10 +29,13 @@ module.exports = function(grunt) {
                     "lib/angular/ngStorage.min.js",
                     "lib/angular/angular-ui-router.js",
                     "lib/angular/ui-bootstrap.min.js",
+                    "lib/angular/image-crop.js",
                     "lib/angular/angular-ui-utils.min.js",
                     "lib/angular/paging.min.js",
                     "lib/angular/ng-time-relative.js",
                     "lib/angular/angular-sanitize.min.js",
+                    "lib/angular/ng-tags-input.min.js",
+                    "lib/angular/autocomplete.js",
                 ],
                 dest: 'ng-libs.js'
             },

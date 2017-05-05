@@ -38927,6 +38927,1349 @@ function m(a){return a.replace(/([A-Z])/g,function(a){return"-"+a.toLowerCase()}
 b||a.warn("modal-transclude is now deprecated. Use uib-modal-transclude instead."),g(c.$parent,function(a){d.empty(),d.append(a)})}}}]).service("$modalStack",["$animate","$timeout","$document","$compile","$rootScope","$q","$injector","$$multiMap","$$stackedMap","$uibModalStack","$log","$modalSuppressWarning",function(a,b,c,d,e,f,g,h,i,j,k,l){l||k.warn("$modalStack is now deprecated. Use $uibModalStack instead."),angular.extend(this,j)}]).provider("$modal",["$uibModalProvider",function(a){angular.extend(this,a),this.$get=["$injector","$log","$modalSuppressWarning",function(b,c,d){return d||c.warn("$modal is now deprecated. Use $uibModal instead."),b.invoke(a.$get)}]}]),angular.module("ui.bootstrap.pagination",[]).controller("UibPaginationController",["$scope","$attrs","$parse",function(a,b,c){var d=this,e={$setViewValue:angular.noop},f=b.numPages?c(b.numPages).assign:angular.noop;this.init=function(g,h){e=g,this.config=h,e.$render=function(){d.render()},b.itemsPerPage?a.$parent.$watch(c(b.itemsPerPage),function(b){d.itemsPerPage=parseInt(b,10),a.totalPages=d.calculateTotalPages()}):this.itemsPerPage=h.itemsPerPage,a.$watch("totalItems",function(){a.totalPages=d.calculateTotalPages()}),a.$watch("totalPages",function(b){f(a.$parent,b),a.page>b?a.selectPage(b):e.$render()})},this.calculateTotalPages=function(){var b=this.itemsPerPage<1?1:Math.ceil(a.totalItems/this.itemsPerPage);return Math.max(b||0,1)},this.render=function(){a.page=parseInt(e.$viewValue,10)||1},a.selectPage=function(b,c){c&&c.preventDefault();var d=!a.ngDisabled||!c;d&&a.page!==b&&b>0&&b<=a.totalPages&&(c&&c.target&&c.target.blur(),e.$setViewValue(b),e.$render())},a.getText=function(b){return a[b+"Text"]||d.config[b+"Text"]},a.noPrevious=function(){return 1===a.page},a.noNext=function(){return a.page===a.totalPages}}]).constant("uibPaginationConfig",{itemsPerPage:10,boundaryLinks:!1,directionLinks:!0,firstText:"First",previousText:"Previous",nextText:"Next",lastText:"Last",rotate:!0}).directive("uibPagination",["$parse","uibPaginationConfig",function(a,b){return{restrict:"EA",scope:{totalItems:"=",firstText:"@",previousText:"@",nextText:"@",lastText:"@",ngDisabled:"="},require:["uibPagination","?ngModel"],controller:"UibPaginationController",controllerAs:"pagination",templateUrl:function(a,b){return b.templateUrl||"template/pagination/pagination.html"},replace:!0,link:function(c,d,e,f){function g(a,b,c){return{number:a,text:b,active:c}}function h(a,b){var c=[],d=1,e=b,f=angular.isDefined(k)&&b>k;f&&(l?(d=Math.max(a-Math.floor(k/2),1),e=d+k-1,e>b&&(e=b,d=e-k+1)):(d=(Math.ceil(a/k)-1)*k+1,e=Math.min(d+k-1,b)));for(var h=d;e>=h;h++){var i=g(h,h,h===a);c.push(i)}if(f&&!l){if(d>1){var j=g(d-1,"...",!1);c.unshift(j)}if(b>e){var m=g(e+1,"...",!1);c.push(m)}}return c}var i=f[0],j=f[1];if(j){var k=angular.isDefined(e.maxSize)?c.$parent.$eval(e.maxSize):b.maxSize,l=angular.isDefined(e.rotate)?c.$parent.$eval(e.rotate):b.rotate;c.boundaryLinks=angular.isDefined(e.boundaryLinks)?c.$parent.$eval(e.boundaryLinks):b.boundaryLinks,c.directionLinks=angular.isDefined(e.directionLinks)?c.$parent.$eval(e.directionLinks):b.directionLinks,i.init(j,b),e.maxSize&&c.$parent.$watch(a(e.maxSize),function(a){k=parseInt(a,10),i.render()});var m=i.render;i.render=function(){m(),c.page>0&&c.page<=c.totalPages&&(c.pages=h(c.page,c.totalPages))}}}}}]).constant("uibPagerConfig",{itemsPerPage:10,previousText:"« Previous",nextText:"Next »",align:!0}).directive("uibPager",["uibPagerConfig",function(a){return{restrict:"EA",scope:{totalItems:"=",previousText:"@",nextText:"@",ngDisabled:"="},require:["uibPager","?ngModel"],controller:"UibPaginationController",controllerAs:"pagination",templateUrl:function(a,b){return b.templateUrl||"template/pagination/pager.html"},replace:!0,link:function(b,c,d,e){var f=e[0],g=e[1];g&&(b.align=angular.isDefined(d.align)?b.$parent.$eval(d.align):a.align,f.init(g,a))}}}]),angular.module("ui.bootstrap.pagination").value("$paginationSuppressWarning",!1).controller("PaginationController",["$scope","$attrs","$parse","$log","$paginationSuppressWarning",function(a,b,c,d,e){e||d.warn("PaginationController is now deprecated. Use UibPaginationController instead.");var f=this,g={$setViewValue:angular.noop},h=b.numPages?c(b.numPages).assign:angular.noop;this.init=function(d,e){g=d,this.config=e,g.$render=function(){f.render()},b.itemsPerPage?a.$parent.$watch(c(b.itemsPerPage),function(b){f.itemsPerPage=parseInt(b,10),a.totalPages=f.calculateTotalPages()}):this.itemsPerPage=e.itemsPerPage,a.$watch("totalItems",function(){a.totalPages=f.calculateTotalPages()}),a.$watch("totalPages",function(b){h(a.$parent,b),a.page>b?a.selectPage(b):g.$render()})},this.calculateTotalPages=function(){var b=this.itemsPerPage<1?1:Math.ceil(a.totalItems/this.itemsPerPage);return Math.max(b||0,1)},this.render=function(){a.page=parseInt(g.$viewValue,10)||1},a.selectPage=function(b,c){c&&c.preventDefault();var d=!a.ngDisabled||!c;d&&a.page!==b&&b>0&&b<=a.totalPages&&(c&&c.target&&c.target.blur(),g.$setViewValue(b),g.$render())},a.getText=function(b){return a[b+"Text"]||f.config[b+"Text"]},a.noPrevious=function(){return 1===a.page},a.noNext=function(){return a.page===a.totalPages}}]).directive("pagination",["$parse","uibPaginationConfig","$log","$paginationSuppressWarning",function(a,b,c,d){return{restrict:"EA",scope:{totalItems:"=",firstText:"@",previousText:"@",nextText:"@",lastText:"@",ngDisabled:"="},require:["pagination","?ngModel"],controller:"PaginationController",controllerAs:"pagination",templateUrl:function(a,b){return b.templateUrl||"template/pagination/pagination.html"},replace:!0,link:function(e,f,g,h){function i(a,b,c){return{number:a,text:b,active:c}}function j(a,b){var c=[],d=1,e=b,f=angular.isDefined(m)&&b>m;f&&(n?(d=Math.max(a-Math.floor(m/2),1),e=d+m-1,e>b&&(e=b,d=e-m+1)):(d=(Math.ceil(a/m)-1)*m+1,e=Math.min(d+m-1,b)));for(var g=d;e>=g;g++){var h=i(g,g,g===a);c.push(h)}if(f&&!n){if(d>1){var j=i(d-1,"...",!1);c.unshift(j)}if(b>e){var k=i(e+1,"...",!1);c.push(k)}}return c}d||c.warn("pagination is now deprecated. Use uib-pagination instead.");var k=h[0],l=h[1];if(l){var m=angular.isDefined(g.maxSize)?e.$parent.$eval(g.maxSize):b.maxSize,n=angular.isDefined(g.rotate)?e.$parent.$eval(g.rotate):b.rotate;e.boundaryLinks=angular.isDefined(g.boundaryLinks)?e.$parent.$eval(g.boundaryLinks):b.boundaryLinks,e.directionLinks=angular.isDefined(g.directionLinks)?e.$parent.$eval(g.directionLinks):b.directionLinks,k.init(l,b),g.maxSize&&e.$parent.$watch(a(g.maxSize),function(a){m=parseInt(a,10),k.render()});var o=k.render;k.render=function(){o(),e.page>0&&e.page<=e.totalPages&&(e.pages=j(e.page,e.totalPages))}}}}}]).directive("pager",["uibPagerConfig","$log","$paginationSuppressWarning",function(a,b,c){return{restrict:"EA",scope:{totalItems:"=",previousText:"@",nextText:"@",ngDisabled:"="},require:["pager","?ngModel"],controller:"PaginationController",controllerAs:"pagination",templateUrl:function(a,b){return b.templateUrl||"template/pagination/pager.html"},replace:!0,link:function(d,e,f,g){c||b.warn("pager is now deprecated. Use uib-pager instead.");var h=g[0],i=g[1];i&&(d.align=angular.isDefined(f.align)?d.$parent.$eval(f.align):a.align,h.init(i,a))}}}]),angular.module("ui.bootstrap.tooltip",["ui.bootstrap.position","ui.bootstrap.stackedMap"]).provider("$uibTooltip",function(){function a(a){var b=/[A-Z]/g,c="-";return a.replace(b,function(a,b){return(b?c:"")+a.toLowerCase()})}var b={placement:"top",animation:!0,popupDelay:0,popupCloseDelay:0,useContentExp:!1},c={mouseenter:"mouseleave",click:"click",focus:"blur",none:""},d={};this.options=function(a){angular.extend(d,a)},this.setTriggers=function(a){angular.extend(c,a)},this.$get=["$window","$compile","$timeout","$document","$uibPosition","$interpolate","$rootScope","$parse","$$stackedMap",function(e,f,g,h,i,j,k,l,m){var n=m.createNew();return h.on("keypress",function(a){if(27===a.which){var b=n.top();b&&(b.value.close(),n.removeTop(),b=null)}}),function(e,k,m,o){function p(a){var b=(a||o.trigger||m).split(" "),d=b.map(function(a){return c[a]||a});return{show:b,hide:d}}o=angular.extend({},b,d,o);var q=a(e),r=j.startSymbol(),s=j.endSymbol(),t="<div "+q+'-popup title="'+r+"title"+s+'" '+(o.useContentExp?'content-exp="contentExp()" ':'content="'+r+"content"+s+'" ')+'placement="'+r+"placement"+s+'" popup-class="'+r+"popupClass"+s+'" animation="animation" is-open="isOpen"origin-scope="origScope" style="visibility: hidden; display: block; top: -9999px; left: -9999px;"></div>';return{compile:function(a,b){var c=f(t);return function(a,b,d,f){function j(){L.isOpen?q():m()}function m(){(!K||a.$eval(d[k+"Enable"]))&&(u(),x(),L.popupDelay?F||(F=g(r,L.popupDelay,!1)):r())}function q(){s(),L.popupCloseDelay?G||(G=g(t,L.popupCloseDelay,!1)):t()}function r(){return s(),u(),L.content?(v(),void L.$evalAsync(function(){L.isOpen=!0,y(!0),Q()})):angular.noop}function s(){F&&(g.cancel(F),F=null),H&&(g.cancel(H),H=null)}function t(){s(),u(),L&&L.$evalAsync(function(){L.isOpen=!1,y(!1),L.animation?E||(E=g(w,150,!1)):w()})}function u(){G&&(g.cancel(G),G=null),E&&(g.cancel(E),E=null)}function v(){C||(D=L.$new(),C=c(D,function(a){I?h.find("body").append(a):b.after(a)}),z())}function w(){A(),E=null,C&&(C.remove(),C=null),D&&(D.$destroy(),D=null)}function x(){L.title=d[k+"Title"],O?L.content=O(a):L.content=d[e],L.popupClass=d[k+"Class"],L.placement=angular.isDefined(d[k+"Placement"])?d[k+"Placement"]:o.placement;var b=parseInt(d[k+"PopupDelay"],10),c=parseInt(d[k+"PopupCloseDelay"],10);L.popupDelay=isNaN(b)?o.popupDelay:b,L.popupCloseDelay=isNaN(c)?o.popupCloseDelay:c}function y(b){N&&angular.isFunction(N.assign)&&N.assign(a,b)}function z(){P.length=0,O?(P.push(a.$watch(O,function(a){L.content=a,!a&&L.isOpen&&t()})),P.push(D.$watch(function(){M||(M=!0,D.$$postDigest(function(){M=!1,L&&L.isOpen&&Q()}))}))):P.push(d.$observe(e,function(a){L.content=a,!a&&L.isOpen?t():Q()})),P.push(d.$observe(k+"Title",function(a){L.title=a,L.isOpen&&Q()})),P.push(d.$observe(k+"Placement",function(a){L.placement=a?a:o.placement,L.isOpen&&Q()}))}function A(){P.length&&(angular.forEach(P,function(a){a()}),P.length=0)}function B(){var a=d[k+"Trigger"];R(),J=p(a),"none"!==J.show&&J.show.forEach(function(a,c){a===J.hide[c]?b[0].addEventListener(a,j):a&&(b[0].addEventListener(a,m),J.hide[c].split(" ").forEach(function(a){b[0].addEventListener(a,q)})),b.on("keypress",function(a){27===a.which&&q()})})}var C,D,E,F,G,H,I=angular.isDefined(o.appendToBody)?o.appendToBody:!1,J=p(void 0),K=angular.isDefined(d[k+"Enable"]),L=a.$new(!0),M=!1,N=angular.isDefined(d[k+"IsOpen"])?l(d[k+"IsOpen"]):!1,O=o.useContentExp?l(d[e]):!1,P=[],Q=function(){C&&C.html()&&(H||(H=g(function(){C.css({top:0,left:0});var a=i.positionElements(b,C,L.placement,I);a.top+="px",a.left+="px",a.visibility="visible",C.css(a),H=null},0,!1)))};L.origScope=a,L.isOpen=!1,n.add(L,{close:t}),L.contentExp=function(){return L.content},d.$observe("disabled",function(a){a&&s(),a&&L.isOpen&&t()}),N&&a.$watch(N,function(a){L&&!a===L.isOpen&&j()});var R=function(){J.show.forEach(function(a){b.unbind(a,m)}),J.hide.forEach(function(a){a.split(" ").forEach(function(a){b[0].removeEventListener(a,q)})})};B();var S=a.$eval(d[k+"Animation"]);L.animation=angular.isDefined(S)?!!S:o.animation;var T=a.$eval(d[k+"AppendToBody"]);I=angular.isDefined(T)?T:I,I&&a.$on("$locationChangeSuccess",function(){L.isOpen&&t()}),a.$on("$destroy",function(){s(),u(),R(),w(),n.remove(L),L=null})}}}}}]}).directive("uibTooltipTemplateTransclude",["$animate","$sce","$compile","$templateRequest",function(a,b,c,d){return{link:function(e,f,g){var h,i,j,k=e.$eval(g.tooltipTemplateTranscludeScope),l=0,m=function(){i&&(i.remove(),i=null),h&&(h.$destroy(),h=null),j&&(a.leave(j).then(function(){i=null}),i=j,j=null)};e.$watch(b.parseAsResourceUrl(g.uibTooltipTemplateTransclude),function(b){var g=++l;b?(d(b,!0).then(function(d){if(g===l){var e=k.$new(),i=d,n=c(i)(e,function(b){m(),a.enter(b,f)});h=e,j=n,h.$emit("$includeContentLoaded",b)}},function(){g===l&&(m(),e.$emit("$includeContentError",b))}),e.$emit("$includeContentRequested",b)):m()}),e.$on("$destroy",m)}}}]).directive("uibTooltipClasses",function(){return{restrict:"A",link:function(a,b,c){a.placement&&b.addClass(a.placement),a.popupClass&&b.addClass(a.popupClass),a.animation()&&b.addClass(c.tooltipAnimationClass)}}}).directive("uibTooltipPopup",function(){return{replace:!0,scope:{content:"@",placement:"@",popupClass:"@",animation:"&",isOpen:"&"},templateUrl:"template/tooltip/tooltip-popup.html",link:function(a,b){b.addClass("tooltip")}}}).directive("uibTooltip",["$uibTooltip",function(a){return a("uibTooltip","tooltip","mouseenter")}]).directive("uibTooltipTemplatePopup",function(){return{replace:!0,scope:{contentExp:"&",placement:"@",popupClass:"@",animation:"&",isOpen:"&",originScope:"&"},templateUrl:"template/tooltip/tooltip-template-popup.html",link:function(a,b){b.addClass("tooltip")}}}).directive("uibTooltipTemplate",["$uibTooltip",function(a){return a("uibTooltipTemplate","tooltip","mouseenter",{useContentExp:!0})}]).directive("uibTooltipHtmlPopup",function(){return{replace:!0,scope:{contentExp:"&",placement:"@",popupClass:"@",animation:"&",isOpen:"&"},templateUrl:"template/tooltip/tooltip-html-popup.html",link:function(a,b){b.addClass("tooltip")}}}).directive("uibTooltipHtml",["$uibTooltip",function(a){return a("uibTooltipHtml","tooltip","mouseenter",{useContentExp:!0})}]),angular.module("ui.bootstrap.tooltip").value("$tooltipSuppressWarning",!1).provider("$tooltip",["$uibTooltipProvider",function(a){angular.extend(this,a),this.$get=["$log","$tooltipSuppressWarning","$injector",function(b,c,d){return c||b.warn("$tooltip is now deprecated. Use $uibTooltip instead."),d.invoke(a.$get)}]}]).directive("tooltipTemplateTransclude",["$animate","$sce","$compile","$templateRequest","$log","$tooltipSuppressWarning",function(a,b,c,d,e,f){return{link:function(g,h,i){f||e.warn("tooltip-template-transclude is now deprecated. Use uib-tooltip-template-transclude instead.");var j,k,l,m=g.$eval(i.tooltipTemplateTranscludeScope),n=0,o=function(){k&&(k.remove(),k=null),j&&(j.$destroy(),j=null),l&&(a.leave(l).then(function(){k=null}),k=l,l=null)};g.$watch(b.parseAsResourceUrl(i.tooltipTemplateTransclude),function(b){var e=++n;b?(d(b,!0).then(function(d){if(e===n){var f=m.$new(),g=d,i=c(g)(f,function(b){o(),a.enter(b,h)});j=f,l=i,j.$emit("$includeContentLoaded",b)}},function(){e===n&&(o(),g.$emit("$includeContentError",b))}),g.$emit("$includeContentRequested",b)):o()}),g.$on("$destroy",o)}}}]).directive("tooltipClasses",["$log","$tooltipSuppressWarning",function(a,b){return{restrict:"A",link:function(c,d,e){b||a.warn("tooltip-classes is now deprecated. Use uib-tooltip-classes instead."),c.placement&&d.addClass(c.placement),c.popupClass&&d.addClass(c.popupClass),c.animation()&&d.addClass(e.tooltipAnimationClass)}}}]).directive("tooltipPopup",["$log","$tooltipSuppressWarning",function(a,b){return{replace:!0,scope:{content:"@",placement:"@",popupClass:"@",animation:"&",isOpen:"&"},templateUrl:"template/tooltip/tooltip-popup.html",link:function(c,d){b||a.warn("tooltip-popup is now deprecated. Use uib-tooltip-popup instead."),d.addClass("tooltip")}}}]).directive("tooltip",["$tooltip",function(a){return a("tooltip","tooltip","mouseenter")}]).directive("tooltipTemplatePopup",["$log","$tooltipSuppressWarning",function(a,b){return{replace:!0,scope:{contentExp:"&",placement:"@",popupClass:"@",animation:"&",isOpen:"&",originScope:"&"},templateUrl:"template/tooltip/tooltip-template-popup.html",link:function(c,d){b||a.warn("tooltip-template-popup is now deprecated. Use uib-tooltip-template-popup instead."),d.addClass("tooltip")}}}]).directive("tooltipTemplate",["$tooltip",function(a){return a("tooltipTemplate","tooltip","mouseenter",{useContentExp:!0})}]).directive("tooltipHtmlPopup",["$log","$tooltipSuppressWarning",function(a,b){return{replace:!0,scope:{contentExp:"&",placement:"@",popupClass:"@",animation:"&",isOpen:"&"},templateUrl:"template/tooltip/tooltip-html-popup.html",link:function(c,d){b||a.warn("tooltip-html-popup is now deprecated. Use uib-tooltip-html-popup instead."),d.addClass("tooltip")}}}]).directive("tooltipHtml",["$tooltip",function(a){return a("tooltipHtml","tooltip","mouseenter",{useContentExp:!0})}]),angular.module("ui.bootstrap.popover",["ui.bootstrap.tooltip"]).directive("uibPopoverTemplatePopup",function(){return{replace:!0,scope:{title:"@",contentExp:"&",placement:"@",popupClass:"@",animation:"&",isOpen:"&",originScope:"&"},templateUrl:"template/popover/popover-template.html",link:function(a,b){b.addClass("popover")}}}).directive("uibPopoverTemplate",["$uibTooltip",function(a){return a("uibPopoverTemplate","popover","click",{useContentExp:!0})}]).directive("uibPopoverHtmlPopup",function(){return{replace:!0,scope:{contentExp:"&",title:"@",placement:"@",popupClass:"@",animation:"&",isOpen:"&"},templateUrl:"template/popover/popover-html.html",link:function(a,b){b.addClass("popover")}}}).directive("uibPopoverHtml",["$uibTooltip",function(a){return a("uibPopoverHtml","popover","click",{useContentExp:!0})}]).directive("uibPopoverPopup",function(){return{replace:!0,scope:{title:"@",content:"@",placement:"@",popupClass:"@",animation:"&",isOpen:"&"},templateUrl:"template/popover/popover.html",link:function(a,b){b.addClass("popover")}}}).directive("uibPopover",["$uibTooltip",function(a){return a("uibPopover","popover","click")}]),angular.module("ui.bootstrap.popover").value("$popoverSuppressWarning",!1).directive("popoverTemplatePopup",["$log","$popoverSuppressWarning",function(a,b){return{replace:!0,scope:{title:"@",contentExp:"&",placement:"@",popupClass:"@",animation:"&",isOpen:"&",originScope:"&"},templateUrl:"template/popover/popover-template.html",link:function(c,d){b||a.warn("popover-template-popup is now deprecated. Use uib-popover-template-popup instead."),d.addClass("popover")}}}]).directive("popoverTemplate",["$tooltip",function(a){return a("popoverTemplate","popover","click",{useContentExp:!0})}]).directive("popoverHtmlPopup",["$log","$popoverSuppressWarning",function(a,b){return{replace:!0,scope:{contentExp:"&",title:"@",placement:"@",popupClass:"@",animation:"&",isOpen:"&"},templateUrl:"template/popover/popover-html.html",link:function(c,d){b||a.warn("popover-html-popup is now deprecated. Use uib-popover-html-popup instead."),d.addClass("popover")}}}]).directive("popoverHtml",["$tooltip",function(a){return a("popoverHtml","popover","click",{useContentExp:!0})}]).directive("popoverPopup",["$log","$popoverSuppressWarning",function(a,b){return{replace:!0,scope:{title:"@",content:"@",placement:"@",popupClass:"@",animation:"&",isOpen:"&"},templateUrl:"template/popover/popover.html",link:function(c,d){b||a.warn("popover-popup is now deprecated. Use uib-popover-popup instead."),d.addClass("popover")}}}]).directive("popover",["$tooltip",function(a){return a("popover","popover","click")}]),angular.module("ui.bootstrap.progressbar",[]).constant("uibProgressConfig",{animate:!0,max:100}).controller("UibProgressController",["$scope","$attrs","uibProgressConfig",function(a,b,c){var d=this,e=angular.isDefined(b.animate)?a.$parent.$eval(b.animate):c.animate;this.bars=[],a.max=angular.isDefined(a.max)?a.max:c.max,this.addBar=function(b,c,f){e||c.css({transition:"none"}),this.bars.push(b),b.max=a.max,b.title=f&&angular.isDefined(f.title)?f.title:"progressbar",b.$watch("value",function(a){b.recalculatePercentage()}),b.recalculatePercentage=function(){var a=d.bars.reduce(function(a,b){return b.percent=+(100*b.value/b.max).toFixed(2),a+b.percent},0);a>100&&(b.percent-=a-100)},b.$on("$destroy",function(){c=null,d.removeBar(b)})},this.removeBar=function(a){this.bars.splice(this.bars.indexOf(a),1),this.bars.forEach(function(a){a.recalculatePercentage()})},a.$watch("max",function(b){d.bars.forEach(function(b){b.max=a.max,b.recalculatePercentage()})})}]).directive("uibProgress",function(){return{replace:!0,transclude:!0,controller:"UibProgressController",require:"uibProgress",scope:{max:"=?"},templateUrl:"template/progressbar/progress.html"}}).directive("uibBar",function(){return{replace:!0,transclude:!0,require:"^uibProgress",scope:{value:"=",type:"@"},templateUrl:"template/progressbar/bar.html",link:function(a,b,c,d){d.addBar(a,b,c)}}}).directive("uibProgressbar",function(){return{replace:!0,transclude:!0,controller:"UibProgressController",scope:{value:"=",max:"=?",type:"@"},templateUrl:"template/progressbar/progressbar.html",link:function(a,b,c,d){d.addBar(a,angular.element(b.children()[0]),{title:c.title})}}}),angular.module("ui.bootstrap.progressbar").value("$progressSuppressWarning",!1).controller("ProgressController",["$scope","$attrs","uibProgressConfig","$log","$progressSuppressWarning",function(a,b,c,d,e){e||d.warn("ProgressController is now deprecated. Use UibProgressController instead.");var f=this,g=angular.isDefined(b.animate)?a.$parent.$eval(b.animate):c.animate;this.bars=[],a.max=angular.isDefined(a.max)?a.max:c.max,this.addBar=function(b,c,d){g||c.css({transition:"none"}),this.bars.push(b),b.max=a.max,b.title=d&&angular.isDefined(d.title)?d.title:"progressbar",b.$watch("value",function(a){b.recalculatePercentage()}),b.recalculatePercentage=function(){b.percent=+(100*b.value/b.max).toFixed(2);var a=f.bars.reduce(function(a,b){return a+b.percent},0);a>100&&(b.percent-=a-100)},b.$on("$destroy",function(){c=null,f.removeBar(b)})},this.removeBar=function(a){this.bars.splice(this.bars.indexOf(a),1)},a.$watch("max",function(b){f.bars.forEach(function(b){b.max=a.max,b.recalculatePercentage()})})}]).directive("progress",["$log","$progressSuppressWarning",function(a,b){return{replace:!0,transclude:!0,controller:"ProgressController",require:"progress",scope:{max:"=?",title:"@?"},templateUrl:"template/progressbar/progress.html",link:function(){b||a.warn("progress is now deprecated. Use uib-progress instead.")}}}]).directive("bar",["$log","$progressSuppressWarning",function(a,b){return{replace:!0,transclude:!0,require:"^progress",scope:{value:"=",type:"@"},templateUrl:"template/progressbar/bar.html",link:function(c,d,e,f){b||a.warn("bar is now deprecated. Use uib-bar instead."),f.addBar(c,d)}}}]).directive("progressbar",["$log","$progressSuppressWarning",function(a,b){return{replace:!0,transclude:!0,controller:"ProgressController",scope:{value:"=",max:"=?",type:"@"},templateUrl:"template/progressbar/progressbar.html",link:function(c,d,e,f){b||a.warn("progressbar is now deprecated. Use uib-progressbar instead."),f.addBar(c,angular.element(d.children()[0]),{title:e.title})}}}]),angular.module("ui.bootstrap.rating",[]).constant("uibRatingConfig",{max:5,stateOn:null,stateOff:null,titles:["one","two","three","four","five"]}).controller("UibRatingController",["$scope","$attrs","uibRatingConfig",function(a,b,c){var d={$setViewValue:angular.noop};this.init=function(e){d=e,d.$render=this.render,d.$formatters.push(function(a){return angular.isNumber(a)&&a<<0!==a&&(a=Math.round(a)),a}),this.stateOn=angular.isDefined(b.stateOn)?a.$parent.$eval(b.stateOn):c.stateOn,this.stateOff=angular.isDefined(b.stateOff)?a.$parent.$eval(b.stateOff):c.stateOff;var f=angular.isDefined(b.titles)?a.$parent.$eval(b.titles):c.titles;this.titles=angular.isArray(f)&&f.length>0?f:c.titles;var g=angular.isDefined(b.ratingStates)?a.$parent.$eval(b.ratingStates):new Array(angular.isDefined(b.max)?a.$parent.$eval(b.max):c.max);a.range=this.buildTemplateObjects(g)},this.buildTemplateObjects=function(a){for(var b=0,c=a.length;c>b;b++)a[b]=angular.extend({index:b},{stateOn:this.stateOn,stateOff:this.stateOff,title:this.getTitle(b)},a[b]);return a},this.getTitle=function(a){return a>=this.titles.length?a+1:this.titles[a]},a.rate=function(b){!a.readonly&&b>=0&&b<=a.range.length&&(d.$setViewValue(d.$viewValue===b?0:b),d.$render())},a.enter=function(b){a.readonly||(a.value=b),a.onHover({value:b})},a.reset=function(){a.value=d.$viewValue,a.onLeave()},a.onKeydown=function(b){/(37|38|39|40)/.test(b.which)&&(b.preventDefault(),b.stopPropagation(),a.rate(a.value+(38===b.which||39===b.which?1:-1)))},this.render=function(){a.value=d.$viewValue}}]).directive("uibRating",function(){return{require:["uibRating","ngModel"],scope:{readonly:"=?",onHover:"&",onLeave:"&"},controller:"UibRatingController",templateUrl:"template/rating/rating.html",replace:!0,link:function(a,b,c,d){var e=d[0],f=d[1];e.init(f)}}}),angular.module("ui.bootstrap.rating").value("$ratingSuppressWarning",!1).controller("RatingController",["$scope","$attrs","$controller","$log","$ratingSuppressWarning",function(a,b,c,d,e){e||d.warn("RatingController is now deprecated. Use UibRatingController instead."),angular.extend(this,c("UibRatingController",{$scope:a,$attrs:b}))}]).directive("rating",["$log","$ratingSuppressWarning",function(a,b){return{require:["rating","ngModel"],scope:{readonly:"=?",onHover:"&",onLeave:"&"},controller:"RatingController",templateUrl:"template/rating/rating.html",replace:!0,link:function(c,d,e,f){b||a.warn("rating is now deprecated. Use uib-rating instead.");var g=f[0],h=f[1];g.init(h)}}}]),angular.module("ui.bootstrap.tabs",[]).controller("UibTabsetController",["$scope",function(a){var b=this,c=b.tabs=a.tabs=[];b.select=function(a){angular.forEach(c,function(b){b.active&&b!==a&&(b.active=!1,b.onDeselect(),a.selectCalled=!1)}),a.active=!0,a.selectCalled||(a.onSelect(),a.selectCalled=!0)},b.addTab=function(a){c.push(a),1===c.length&&a.active!==!1?a.active=!0:a.active?b.select(a):a.active=!1},b.removeTab=function(a){var e=c.indexOf(a);if(a.active&&c.length>1&&!d){var f=e==c.length-1?e-1:e+1;b.select(c[f])}c.splice(e,1)};var d;a.$on("$destroy",function(){d=!0})}]).directive("uibTabset",function(){return{restrict:"EA",transclude:!0,replace:!0,scope:{type:"@"},controller:"UibTabsetController",templateUrl:"template/tabs/tabset.html",link:function(a,b,c){a.vertical=angular.isDefined(c.vertical)?a.$parent.$eval(c.vertical):!1,a.justified=angular.isDefined(c.justified)?a.$parent.$eval(c.justified):!1}}}).directive("uibTab",["$parse",function(a){return{require:"^uibTabset",restrict:"EA",replace:!0,templateUrl:"template/tabs/tab.html",transclude:!0,scope:{active:"=?",heading:"@",onSelect:"&select",onDeselect:"&deselect"},controller:function(){},link:function(b,c,d,e,f){b.$watch("active",function(a){a&&e.select(b)}),b.disabled=!1,d.disable&&b.$parent.$watch(a(d.disable),function(a){b.disabled=!!a}),b.select=function(){b.disabled||(b.active=!0)},e.addTab(b),b.$on("$destroy",function(){e.removeTab(b)}),b.$transcludeFn=f}}}]).directive("uibTabHeadingTransclude",function(){return{restrict:"A",require:["?^uibTab","?^tab"],link:function(a,b){a.$watch("headingElement",function(a){a&&(b.html(""),b.append(a))})}}}).directive("uibTabContentTransclude",function(){function a(a){return a.tagName&&(a.hasAttribute("tab-heading")||a.hasAttribute("data-tab-heading")||a.hasAttribute("x-tab-heading")||a.hasAttribute("uib-tab-heading")||a.hasAttribute("data-uib-tab-heading")||a.hasAttribute("x-uib-tab-heading")||"tab-heading"===a.tagName.toLowerCase()||"data-tab-heading"===a.tagName.toLowerCase()||"x-tab-heading"===a.tagName.toLowerCase()||"uib-tab-heading"===a.tagName.toLowerCase()||"data-uib-tab-heading"===a.tagName.toLowerCase()||"x-uib-tab-heading"===a.tagName.toLowerCase())}return{restrict:"A",require:["?^uibTabset","?^tabset"],link:function(b,c,d){var e=b.$eval(d.uibTabContentTransclude);e.$transcludeFn(e.$parent,function(b){angular.forEach(b,function(b){a(b)?e.headingElement=b:c.append(b)})})}}}),angular.module("ui.bootstrap.tabs").value("$tabsSuppressWarning",!1).controller("TabsetController",["$scope","$controller","$log","$tabsSuppressWarning",function(a,b,c,d){d||c.warn("TabsetController is now deprecated. Use UibTabsetController instead."),angular.extend(this,b("UibTabsetController",{$scope:a}))}]).directive("tabset",["$log","$tabsSuppressWarning",function(a,b){return{restrict:"EA",transclude:!0,replace:!0,scope:{type:"@"},controller:"TabsetController",templateUrl:"template/tabs/tabset.html",link:function(c,d,e){b||a.warn("tabset is now deprecated. Use uib-tabset instead."),c.vertical=angular.isDefined(e.vertical)?c.$parent.$eval(e.vertical):!1,c.justified=angular.isDefined(e.justified)?c.$parent.$eval(e.justified):!1}}}]).directive("tab",["$parse","$log","$tabsSuppressWarning",function(a,b,c){return{require:"^tabset",restrict:"EA",replace:!0,templateUrl:"template/tabs/tab.html",transclude:!0,scope:{active:"=?",heading:"@",onSelect:"&select",onDeselect:"&deselect"},controller:function(){},link:function(d,e,f,g,h){c||b.warn("tab is now deprecated. Use uib-tab instead."),d.$watch("active",function(a){a&&g.select(d)}),d.disabled=!1,f.disable&&d.$parent.$watch(a(f.disable),function(a){d.disabled=!!a}),d.select=function(){d.disabled||(d.active=!0)},g.addTab(d),d.$on("$destroy",function(){g.removeTab(d)}),d.$transcludeFn=h}}}]).directive("tabHeadingTransclude",["$log","$tabsSuppressWarning",function(a,b){return{restrict:"A",require:"^tab",link:function(c,d){b||a.warn("tab-heading-transclude is now deprecated. Use uib-tab-heading-transclude instead."),c.$watch("headingElement",function(a){a&&(d.html(""),d.append(a))})}}}]).directive("tabContentTransclude",["$log","$tabsSuppressWarning",function(a,b){function c(a){return a.tagName&&(a.hasAttribute("tab-heading")||a.hasAttribute("data-tab-heading")||a.hasAttribute("x-tab-heading")||"tab-heading"===a.tagName.toLowerCase()||"data-tab-heading"===a.tagName.toLowerCase()||"x-tab-heading"===a.tagName.toLowerCase())}return{restrict:"A",require:"^tabset",link:function(d,e,f){b||a.warn("tab-content-transclude is now deprecated. Use uib-tab-content-transclude instead.");var g=d.$eval(f.tabContentTransclude);g.$transcludeFn(g.$parent,function(a){angular.forEach(a,function(a){c(a)?g.headingElement=a:e.append(a)})})}}}]),angular.module("ui.bootstrap.timepicker",[]).constant("uibTimepickerConfig",{hourStep:1,minuteStep:1,showMeridian:!0,meridians:null,readonlyInput:!1,mousewheel:!0,arrowkeys:!0,showSpinners:!0}).controller("UibTimepickerController",["$scope","$element","$attrs","$parse","$log","$locale","uibTimepickerConfig",function(a,b,c,d,e,f,g){function h(){var b=parseInt(a.hours,10),c=a.showMeridian?b>0&&13>b:b>=0&&24>b;return c?(a.showMeridian&&(12===b&&(b=0),a.meridian===r[1]&&(b+=12)),b):void 0}function i(){var b=parseInt(a.minutes,10);return b>=0&&60>b?b:void 0}function j(a){return angular.isDefined(a)&&a.toString().length<2?"0"+a:a.toString()}function k(a){l(),q.$setViewValue(new Date(p)),m(a)}function l(){q.$setValidity("time",!0),a.invalidHours=!1,a.invalidMinutes=!1}function m(b){var c=p.getHours(),d=p.getMinutes();a.showMeridian&&(c=0===c||12===c?12:c%12),a.hours="h"===b?c:j(c),"m"!==b&&(a.minutes=j(d)),a.meridian=p.getHours()<12?r[0]:r[1]}function n(a,b){var c=new Date(a.getTime()+6e4*b),d=new Date(a);return d.setHours(c.getHours(),c.getMinutes()),d}function o(a){p=n(p,a),k()}var p=new Date,q={$setViewValue:angular.noop},r=angular.isDefined(c.meridians)?a.$parent.$eval(c.meridians):g.meridians||f.DATETIME_FORMATS.AMPMS;a.tabindex=angular.isDefined(c.tabindex)?c.tabindex:0,b.removeAttr("tabindex"),this.init=function(b,d){q=b,q.$render=this.render,q.$formatters.unshift(function(a){return a?new Date(a):null});var e=d.eq(0),f=d.eq(1),h=angular.isDefined(c.mousewheel)?a.$parent.$eval(c.mousewheel):g.mousewheel;h&&this.setupMousewheelEvents(e,f);var i=angular.isDefined(c.arrowkeys)?a.$parent.$eval(c.arrowkeys):g.arrowkeys;i&&this.setupArrowkeyEvents(e,f),a.readonlyInput=angular.isDefined(c.readonlyInput)?a.$parent.$eval(c.readonlyInput):g.readonlyInput,this.setupInputEvents(e,f)};var s=g.hourStep;c.hourStep&&a.$parent.$watch(d(c.hourStep),function(a){s=parseInt(a,10)});var t=g.minuteStep;c.minuteStep&&a.$parent.$watch(d(c.minuteStep),function(a){t=parseInt(a,10)});var u;a.$parent.$watch(d(c.min),function(a){var b=new Date(a);u=isNaN(b)?void 0:b});var v;a.$parent.$watch(d(c.max),function(a){var b=new Date(a);v=isNaN(b)?void 0:b}),a.noIncrementHours=function(){var a=n(p,60*s);
 return a>v||p>a&&u>a},a.noDecrementHours=function(){var a=n(p,60*-s);return u>a||a>p&&a>v},a.noIncrementMinutes=function(){var a=n(p,t);return a>v||p>a&&u>a},a.noDecrementMinutes=function(){var a=n(p,-t);return u>a||a>p&&a>v},a.noToggleMeridian=function(){return p.getHours()<13?n(p,720)>v:n(p,-720)<u},a.showMeridian=g.showMeridian,c.showMeridian&&a.$parent.$watch(d(c.showMeridian),function(b){if(a.showMeridian=!!b,q.$error.time){var c=h(),d=i();angular.isDefined(c)&&angular.isDefined(d)&&(p.setHours(c),k())}else m()}),this.setupMousewheelEvents=function(b,c){var d=function(a){a.originalEvent&&(a=a.originalEvent);var b=a.wheelDelta?a.wheelDelta:-a.deltaY;return a.detail||b>0};b.bind("mousewheel wheel",function(b){a.$apply(d(b)?a.incrementHours():a.decrementHours()),b.preventDefault()}),c.bind("mousewheel wheel",function(b){a.$apply(d(b)?a.incrementMinutes():a.decrementMinutes()),b.preventDefault()})},this.setupArrowkeyEvents=function(b,c){b.bind("keydown",function(b){38===b.which?(b.preventDefault(),a.incrementHours(),a.$apply()):40===b.which&&(b.preventDefault(),a.decrementHours(),a.$apply())}),c.bind("keydown",function(b){38===b.which?(b.preventDefault(),a.incrementMinutes(),a.$apply()):40===b.which&&(b.preventDefault(),a.decrementMinutes(),a.$apply())})},this.setupInputEvents=function(b,c){if(a.readonlyInput)return a.updateHours=angular.noop,void(a.updateMinutes=angular.noop);var d=function(b,c){q.$setViewValue(null),q.$setValidity("time",!1),angular.isDefined(b)&&(a.invalidHours=b),angular.isDefined(c)&&(a.invalidMinutes=c)};a.updateHours=function(){var a=h(),b=i();angular.isDefined(a)&&angular.isDefined(b)?(p.setHours(a),u>p||p>v?d(!0):k("h")):d(!0)},b.bind("blur",function(b){!a.invalidHours&&a.hours<10&&a.$apply(function(){a.hours=j(a.hours)})}),a.updateMinutes=function(){var a=i(),b=h();angular.isDefined(a)&&angular.isDefined(b)?(p.setMinutes(a),u>p||p>v?d(void 0,!0):k("m")):d(void 0,!0)},c.bind("blur",function(b){!a.invalidMinutes&&a.minutes<10&&a.$apply(function(){a.minutes=j(a.minutes)})})},this.render=function(){var b=q.$viewValue;isNaN(b)?(q.$setValidity("time",!1),e.error('Timepicker directive: "ng-model" value must be a Date object, a number of milliseconds since 01.01.1970 or a string representing an RFC2822 or ISO 8601 date.')):(b&&(p=b),u>p||p>v?(q.$setValidity("time",!1),a.invalidHours=!0,a.invalidMinutes=!0):l(),m())},a.showSpinners=angular.isDefined(c.showSpinners)?a.$parent.$eval(c.showSpinners):g.showSpinners,a.incrementHours=function(){a.noIncrementHours()||o(60*s)},a.decrementHours=function(){a.noDecrementHours()||o(60*-s)},a.incrementMinutes=function(){a.noIncrementMinutes()||o(t)},a.decrementMinutes=function(){a.noDecrementMinutes()||o(-t)},a.toggleMeridian=function(){a.noToggleMeridian()||o(720*(p.getHours()<12?1:-1))}}]).directive("uibTimepicker",function(){return{restrict:"EA",require:["uibTimepicker","?^ngModel"],controller:"UibTimepickerController",controllerAs:"timepicker",replace:!0,scope:{},templateUrl:function(a,b){return b.templateUrl||"template/timepicker/timepicker.html"},link:function(a,b,c,d){var e=d[0],f=d[1];f&&e.init(f,b.find("input"))}}}),angular.module("ui.bootstrap.timepicker").value("$timepickerSuppressWarning",!1).controller("TimepickerController",["$scope","$element","$attrs","$controller","$log","$timepickerSuppressWarning",function(a,b,c,d,e,f){f||e.warn("TimepickerController is now deprecated. Use UibTimepickerController instead."),angular.extend(this,d("UibTimepickerController",{$scope:a,$element:b,$attrs:c}))}]).directive("timepicker",["$log","$timepickerSuppressWarning",function(a,b){return{restrict:"EA",require:["timepicker","?^ngModel"],controller:"TimepickerController",controllerAs:"timepicker",replace:!0,scope:{},templateUrl:function(a,b){return b.templateUrl||"template/timepicker/timepicker.html"},link:function(c,d,e,f){b||a.warn("timepicker is now deprecated. Use uib-timepicker instead.");var g=f[0],h=f[1];h&&g.init(h,d.find("input"))}}}]),angular.module("ui.bootstrap.typeahead",["ui.bootstrap.position"]).factory("uibTypeaheadParser",["$parse",function(a){var b=/^\s*([\s\S]+?)(?:\s+as\s+([\s\S]+?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+([\s\S]+?)$/;return{parse:function(c){var d=c.match(b);if(!d)throw new Error('Expected typeahead specification in form of "_modelValue_ (as _label_)? for _item_ in _collection_" but got "'+c+'".');return{itemName:d[3],source:a(d[4]),viewMapper:a(d[2]||d[1]),modelMapper:a(d[1])}}}}]).controller("UibTypeaheadController",["$scope","$element","$attrs","$compile","$parse","$q","$timeout","$document","$window","$rootScope","$uibPosition","uibTypeaheadParser",function(a,b,c,d,e,f,g,h,i,j,k,l){function m(){K.moveInProgress||(K.moveInProgress=!0,K.$digest()),S&&g.cancel(S),S=g(function(){K.matches.length&&n(),K.moveInProgress=!1},r)}function n(){K.position=C?k.offset(b):k.position(b),K.position.top+=b.prop("offsetHeight")}var o,p,q=[9,13,27,38,40],r=200,s=a.$eval(c.typeaheadMinLength);s||0===s||(s=1);var t,u,v=a.$eval(c.typeaheadWaitMs)||0,w=a.$eval(c.typeaheadEditable)!==!1,x=e(c.typeaheadLoading).assign||angular.noop,y=e(c.typeaheadOnSelect),z=angular.isDefined(c.typeaheadSelectOnBlur)?a.$eval(c.typeaheadSelectOnBlur):!1,A=e(c.typeaheadNoResults).assign||angular.noop,B=c.typeaheadInputFormatter?e(c.typeaheadInputFormatter):void 0,C=c.typeaheadAppendToBody?a.$eval(c.typeaheadAppendToBody):!1,D=c.typeaheadAppendToElementId||!1,E=a.$eval(c.typeaheadFocusFirst)!==!1,F=c.typeaheadSelectOnExact?a.$eval(c.typeaheadSelectOnExact):!1,G=e(c.ngModel),H=e(c.ngModel+"($$$p)"),I=function(b,c){return angular.isFunction(G(a))&&p&&p.$options&&p.$options.getterSetter?H(b,{$$$p:c}):G.assign(b,c)},J=l.parse(c.uibTypeahead),K=a.$new(),L=a.$on("$destroy",function(){K.$destroy()});K.$on("$destroy",L);var M="typeahead-"+K.$id+"-"+Math.floor(1e4*Math.random());b.attr({"aria-autocomplete":"list","aria-expanded":!1,"aria-owns":M});var N=angular.element("<div uib-typeahead-popup></div>");N.attr({id:M,matches:"matches",active:"activeIdx",select:"select(activeIdx)","move-in-progress":"moveInProgress",query:"query",position:"position"}),angular.isDefined(c.typeaheadTemplateUrl)&&N.attr("template-url",c.typeaheadTemplateUrl),angular.isDefined(c.typeaheadPopupTemplateUrl)&&N.attr("popup-template-url",c.typeaheadPopupTemplateUrl);var O=function(){K.matches=[],K.activeIdx=-1,b.attr("aria-expanded",!1)},P=function(a){return M+"-option-"+a};K.$watch("activeIdx",function(a){0>a?b.removeAttr("aria-activedescendant"):b.attr("aria-activedescendant",P(a))});var Q=function(a,b){return K.matches.length>b&&a?a.toUpperCase()===K.matches[b].label.toUpperCase():!1},R=function(c){var d={$viewValue:c};x(a,!0),A(a,!1),f.when(J.source(a,d)).then(function(e){var f=c===o.$viewValue;if(f&&t)if(e&&e.length>0){K.activeIdx=E?0:-1,A(a,!1),K.matches.length=0;for(var g=0;g<e.length;g++)d[J.itemName]=e[g],K.matches.push({id:P(g),label:J.viewMapper(K,d),model:e[g]});K.query=c,n(),b.attr("aria-expanded",!0),F&&1===K.matches.length&&Q(c,0)&&K.select(0)}else O(),A(a,!0);f&&x(a,!1)},function(){O(),x(a,!1),A(a,!0)})};C&&(angular.element(i).bind("resize",m),h.find("body").bind("scroll",m));var S;K.moveInProgress=!1,K.query=void 0;var T,U=function(a){T=g(function(){R(a)},v)},V=function(){T&&g.cancel(T)};O(),K.select=function(d){var e,f,h={};u=!0,h[J.itemName]=f=K.matches[d].model,e=J.modelMapper(a,h),I(a,e),o.$setValidity("editable",!0),o.$setValidity("parse",!0),y(a,{$item:f,$model:e,$label:J.viewMapper(a,h)}),O(),K.$eval(c.typeaheadFocusOnSelect)!==!1&&g(function(){b[0].focus()},0,!1)},b.bind("keydown",function(a){if(0!==K.matches.length&&-1!==q.indexOf(a.which)){if(-1===K.activeIdx&&(9===a.which||13===a.which))return O(),void K.$digest();a.preventDefault(),40===a.which?(K.activeIdx=(K.activeIdx+1)%K.matches.length,K.$digest()):38===a.which?(K.activeIdx=(K.activeIdx>0?K.activeIdx:K.matches.length)-1,K.$digest()):13===a.which||9===a.which?K.$apply(function(){K.select(K.activeIdx)}):27===a.which&&(a.stopPropagation(),O(),K.$digest())}}),b.bind("blur",function(){z&&K.matches.length&&-1!==K.activeIdx&&!u&&(u=!0,K.$apply(function(){K.select(K.activeIdx)})),t=!1,u=!1});var W=function(a){b[0]!==a.target&&3!==a.which&&0!==K.matches.length&&(O(),j.$$phase||K.$digest())};h.bind("click",W),a.$on("$destroy",function(){h.unbind("click",W),(C||D)&&X.remove(),C&&(angular.element(i).unbind("resize",m),h.find("body").unbind("scroll",m)),N.remove()});var X=d(N)(K);C?h.find("body").append(X):D!==!1?angular.element(h[0].getElementById(D)).append(X):b.after(X),this.init=function(b,c){o=b,p=c,o.$parsers.unshift(function(b){return t=!0,0===s||b&&b.length>=s?v>0?(V(),U(b)):R(b):(x(a,!1),V(),O()),w?b:b?void o.$setValidity("editable",!1):(o.$setValidity("editable",!0),null)}),o.$formatters.push(function(b){var c,d,e={};return w||o.$setValidity("editable",!0),B?(e.$model=b,B(a,e)):(e[J.itemName]=b,c=J.viewMapper(a,e),e[J.itemName]=void 0,d=J.viewMapper(a,e),c!==d?c:b)})}}]).directive("uibTypeahead",function(){return{controller:"UibTypeaheadController",require:["ngModel","^?ngModelOptions","uibTypeahead"],link:function(a,b,c,d){d[2].init(d[0],d[1])}}}).directive("uibTypeaheadPopup",function(){return{scope:{matches:"=",query:"=",active:"=",position:"&",moveInProgress:"=",select:"&"},replace:!0,templateUrl:function(a,b){return b.popupTemplateUrl||"template/typeahead/typeahead-popup.html"},link:function(a,b,c){a.templateUrl=c.templateUrl,a.isOpen=function(){return a.matches.length>0},a.isActive=function(b){return a.active==b},a.selectActive=function(b){a.active=b},a.selectMatch=function(b){a.select({activeIdx:b})}}}}).directive("uibTypeaheadMatch",["$templateRequest","$compile","$parse",function(a,b,c){return{scope:{index:"=",match:"=",query:"="},link:function(d,e,f){var g=c(f.templateUrl)(d.$parent)||"template/typeahead/typeahead-match.html";a(g).then(function(a){b(a.trim())(d,function(a){e.replaceWith(a)})})}}}]).filter("uibTypeaheadHighlight",["$sce","$injector","$log",function(a,b,c){function d(a){return a.replace(/([.?*+^$[\]\\(){}|-])/g,"\\$1")}function e(a){return/<.*>/g.test(a)}var f;return f=b.has("$sanitize"),function(b,g){return!f&&e(b)&&c.warn("Unsafe use of typeahead please use ngSanitize"),b=g?(""+b).replace(new RegExp(d(g),"gi"),"<strong>$&</strong>"):b,f||(b=a.trustAsHtml(b)),b}}]),angular.module("ui.bootstrap.typeahead").value("$typeaheadSuppressWarning",!1).service("typeaheadParser",["$parse","uibTypeaheadParser","$log","$typeaheadSuppressWarning",function(a,b,c,d){return d||c.warn("typeaheadParser is now deprecated. Use uibTypeaheadParser instead."),b}]).directive("typeahead",["$compile","$parse","$q","$timeout","$document","$window","$rootScope","$uibPosition","typeaheadParser","$log","$typeaheadSuppressWarning",function(a,b,c,d,e,f,g,h,i,j,k){var l=[9,13,27,38,40],m=200;return{require:["ngModel","^?ngModelOptions"],link:function(n,o,p,q){function r(){N.moveInProgress||(N.moveInProgress=!0,N.$digest()),V&&d.cancel(V),V=d(function(){N.matches.length&&s(),N.moveInProgress=!1},m)}function s(){N.position=F?h.offset(o):h.position(o),N.position.top+=o.prop("offsetHeight")}k||j.warn("typeahead is now deprecated. Use uib-typeahead instead.");var t=q[0],u=q[1],v=n.$eval(p.typeaheadMinLength);v||0===v||(v=1);var w,x,y=n.$eval(p.typeaheadWaitMs)||0,z=n.$eval(p.typeaheadEditable)!==!1,A=b(p.typeaheadLoading).assign||angular.noop,B=b(p.typeaheadOnSelect),C=angular.isDefined(p.typeaheadSelectOnBlur)?n.$eval(p.typeaheadSelectOnBlur):!1,D=b(p.typeaheadNoResults).assign||angular.noop,E=p.typeaheadInputFormatter?b(p.typeaheadInputFormatter):void 0,F=p.typeaheadAppendToBody?n.$eval(p.typeaheadAppendToBody):!1,G=p.typeaheadAppendToElementId||!1,H=n.$eval(p.typeaheadFocusFirst)!==!1,I=p.typeaheadSelectOnExact?n.$eval(p.typeaheadSelectOnExact):!1,J=b(p.ngModel),K=b(p.ngModel+"($$$p)"),L=function(a,b){return angular.isFunction(J(n))&&u&&u.$options&&u.$options.getterSetter?K(a,{$$$p:b}):J.assign(a,b)},M=i.parse(p.typeahead),N=n.$new(),O=n.$on("$destroy",function(){N.$destroy()});N.$on("$destroy",O);var P="typeahead-"+N.$id+"-"+Math.floor(1e4*Math.random());o.attr({"aria-autocomplete":"list","aria-expanded":!1,"aria-owns":P});var Q=angular.element("<div typeahead-popup></div>");Q.attr({id:P,matches:"matches",active:"activeIdx",select:"select(activeIdx)","move-in-progress":"moveInProgress",query:"query",position:"position"}),angular.isDefined(p.typeaheadTemplateUrl)&&Q.attr("template-url",p.typeaheadTemplateUrl),angular.isDefined(p.typeaheadPopupTemplateUrl)&&Q.attr("popup-template-url",p.typeaheadPopupTemplateUrl);var R=function(){N.matches=[],N.activeIdx=-1,o.attr("aria-expanded",!1)},S=function(a){return P+"-option-"+a};N.$watch("activeIdx",function(a){0>a?o.removeAttr("aria-activedescendant"):o.attr("aria-activedescendant",S(a))});var T=function(a,b){return N.matches.length>b&&a?a.toUpperCase()===N.matches[b].label.toUpperCase():!1},U=function(a){var b={$viewValue:a};A(n,!0),D(n,!1),c.when(M.source(n,b)).then(function(c){var d=a===t.$viewValue;if(d&&w)if(c&&c.length>0){N.activeIdx=H?0:-1,D(n,!1),N.matches.length=0;for(var e=0;e<c.length;e++)b[M.itemName]=c[e],N.matches.push({id:S(e),label:M.viewMapper(N,b),model:c[e]});N.query=a,s(),o.attr("aria-expanded",!0),I&&1===N.matches.length&&T(a,0)&&N.select(0)}else R(),D(n,!0);d&&A(n,!1)},function(){R(),A(n,!1),D(n,!0)})};F&&(angular.element(f).bind("resize",r),e.find("body").bind("scroll",r));var V;N.moveInProgress=!1,R(),N.query=void 0;var W,X=function(a){W=d(function(){U(a)},y)},Y=function(){W&&d.cancel(W)};t.$parsers.unshift(function(a){return w=!0,0===v||a&&a.length>=v?y>0?(Y(),X(a)):U(a):(A(n,!1),Y(),R()),z?a:a?void t.$setValidity("editable",!1):(t.$setValidity("editable",!0),null)}),t.$formatters.push(function(a){var b,c,d={};return z||t.$setValidity("editable",!0),E?(d.$model=a,E(n,d)):(d[M.itemName]=a,b=M.viewMapper(n,d),d[M.itemName]=void 0,c=M.viewMapper(n,d),b!==c?b:a)}),N.select=function(a){var b,c,e={};x=!0,e[M.itemName]=c=N.matches[a].model,b=M.modelMapper(n,e),L(n,b),t.$setValidity("editable",!0),t.$setValidity("parse",!0),B(n,{$item:c,$model:b,$label:M.viewMapper(n,e)}),R(),N.$eval(p.typeaheadFocusOnSelect)!==!1&&d(function(){o[0].focus()},0,!1)},o.bind("keydown",function(a){if(0!==N.matches.length&&-1!==l.indexOf(a.which)){if(-1===N.activeIdx&&(9===a.which||13===a.which))return R(),void N.$digest();a.preventDefault(),40===a.which?(N.activeIdx=(N.activeIdx+1)%N.matches.length,N.$digest()):38===a.which?(N.activeIdx=(N.activeIdx>0?N.activeIdx:N.matches.length)-1,N.$digest()):13===a.which||9===a.which?N.$apply(function(){N.select(N.activeIdx)}):27===a.which&&(a.stopPropagation(),R(),N.$digest())}}),o.bind("blur",function(){C&&N.matches.length&&-1!==N.activeIdx&&!x&&(x=!0,N.$apply(function(){N.select(N.activeIdx)})),w=!1,x=!1});var Z=function(a){o[0]!==a.target&&3!==a.which&&0!==N.matches.length&&(R(),g.$$phase||N.$digest())};e.bind("click",Z),n.$on("$destroy",function(){e.unbind("click",Z),(F||G)&&$.remove(),F&&(angular.element(f).unbind("resize",r),e.find("body").unbind("scroll",r)),Q.remove()});var $=a(Q)(N);F?e.find("body").append($):G!==!1?angular.element(e[0].getElementById(G)).append($):o.after($)}}}]).directive("typeaheadPopup",["$typeaheadSuppressWarning","$log",function(a,b){return{scope:{matches:"=",query:"=",active:"=",position:"&",moveInProgress:"=",select:"&"},replace:!0,templateUrl:function(a,b){return b.popupTemplateUrl||"template/typeahead/typeahead-popup.html"},link:function(c,d,e){a||b.warn("typeahead-popup is now deprecated. Use uib-typeahead-popup instead."),c.templateUrl=e.templateUrl,c.isOpen=function(){return c.matches.length>0},c.isActive=function(a){return c.active==a},c.selectActive=function(a){c.active=a},c.selectMatch=function(a){c.select({activeIdx:a})}}}}]).directive("typeaheadMatch",["$templateRequest","$compile","$parse","$typeaheadSuppressWarning","$log",function(a,b,c,d,e){return{restrict:"EA",scope:{index:"=",match:"=",query:"="},link:function(f,g,h){d||e.warn("typeahead-match is now deprecated. Use uib-typeahead-match instead.");var i=c(h.templateUrl)(f.$parent)||"template/typeahead/typeahead-match.html";a(i).then(function(a){b(a.trim())(f,function(a){g.replaceWith(a)})})}}}]).filter("typeaheadHighlight",["$sce","$injector","$log","$typeaheadSuppressWarning",function(a,b,c,d){function e(a){return a.replace(/([.?*+^$[\]\\(){}|-])/g,"\\$1")}function f(a){return/<.*>/g.test(a)}var g;return g=b.has("$sanitize"),function(b,h){return d||c.warn("typeaheadHighlight is now deprecated. Use uibTypeaheadHighlight instead."),!g&&f(b)&&c.warn("Unsafe use of typeahead please use ngSanitize"),b=h?(""+b).replace(new RegExp(e(h),"gi"),"<strong>$&</strong>"):b,g||(b=a.trustAsHtml(b)),b}}]),angular.module("template/accordion/accordion-group.html",[]).run(["$templateCache",function(a){a.put("template/accordion/accordion-group.html",'<div class="panel {{panelClass || \'panel-default\'}}">\n  <div class="panel-heading" ng-keypress="toggleOpen($event)">\n    <h4 class="panel-title">\n      <a href tabindex="0" class="accordion-toggle" ng-click="toggleOpen()" uib-accordion-transclude="heading"><span ng-class="{\'text-muted\': isDisabled}">{{heading}}</span></a>\n    </h4>\n  </div>\n  <div class="panel-collapse collapse" uib-collapse="!isOpen">\n	  <div class="panel-body" ng-transclude></div>\n  </div>\n</div>\n')}]),angular.module("template/accordion/accordion.html",[]).run(["$templateCache",function(a){a.put("template/accordion/accordion.html",'<div class="panel-group" ng-transclude></div>')}]),angular.module("template/alert/alert.html",[]).run(["$templateCache",function(a){a.put("template/alert/alert.html",'<div class="alert" ng-class="[\'alert-\' + (type || \'warning\'), closeable ? \'alert-dismissible\' : null]" role="alert">\n    <button ng-show="closeable" type="button" class="close" ng-click="close({$event: $event})">\n        <span aria-hidden="true">&times;</span>\n        <span class="sr-only">Close</span>\n    </button>\n    <div ng-transclude></div>\n</div>\n')}]),angular.module("template/carousel/carousel.html",[]).run(["$templateCache",function(a){a.put("template/carousel/carousel.html",'<div ng-mouseenter="pause()" ng-mouseleave="play()" class="carousel" ng-swipe-right="prev()" ng-swipe-left="next()">\n  <div class="carousel-inner" ng-transclude></div>\n  <a role="button" href class="left carousel-control" ng-click="prev()" ng-show="slides.length > 1">\n    <span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span>\n    <span class="sr-only">previous</span>\n  </a>\n  <a role="button" href class="right carousel-control" ng-click="next()" ng-show="slides.length > 1">\n    <span aria-hidden="true" class="glyphicon glyphicon-chevron-right"></span>\n    <span class="sr-only">next</span>\n  </a>\n  <ol class="carousel-indicators" ng-show="slides.length > 1">\n    <li ng-repeat="slide in slides | orderBy:indexOfSlide track by $index" ng-class="{ active: isActive(slide) }" ng-click="select(slide)">\n      <span class="sr-only">slide {{ $index + 1 }} of {{ slides.length }}<span ng-if="isActive(slide)">, currently active</span></span>\n    </li>\n  </ol>\n</div>')}]),angular.module("template/carousel/slide.html",[]).run(["$templateCache",function(a){a.put("template/carousel/slide.html",'<div ng-class="{\n    \'active\': active\n  }" class="item text-center" ng-transclude></div>\n')}]),angular.module("template/datepicker/datepicker.html",[]).run(["$templateCache",function(a){a.put("template/datepicker/datepicker.html",'<div ng-switch="datepickerMode" role="application" ng-keydown="keydown($event)">\n  <uib-daypicker ng-switch-when="day" tabindex="0"></uib-daypicker>\n  <uib-monthpicker ng-switch-when="month" tabindex="0"></uib-monthpicker>\n  <uib-yearpicker ng-switch-when="year" tabindex="0"></uib-yearpicker>\n</div>')}]),angular.module("template/datepicker/day.html",[]).run(["$templateCache",function(a){a.put("template/datepicker/day.html",'<table role="grid" aria-labelledby="{{::uniqueId}}-title" aria-activedescendant="{{activeDateId}}">\n  <thead>\n    <tr>\n      <th><button type="button" class="btn btn-default btn-sm pull-left" ng-click="move(-1)" tabindex="-1"><i class="glyphicon glyphicon-chevron-left"></i></button></th>\n      <th colspan="{{::5 + showWeeks}}"><button id="{{::uniqueId}}-title" role="heading" aria-live="assertive" aria-atomic="true" type="button" class="btn btn-default btn-sm" ng-click="toggleMode()" ng-disabled="datepickerMode === maxMode" tabindex="-1" style="width:100%;"><strong>{{title}}</strong></button></th>\n      <th><button type="button" class="btn btn-default btn-sm pull-right" ng-click="move(1)" tabindex="-1"><i class="glyphicon glyphicon-chevron-right"></i></button></th>\n    </tr>\n    <tr>\n      <th ng-if="showWeeks" class="text-center"></th>\n      <th ng-repeat="label in ::labels track by $index" class="text-center"><small aria-label="{{::label.full}}">{{::label.abbr}}</small></th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr ng-repeat="row in rows track by $index">\n      <td ng-if="showWeeks" class="text-center h6"><em>{{ weekNumbers[$index] }}</em></td>\n      <td ng-repeat="dt in row track by dt.date" class="text-center" role="gridcell" id="{{::dt.uid}}" ng-class="::dt.customClass">\n        <button type="button" style="min-width:100%;" class="btn btn-default btn-sm" ng-class="{\'btn-info\': dt.selected, active: isActive(dt)}" ng-click="select(dt.date)" ng-disabled="dt.disabled" tabindex="-1"><span ng-class="::{\'text-muted\': dt.secondary, \'text-info\': dt.current}">{{::dt.label}}</span></button>\n      </td>\n    </tr>\n  </tbody>\n</table>\n')}]),angular.module("template/datepicker/month.html",[]).run(["$templateCache",function(a){a.put("template/datepicker/month.html",'<table role="grid" aria-labelledby="{{::uniqueId}}-title" aria-activedescendant="{{activeDateId}}">\n  <thead>\n    <tr>\n      <th><button type="button" class="btn btn-default btn-sm pull-left" ng-click="move(-1)" tabindex="-1"><i class="glyphicon glyphicon-chevron-left"></i></button></th>\n      <th><button id="{{::uniqueId}}-title" role="heading" aria-live="assertive" aria-atomic="true" type="button" class="btn btn-default btn-sm" ng-click="toggleMode()" ng-disabled="datepickerMode === maxMode" tabindex="-1" style="width:100%;"><strong>{{title}}</strong></button></th>\n      <th><button type="button" class="btn btn-default btn-sm pull-right" ng-click="move(1)" tabindex="-1"><i class="glyphicon glyphicon-chevron-right"></i></button></th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr ng-repeat="row in rows track by $index">\n      <td ng-repeat="dt in row track by dt.date" class="text-center" role="gridcell" id="{{::dt.uid}}" ng-class="::dt.customClass">\n        <button type="button" style="min-width:100%;" class="btn btn-default" ng-class="{\'btn-info\': dt.selected, active: isActive(dt)}" ng-click="select(dt.date)" ng-disabled="dt.disabled" tabindex="-1"><span ng-class="::{\'text-info\': dt.current}">{{::dt.label}}</span></button>\n      </td>\n    </tr>\n  </tbody>\n</table>\n')}]),angular.module("template/datepicker/popup.html",[]).run(["$templateCache",function(a){a.put("template/datepicker/popup.html",'<ul class="dropdown-menu" dropdown-nested ng-if="isOpen" style="display: block" ng-style="{top: position.top+\'px\', left: position.left+\'px\'}" ng-keydown="keydown($event)" ng-click="$event.stopPropagation()">\n	<li ng-transclude></li>\n	<li ng-if="showButtonBar" style="padding:10px 9px 2px">\n		<span class="btn-group pull-left">\n			<button type="button" class="btn btn-sm btn-info" ng-click="select(\'today\')" ng-disabled="isDisabled(\'today\')">{{ getText(\'current\') }}</button>\n			<button type="button" class="btn btn-sm btn-danger" ng-click="select(null)">{{ getText(\'clear\') }}</button>\n		</span>\n		<button type="button" class="btn btn-sm btn-success pull-right" ng-click="close()">{{ getText(\'close\') }}</button>\n	</li>\n</ul>\n')}]),angular.module("template/datepicker/year.html",[]).run(["$templateCache",function(a){a.put("template/datepicker/year.html",'<table role="grid" aria-labelledby="{{::uniqueId}}-title" aria-activedescendant="{{activeDateId}}">\n  <thead>\n    <tr>\n      <th><button type="button" class="btn btn-default btn-sm pull-left" ng-click="move(-1)" tabindex="-1"><i class="glyphicon glyphicon-chevron-left"></i></button></th>\n      <th colspan="3"><button id="{{::uniqueId}}-title" role="heading" aria-live="assertive" aria-atomic="true" type="button" class="btn btn-default btn-sm" ng-click="toggleMode()" ng-disabled="datepickerMode === maxMode" tabindex="-1" style="width:100%;"><strong>{{title}}</strong></button></th>\n      <th><button type="button" class="btn btn-default btn-sm pull-right" ng-click="move(1)" tabindex="-1"><i class="glyphicon glyphicon-chevron-right"></i></button></th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr ng-repeat="row in rows track by $index">\n      <td ng-repeat="dt in row track by dt.date" class="text-center" role="gridcell" id="{{::dt.uid}}" ng-class="::dt.customClass">\n        <button type="button" style="min-width:100%;" class="btn btn-default" ng-class="{\'btn-info\': dt.selected, active: isActive(dt)}" ng-click="select(dt.date)" ng-disabled="dt.disabled" tabindex="-1"><span ng-class="::{\'text-info\': dt.current}">{{::dt.label}}</span></button>\n      </td>\n    </tr>\n  </tbody>\n</table>\n')}]),angular.module("template/modal/backdrop.html",[]).run(["$templateCache",function(a){a.put("template/modal/backdrop.html",'<div uib-modal-animation-class="fade"\n     modal-in-class="in"\n     ng-style="{\'z-index\': 1040 + (index && 1 || 0) + index*10}"\n></div>\n')}]),angular.module("template/modal/window.html",[]).run(["$templateCache",function(a){a.put("template/modal/window.html",'<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="modal"\n    uib-modal-animation-class="fade"\n    modal-in-class="in"\n    ng-style="{\'z-index\': 1050 + index*10, display: \'block\'}">\n    <div class="modal-dialog" ng-class="size ? \'modal-\' + size : \'\'"><div class="modal-content" uib-modal-transclude></div></div>\n</div>\n')}]),angular.module("template/pagination/pager.html",[]).run(["$templateCache",function(a){a.put("template/pagination/pager.html",'<ul class="pager">\n  <li ng-class="{disabled: noPrevious()||ngDisabled, previous: align}"><a href ng-click="selectPage(page - 1, $event)">{{::getText(\'previous\')}}</a></li>\n  <li ng-class="{disabled: noNext()||ngDisabled, next: align}"><a href ng-click="selectPage(page + 1, $event)">{{::getText(\'next\')}}</a></li>\n</ul>\n')}]),angular.module("template/pagination/pagination.html",[]).run(["$templateCache",function(a){a.put("template/pagination/pagination.html",'<ul class="pagination">\n  <li ng-if="::boundaryLinks" ng-class="{disabled: noPrevious()||ngDisabled}" class="pagination-first"><a href ng-click="selectPage(1, $event)">{{::getText(\'first\')}}</a></li>\n  <li ng-if="::directionLinks" ng-class="{disabled: noPrevious()||ngDisabled}" class="pagination-prev"><a href ng-click="selectPage(page - 1, $event)">{{::getText(\'previous\')}}</a></li>\n  <li ng-repeat="page in pages track by $index" ng-class="{active: page.active,disabled: ngDisabled&&!page.active}" class="pagination-page"><a href ng-click="selectPage(page.number, $event)">{{page.text}}</a></li>\n  <li ng-if="::directionLinks" ng-class="{disabled: noNext()||ngDisabled}" class="pagination-next"><a href ng-click="selectPage(page + 1, $event)">{{::getText(\'next\')}}</a></li>\n  <li ng-if="::boundaryLinks" ng-class="{disabled: noNext()||ngDisabled}" class="pagination-last"><a href ng-click="selectPage(totalPages, $event)">{{::getText(\'last\')}}</a></li>\n</ul>\n')}]),angular.module("template/tooltip/tooltip-html-popup.html",[]).run(["$templateCache",function(a){a.put("template/tooltip/tooltip-html-popup.html",'<div\n  tooltip-animation-class="fade"\n  uib-tooltip-classes\n  ng-class="{ in: isOpen() }">\n  <div class="tooltip-arrow"></div>\n  <div class="tooltip-inner" ng-bind-html="contentExp()"></div>\n</div>\n')}]),angular.module("template/tooltip/tooltip-popup.html",[]).run(["$templateCache",function(a){a.put("template/tooltip/tooltip-popup.html",'<div\n  tooltip-animation-class="fade"\n  uib-tooltip-classes\n  ng-class="{ in: isOpen() }">\n  <div class="tooltip-arrow"></div>\n  <div class="tooltip-inner" ng-bind="content"></div>\n</div>\n')}]),angular.module("template/tooltip/tooltip-template-popup.html",[]).run(["$templateCache",function(a){a.put("template/tooltip/tooltip-template-popup.html",'<div\n  tooltip-animation-class="fade"\n  uib-tooltip-classes\n  ng-class="{ in: isOpen() }">\n  <div class="tooltip-arrow"></div>\n  <div class="tooltip-inner"\n    uib-tooltip-template-transclude="contentExp()"\n    tooltip-template-transclude-scope="originScope()"></div>\n</div>\n')}]),angular.module("template/popover/popover-html.html",[]).run(["$templateCache",function(a){a.put("template/popover/popover-html.html",'<div tooltip-animation-class="fade"\n  uib-tooltip-classes\n  ng-class="{ in: isOpen() }">\n  <div class="arrow"></div>\n\n  <div class="popover-inner">\n      <h3 class="popover-title" ng-bind="title" ng-if="title"></h3>\n      <div class="popover-content" ng-bind-html="contentExp()"></div>\n  </div>\n</div>\n')}]),angular.module("template/popover/popover-template.html",[]).run(["$templateCache",function(a){a.put("template/popover/popover-template.html",'<div tooltip-animation-class="fade"\n  uib-tooltip-classes\n  ng-class="{ in: isOpen() }">\n  <div class="arrow"></div>\n\n  <div class="popover-inner">\n      <h3 class="popover-title" ng-bind="title" ng-if="title"></h3>\n      <div class="popover-content"\n        uib-tooltip-template-transclude="contentExp()"\n        tooltip-template-transclude-scope="originScope()"></div>\n  </div>\n</div>\n')}]),angular.module("template/popover/popover.html",[]).run(["$templateCache",function(a){a.put("template/popover/popover.html",'<div tooltip-animation-class="fade"\n  uib-tooltip-classes\n  ng-class="{ in: isOpen() }">\n  <div class="arrow"></div>\n\n  <div class="popover-inner">\n      <h3 class="popover-title" ng-bind="title" ng-if="title"></h3>\n      <div class="popover-content" ng-bind="content"></div>\n  </div>\n</div>\n')}]),angular.module("template/progressbar/bar.html",[]).run(["$templateCache",function(a){a.put("template/progressbar/bar.html",'<div class="progress-bar" ng-class="type && \'progress-bar-\' + type" role="progressbar" aria-valuenow="{{value}}" aria-valuemin="0" aria-valuemax="{{max}}" ng-style="{width: (percent < 100 ? percent : 100) + \'%\'}" aria-valuetext="{{percent | number:0}}%" aria-labelledby="{{::title}}" style="min-width: 0;" ng-transclude></div>\n')}]),angular.module("template/progressbar/progress.html",[]).run(["$templateCache",function(a){a.put("template/progressbar/progress.html",'<div class="progress" ng-transclude aria-labelledby="{{::title}}"></div>')}]),angular.module("template/progressbar/progressbar.html",[]).run(["$templateCache",function(a){a.put("template/progressbar/progressbar.html",'<div class="progress">\n  <div class="progress-bar" ng-class="type && \'progress-bar-\' + type" role="progressbar" aria-valuenow="{{value}}" aria-valuemin="0" aria-valuemax="{{max}}" ng-style="{width: (percent < 100 ? percent : 100) + \'%\'}" aria-valuetext="{{percent | number:0}}%" aria-labelledby="{{::title}}" style="min-width: 0;" ng-transclude></div>\n</div>\n')}]),angular.module("template/rating/rating.html",[]).run(["$templateCache",function(a){a.put("template/rating/rating.html",'<span ng-mouseleave="reset()" ng-keydown="onKeydown($event)" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="{{range.length}}" aria-valuenow="{{value}}">\n    <span ng-repeat-start="r in range track by $index" class="sr-only">({{ $index < value ? \'*\' : \' \' }})</span>\n    <i ng-repeat-end ng-mouseenter="enter($index + 1)" ng-click="rate($index + 1)" class="glyphicon" ng-class="$index < value && (r.stateOn || \'glyphicon-star\') || (r.stateOff || \'glyphicon-star-empty\')" ng-attr-title="{{r.title}}" aria-valuetext="{{r.title}}"></i>\n</span>\n');
 }]),angular.module("template/tabs/tab.html",[]).run(["$templateCache",function(a){a.put("template/tabs/tab.html",'<li ng-class="{active: active, disabled: disabled}">\n  <a href ng-click="select()" uib-tab-heading-transclude>{{heading}}</a>\n</li>\n')}]),angular.module("template/tabs/tabset.html",[]).run(["$templateCache",function(a){a.put("template/tabs/tabset.html",'<div>\n  <ul class="nav nav-{{type || \'tabs\'}}" ng-class="{\'nav-stacked\': vertical, \'nav-justified\': justified}" ng-transclude></ul>\n  <div class="tab-content">\n    <div class="tab-pane" \n         ng-repeat="tab in tabs" \n         ng-class="{active: tab.active}"\n         uib-tab-content-transclude="tab">\n    </div>\n  </div>\n</div>\n')}]),angular.module("template/timepicker/timepicker.html",[]).run(["$templateCache",function(a){a.put("template/timepicker/timepicker.html",'<table>\n  <tbody>\n    <tr class="text-center" ng-show="::showSpinners">\n      <td><a ng-click="incrementHours()" ng-class="{disabled: noIncrementHours()}" class="btn btn-link" ng-disabled="noIncrementHours()" tabindex="{{::tabindex}}"><span class="glyphicon glyphicon-chevron-up"></span></a></td>\n      <td>&nbsp;</td>\n      <td><a ng-click="incrementMinutes()" ng-class="{disabled: noIncrementMinutes()}" class="btn btn-link" ng-disabled="noIncrementMinutes()" tabindex="{{::tabindex}}"><span class="glyphicon glyphicon-chevron-up"></span></a></td>\n      <td ng-show="showMeridian"></td>\n    </tr>\n    <tr>\n      <td class="form-group" ng-class="{\'has-error\': invalidHours}">\n        <input style="width:50px;" type="text" ng-model="hours" ng-change="updateHours()" class="form-control text-center" ng-readonly="::readonlyInput" maxlength="2" tabindex="{{::tabindex}}">\n      </td>\n      <td>:</td>\n      <td class="form-group" ng-class="{\'has-error\': invalidMinutes}">\n        <input style="width:50px;" type="text" ng-model="minutes" ng-change="updateMinutes()" class="form-control text-center" ng-readonly="::readonlyInput" maxlength="2" tabindex="{{::tabindex}}">\n      </td>\n      <td ng-show="showMeridian"><button type="button" ng-class="{disabled: noToggleMeridian()}" class="btn btn-default text-center" ng-click="toggleMeridian()" ng-disabled="noToggleMeridian()" tabindex="{{::tabindex}}">{{meridian}}</button></td>\n    </tr>\n    <tr class="text-center" ng-show="::showSpinners">\n      <td><a ng-click="decrementHours()" ng-class="{disabled: noDecrementHours()}" class="btn btn-link" ng-disabled="noDecrementHours()" tabindex="{{::tabindex}}"><span class="glyphicon glyphicon-chevron-down"></span></a></td>\n      <td>&nbsp;</td>\n      <td><a ng-click="decrementMinutes()" ng-class="{disabled: noDecrementMinutes()}" class="btn btn-link" ng-disabled="noDecrementMinutes()" tabindex="{{::tabindex}}"><span class="glyphicon glyphicon-chevron-down"></span></a></td>\n      <td ng-show="showMeridian"></td>\n    </tr>\n  </tbody>\n</table>\n')}]),angular.module("template/typeahead/typeahead-match.html",[]).run(["$templateCache",function(a){a.put("template/typeahead/typeahead-match.html",'<a href tabindex="-1" ng-bind-html="match.label | uibTypeaheadHighlight:query"></a>\n')}]),angular.module("template/typeahead/typeahead-popup.html",[]).run(["$templateCache",function(a){a.put("template/typeahead/typeahead-popup.html",'<ul class="dropdown-menu" ng-show="isOpen() && !moveInProgress" ng-style="{top: position().top+\'px\', left: position().left+\'px\'}" style="display: block;" role="listbox" aria-hidden="{{!isOpen()}}">\n    <li ng-repeat="match in matches track by $index" ng-class="{active: isActive($index) }" ng-mouseenter="selectActive($index)" ng-click="selectMatch($index)" role="option" id="{{::match.id}}">\n        <div uib-typeahead-match index="$index" match="match" query="query" template-url="templateUrl"></div>\n    </li>\n</ul>\n')}]),!angular.$$csp()&&angular.element(document).find("head").prepend('<style type="text/css">.ng-animate.item:not(.left):not(.right){-webkit-transition:0s ease-in-out left;transition:0s ease-in-out left}</style>');;/**
+ * AngularJS Directive - Image Crop v1.1.0
+ * Copyright (c) 2014 Andy Shora, andyshora@gmail.com, andyshora.com
+ * Licensed under the MPL License [http://www.nihilogic.dk/licenses/mpl-license.txt]
+ */
+(function() {
+
+  /*
+   * DEPENDENCY
+   * Javascript BinaryFile
+   * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+   * Licensed under the MPL License [http://www.nihilogic.dk/licenses/mpl-license.txt]
+   */
+
+  var BinaryFile = function(strData, iDataOffset, iDataLength) {
+      var data = strData;
+      var dataOffset = iDataOffset || 0;
+      var dataLength = 0;
+
+      this.getRawData = function() {
+          return data;
+      }
+
+      if (typeof strData == "string") {
+          dataLength = iDataLength || data.length;
+
+          this.getByteAt = function(iOffset) {
+              return data.charCodeAt(iOffset + dataOffset) & 0xFF;
+          }
+
+          this.getBytesAt = function(iOffset, iLength) {
+              var aBytes = [];
+
+              for (var i = 0; i < iLength; i++) {
+                  aBytes[i] = data.charCodeAt((iOffset + i) + dataOffset) & 0xFF
+              }
+              ;
+
+              return aBytes;
+          }
+      } else if (typeof strData == "unknown") {
+          dataLength = iDataLength || IEBinary_getLength(data);
+
+          this.getByteAt = function(iOffset) {
+              return IEBinary_getByteAt(data, iOffset + dataOffset);
+          }
+
+          this.getBytesAt = function(iOffset, iLength) {
+              return new VBArray(IEBinary_getBytesAt(data, iOffset + dataOffset, iLength)).toArray();
+          }
+      }
+
+      this.getLength = function() {
+          return dataLength;
+      }
+
+      this.getSByteAt = function(iOffset) {
+          var iByte = this.getByteAt(iOffset);
+          if (iByte > 127)
+              return iByte - 256;
+          else
+              return iByte;
+      }
+
+      this.getShortAt = function(iOffset, bBigEndian) {
+          var iShort = bBigEndian ?
+                  (this.getByteAt(iOffset) << 8) + this.getByteAt(iOffset + 1)
+                  : (this.getByteAt(iOffset + 1) << 8) + this.getByteAt(iOffset)
+          if (iShort < 0)
+              iShort += 65536;
+          return iShort;
+      }
+      this.getSShortAt = function(iOffset, bBigEndian) {
+          var iUShort = this.getShortAt(iOffset, bBigEndian);
+          if (iUShort > 32767)
+              return iUShort - 65536;
+          else
+              return iUShort;
+      }
+      this.getLongAt = function(iOffset, bBigEndian) {
+          var iByte1 = this.getByteAt(iOffset),
+                  iByte2 = this.getByteAt(iOffset + 1),
+                  iByte3 = this.getByteAt(iOffset + 2),
+                  iByte4 = this.getByteAt(iOffset + 3);
+
+          var iLong = bBigEndian ?
+                  (((((iByte1 << 8) + iByte2) << 8) + iByte3) << 8) + iByte4
+                  : (((((iByte4 << 8) + iByte3) << 8) + iByte2) << 8) + iByte1;
+          if (iLong < 0)
+              iLong += 4294967296;
+          return iLong;
+      }
+      this.getSLongAt = function(iOffset, bBigEndian) {
+          var iULong = this.getLongAt(iOffset, bBigEndian);
+          if (iULong > 2147483647)
+              return iULong - 4294967296;
+          else
+              return iULong;
+      }
+
+      this.getStringAt = function(iOffset, iLength) {
+          var aStr = [];
+
+          var aBytes = this.getBytesAt(iOffset, iLength);
+          for (var j = 0; j < iLength; j++) {
+              aStr[j] = String.fromCharCode(aBytes[j]);
+          }
+          return aStr.join("");
+      }
+
+      this.getCharAt = function(iOffset) {
+          return String.fromCharCode(this.getByteAt(iOffset));
+      }
+      this.toBase64 = function() {
+          return window.btoa(data);
+      }
+      this.fromBase64 = function(strBase64) {
+          data = window.atob(strBase64);
+      }
+  };
+  /*
+   * DEPENDENCY
+   * Javascript EXIF Reader 0.1.6
+   * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+   * Licensed under the MPL License [http://www.nihilogic.dk/licenses/mpl-license.txt]
+   */
+  var EXIF = (function() {
+
+      var debug = false;
+
+      var ExifTags = {
+
+          // version tags
+          0x9000: "ExifVersion", // EXIF version
+          0xA000: "FlashpixVersion", // Flashpix format version
+
+          // colorspace tags
+          0xA001: "ColorSpace", // Color space information tag
+
+          // image configuration
+          0xA002: "PixelXDimension", // Valid width of meaningful image
+          0xA003: "PixelYDimension", // Valid height of meaningful image
+          0x9101: "ComponentsConfiguration", // Information about channels
+          0x9102: "CompressedBitsPerPixel", // Compressed bits per pixel
+
+          // user information
+          0x927C: "MakerNote", // Any desired information written by the manufacturer
+          0x9286: "UserComment", // Comments by user
+
+          // related file
+          0xA004: "RelatedSoundFile", // Name of related sound file
+
+          // date and time
+          0x9003: "DateTimeOriginal", // Date and time when the original image was generated
+          0x9004: "DateTimeDigitized", // Date and time when the image was stored digitally
+          0x9290: "SubsecTime", // Fractions of seconds for DateTime
+          0x9291: "SubsecTimeOriginal", // Fractions of seconds for DateTimeOriginal
+          0x9292: "SubsecTimeDigitized", // Fractions of seconds for DateTimeDigitized
+
+          // picture-taking conditions
+          0x829A: "ExposureTime", // Exposure time (in seconds)
+          0x829D: "FNumber", // F number
+          0x8822: "ExposureProgram", // Exposure program
+          0x8824: "SpectralSensitivity", // Spectral sensitivity
+          0x8827: "ISOSpeedRatings", // ISO speed rating
+          0x8828: "OECF", // Optoelectric conversion factor
+          0x9201: "ShutterSpeedValue", // Shutter speed
+          0x9202: "ApertureValue", // Lens aperture
+          0x9203: "BrightnessValue", // Value of brightness
+          0x9204: "ExposureBias", // Exposure bias
+          0x9205: "MaxApertureValue", // Smallest F number of lens
+          0x9206: "SubjectDistance", // Distance to subject in meters
+          0x9207: "MeteringMode", // Metering mode
+          0x9208: "LightSource", // Kind of light source
+          0x9209: "Flash", // Flash status
+          0x9214: "SubjectArea", // Location and area of main subject
+          0x920A: "FocalLength", // Focal length of the lens in mm
+          0xA20B: "FlashEnergy", // Strobe energy in BCPS
+          0xA20C: "SpatialFrequencyResponse", //
+          0xA20E: "FocalPlaneXResolution", // Number of pixels in width direction per FocalPlaneResolutionUnit
+          0xA20F: "FocalPlaneYResolution", // Number of pixels in height direction per FocalPlaneResolutionUnit
+          0xA210: "FocalPlaneResolutionUnit", // Unit for measuring FocalPlaneXResolution and FocalPlaneYResolution
+          0xA214: "SubjectLocation", // Location of subject in image
+          0xA215: "ExposureIndex", // Exposure index selected on camera
+          0xA217: "SensingMethod", // Image sensor type
+          0xA300: "FileSource", // Image source (3 == DSC)
+          0xA301: "SceneType", // Scene type (1 == directly photographed)
+          0xA302: "CFAPattern", // Color filter array geometric pattern
+          0xA401: "CustomRendered", // Special processing
+          0xA402: "ExposureMode", // Exposure mode
+          0xA403: "WhiteBalance", // 1 = auto white balance, 2 = manual
+          0xA404: "DigitalZoomRation", // Digital zoom ratio
+          0xA405: "FocalLengthIn35mmFilm", // Equivalent foacl length assuming 35mm film camera (in mm)
+          0xA406: "SceneCaptureType", // Type of scene
+          0xA407: "GainControl", // Degree of overall image gain adjustment
+          0xA408: "Contrast", // Direction of contrast processing applied by camera
+          0xA409: "Saturation", // Direction of saturation processing applied by camera
+          0xA40A: "Sharpness", // Direction of sharpness processing applied by camera
+          0xA40B: "DeviceSettingDescription", //
+          0xA40C: "SubjectDistanceRange", // Distance to subject
+
+          // other tags
+          0xA005: "InteroperabilityIFDPointer",
+          0xA420: "ImageUniqueID"   // Identifier assigned uniquely to each image
+      };
+
+      var TiffTags = {
+          0x0100: "ImageWidth",
+          0x0101: "ImageHeight",
+          0x8769: "ExifIFDPointer",
+          0x8825: "GPSInfoIFDPointer",
+          0xA005: "InteroperabilityIFDPointer",
+          0x0102: "BitsPerSample",
+          0x0103: "Compression",
+          0x0106: "PhotometricInterpretation",
+          0x0112: "Orientation",
+          0x0115: "SamplesPerPixel",
+          0x011C: "PlanarConfiguration",
+          0x0212: "YCbCrSubSampling",
+          0x0213: "YCbCrPositioning",
+          0x011A: "XResolution",
+          0x011B: "YResolution",
+          0x0128: "ResolutionUnit",
+          0x0111: "StripOffsets",
+          0x0116: "RowsPerStrip",
+          0x0117: "StripByteCounts",
+          0x0201: "JPEGInterchangeFormat",
+          0x0202: "JPEGInterchangeFormatLength",
+          0x012D: "TransferFunction",
+          0x013E: "WhitePoint",
+          0x013F: "PrimaryChromaticities",
+          0x0211: "YCbCrCoefficients",
+          0x0214: "ReferenceBlackWhite",
+          0x0132: "DateTime",
+          0x010E: "ImageDescription",
+          0x010F: "Make",
+          0x0110: "Model",
+          0x0131: "Software",
+          0x013B: "Artist",
+          0x8298: "Copyright"
+      };
+
+      var GPSTags = {
+          0x0000: "GPSVersionID",
+          0x0001: "GPSLatitudeRef",
+          0x0002: "GPSLatitude",
+          0x0003: "GPSLongitudeRef",
+          0x0004: "GPSLongitude",
+          0x0005: "GPSAltitudeRef",
+          0x0006: "GPSAltitude",
+          0x0007: "GPSTimeStamp",
+          0x0008: "GPSSatellites",
+          0x0009: "GPSStatus",
+          0x000A: "GPSMeasureMode",
+          0x000B: "GPSDOP",
+          0x000C: "GPSSpeedRef",
+          0x000D: "GPSSpeed",
+          0x000E: "GPSTrackRef",
+          0x000F: "GPSTrack",
+          0x0010: "GPSImgDirectionRef",
+          0x0011: "GPSImgDirection",
+          0x0012: "GPSMapDatum",
+          0x0013: "GPSDestLatitudeRef",
+          0x0014: "GPSDestLatitude",
+          0x0015: "GPSDestLongitudeRef",
+          0x0016: "GPSDestLongitude",
+          0x0017: "GPSDestBearingRef",
+          0x0018: "GPSDestBearing",
+          0x0019: "GPSDestDistanceRef",
+          0x001A: "GPSDestDistance",
+          0x001B: "GPSProcessingMethod",
+          0x001C: "GPSAreaInformation",
+          0x001D: "GPSDateStamp",
+          0x001E: "GPSDifferential"
+      };
+
+      var StringValues = {
+          ExposureProgram: {
+              0: "Not defined",
+              1: "Manual",
+              2: "Normal program",
+              3: "Aperture priority",
+              4: "Shutter priority",
+              5: "Creative program",
+              6: "Action program",
+              7: "Portrait mode",
+              8: "Landscape mode"
+          },
+          MeteringMode: {
+              0: "Unknown",
+              1: "Average",
+              2: "CenterWeightedAverage",
+              3: "Spot",
+              4: "MultiSpot",
+              5: "Pattern",
+              6: "Partial",
+              255: "Other"
+          },
+          LightSource: {
+              0: "Unknown",
+              1: "Daylight",
+              2: "Fluorescent",
+              3: "Tungsten (incandescent light)",
+              4: "Flash",
+              9: "Fine weather",
+              10: "Cloudy weather",
+              11: "Shade",
+              12: "Daylight fluorescent (D 5700 - 7100K)",
+              13: "Day white fluorescent (N 4600 - 5400K)",
+              14: "Cool white fluorescent (W 3900 - 4500K)",
+              15: "White fluorescent (WW 3200 - 3700K)",
+              17: "Standard light A",
+              18: "Standard light B",
+              19: "Standard light C",
+              20: "D55",
+              21: "D65",
+              22: "D75",
+              23: "D50",
+              24: "ISO studio tungsten",
+              255: "Other"
+          },
+          Flash: {
+              0x0000: "Flash did not fire",
+              0x0001: "Flash fired",
+              0x0005: "Strobe return light not detected",
+              0x0007: "Strobe return light detected",
+              0x0009: "Flash fired, compulsory flash mode",
+              0x000D: "Flash fired, compulsory flash mode, return light not detected",
+              0x000F: "Flash fired, compulsory flash mode, return light detected",
+              0x0010: "Flash did not fire, compulsory flash mode",
+              0x0018: "Flash did not fire, auto mode",
+              0x0019: "Flash fired, auto mode",
+              0x001D: "Flash fired, auto mode, return light not detected",
+              0x001F: "Flash fired, auto mode, return light detected",
+              0x0020: "No flash function",
+              0x0041: "Flash fired, red-eye reduction mode",
+              0x0045: "Flash fired, red-eye reduction mode, return light not detected",
+              0x0047: "Flash fired, red-eye reduction mode, return light detected",
+              0x0049: "Flash fired, compulsory flash mode, red-eye reduction mode",
+              0x004D: "Flash fired, compulsory flash mode, red-eye reduction mode, return light not detected",
+              0x004F: "Flash fired, compulsory flash mode, red-eye reduction mode, return light detected",
+              0x0059: "Flash fired, auto mode, red-eye reduction mode",
+              0x005D: "Flash fired, auto mode, return light not detected, red-eye reduction mode",
+              0x005F: "Flash fired, auto mode, return light detected, red-eye reduction mode"
+          },
+          SensingMethod: {
+              1: "Not defined",
+              2: "One-chip color area sensor",
+              3: "Two-chip color area sensor",
+              4: "Three-chip color area sensor",
+              5: "Color sequential area sensor",
+              7: "Trilinear sensor",
+              8: "Color sequential linear sensor"
+          },
+          SceneCaptureType: {
+              0: "Standard",
+              1: "Landscape",
+              2: "Portrait",
+              3: "Night scene"
+          },
+          SceneType: {
+              1: "Directly photographed"
+          },
+          CustomRendered: {
+              0: "Normal process",
+              1: "Custom process"
+          },
+          WhiteBalance: {
+              0: "Auto white balance",
+              1: "Manual white balance"
+          },
+          GainControl: {
+              0: "None",
+              1: "Low gain up",
+              2: "High gain up",
+              3: "Low gain down",
+              4: "High gain down"
+          },
+          Contrast: {
+              0: "Normal",
+              1: "Soft",
+              2: "Hard"
+          },
+          Saturation: {
+              0: "Normal",
+              1: "Low saturation",
+              2: "High saturation"
+          },
+          Sharpness: {
+              0: "Normal",
+              1: "Soft",
+              2: "Hard"
+          },
+          SubjectDistanceRange: {
+              0: "Unknown",
+              1: "Macro",
+              2: "Close view",
+              3: "Distant view"
+          },
+          FileSource: {
+              3: "DSC"
+          },
+          Components: {
+              0: "",
+              1: "Y",
+              2: "Cb",
+              3: "Cr",
+              4: "R",
+              5: "G",
+              6: "B"
+          }
+      };
+
+      function addEvent(element, event, handler) {
+          if (element.addEventListener) {
+              element.addEventListener(event, handler, false);
+          } else if (element.attachEvent) {
+              element.attachEvent("on" + event, handler);
+          }
+      }
+
+      function imageHasData(img) {
+          return !!(img.exifdata);
+      }
+
+      function getImageData(img, callback) {
+          BinaryAjax(img.src, function(http) {
+              var data = findEXIFinJPEG(http.binaryResponse);
+              img.exifdata = data || {};
+              if (callback) {
+                  callback.call(img)
+              }
+          });
+      }
+
+      function findEXIFinJPEG(file) {
+          if (file.getByteAt(0) != 0xFF || file.getByteAt(1) != 0xD8) {
+              return false; // not a valid jpeg
+          }
+
+          var offset = 2,
+                  length = file.getLength(),
+                  marker;
+
+          while (offset < length) {
+              if (file.getByteAt(offset) != 0xFF) {
+                  if (debug)
+                      console.log("Not a valid marker at offset " + offset + ", found: " + file.getByteAt(offset));
+                  return false; // not a valid marker, something is wrong
+              }
+
+              marker = file.getByteAt(offset + 1);
+
+              // we could implement handling for other markers here,
+              // but we're only looking for 0xFFE1 for EXIF data
+
+              if (marker == 22400) {
+                  if (debug)
+                      console.log("Found 0xFFE1 marker");
+
+                  return readEXIFData(file, offset + 4, file.getShortAt(offset + 2, true) - 2);
+
+                  // offset += 2 + file.getShortAt(offset+2, true);
+
+              } else if (marker == 225) {
+                  // 0xE1 = Application-specific 1 (for EXIF)
+                  if (debug)
+                      console.log("Found 0xFFE1 marker");
+
+                  return readEXIFData(file, offset + 4, file.getShortAt(offset + 2, true) - 2);
+
+              } else {
+                  offset += 2 + file.getShortAt(offset + 2, true);
+              }
+
+          }
+
+      }
+
+
+      function readTags(file, tiffStart, dirStart, strings, bigEnd) {
+          var entries = file.getShortAt(dirStart, bigEnd),
+                  tags = {},
+                  entryOffset, tag,
+                  i;
+
+          for (i = 0; i < entries; i++) {
+              entryOffset = dirStart + i * 12 + 2;
+              tag = strings[file.getShortAt(entryOffset, bigEnd)];
+              if (!tag && debug)
+                  console.log("Unknown tag: " + file.getShortAt(entryOffset, bigEnd));
+              tags[tag] = readTagValue(file, entryOffset, tiffStart, dirStart, bigEnd);
+          }
+          return tags;
+      }
+
+
+      function readTagValue(file, entryOffset, tiffStart, dirStart, bigEnd) {
+          var type = file.getShortAt(entryOffset + 2, bigEnd),
+                  numValues = file.getLongAt(entryOffset + 4, bigEnd),
+                  valueOffset = file.getLongAt(entryOffset + 8, bigEnd) + tiffStart,
+                  offset,
+                  vals, val, n,
+                  numerator, denominator;
+
+          switch (type) {
+              case 1: // byte, 8-bit unsigned int
+              case 7: // undefined, 8-bit byte, value depending on field
+                  if (numValues == 1) {
+                      return file.getByteAt(entryOffset + 8, bigEnd);
+                  } else {
+                      offset = numValues > 4 ? valueOffset : (entryOffset + 8);
+                      vals = [];
+                      for (n = 0; n < numValues; n++) {
+                          vals[n] = file.getByteAt(offset + n);
+                      }
+                      return vals;
+                  }
+
+              case 2: // ascii, 8-bit byte
+                  offset = numValues > 4 ? valueOffset : (entryOffset + 8);
+                  return file.getStringAt(offset, numValues - 1);
+
+              case 3: // short, 16 bit int
+                  if (numValues == 1) {
+                      return file.getShortAt(entryOffset + 8, bigEnd);
+                  } else {
+                      offset = numValues > 2 ? valueOffset : (entryOffset + 8);
+                      vals = [];
+                      for (n = 0; n < numValues; n++) {
+                          vals[n] = file.getShortAt(offset + 2 * n, bigEnd);
+                      }
+                      return vals;
+                  }
+
+              case 4: // long, 32 bit int
+                  if (numValues == 1) {
+                      return file.getLongAt(entryOffset + 8, bigEnd);
+                  } else {
+                      vals = [];
+                      for (var n = 0; n < numValues; n++) {
+                          vals[n] = file.getLongAt(valueOffset + 4 * n, bigEnd);
+                      }
+                      return vals;
+                  }
+
+              case 5: // rational = two long values, first is numerator, second is denominator
+                  if (numValues == 1) {
+                      numerator = file.getLongAt(valueOffset, bigEnd);
+                      denominator = file.getLongAt(valueOffset + 4, bigEnd);
+                      val = new Number(numerator / denominator);
+                      val.numerator = numerator;
+                      val.denominator = denominator;
+                      return val;
+                  } else {
+                      vals = [];
+                      for (n = 0; n < numValues; n++) {
+                          numerator = file.getLongAt(valueOffset + 8 * n, bigEnd);
+                          denominator = file.getLongAt(valueOffset + 4 + 8 * n, bigEnd);
+                          vals[n] = new Number(numerator / denominator);
+                          vals[n].numerator = numerator;
+                          vals[n].denominator = denominator;
+                      }
+                      return vals;
+                  }
+
+              case 9: // slong, 32 bit signed int
+                  if (numValues == 1) {
+                      return file.getSLongAt(entryOffset + 8, bigEnd);
+                  } else {
+                      vals = [];
+                      for (n = 0; n < numValues; n++) {
+                          vals[n] = file.getSLongAt(valueOffset + 4 * n, bigEnd);
+                      }
+                      return vals;
+                  }
+
+              case 10: // signed rational, two slongs, first is numerator, second is denominator
+                  if (numValues == 1) {
+                      return file.getSLongAt(valueOffset, bigEnd) / file.getSLongAt(valueOffset + 4, bigEnd);
+                  } else {
+                      vals = [];
+                      for (n = 0; n < numValues; n++) {
+                          vals[n] = file.getSLongAt(valueOffset + 8 * n, bigEnd) / file.getSLongAt(valueOffset + 4 + 8 * n, bigEnd);
+                      }
+                      return vals;
+                  }
+          }
+      }
+
+
+      function readEXIFData(file, start) {
+          if (file.getStringAt(start, 4) != "Exif") {
+              if (debug)
+                  console.log("Not valid EXIF data! " + file.getStringAt(start, 4));
+              return false;
+          }
+
+          var bigEnd,
+                  tags, tag,
+                  exifData, gpsData,
+                  tiffOffset = start + 6;
+
+          // test for TIFF validity and endianness
+          if (file.getShortAt(tiffOffset) == 0x4949) {
+              bigEnd = false;
+          } else if (file.getShortAt(tiffOffset) == 0x4D4D) {
+              bigEnd = true;
+          } else {
+              if (debug)
+                  console.log("Not valid TIFF data! (no 0x4949 or 0x4D4D)");
+              return false;
+          }
+
+          if (file.getShortAt(tiffOffset + 2, bigEnd) != 0x002A) {
+              if (debug)
+                  console.log("Not valid TIFF data! (no 0x002A)");
+              return false;
+          }
+
+          if (file.getLongAt(tiffOffset + 4, bigEnd) != 0x00000008) {
+              if (debug)
+                  console.log("Not valid TIFF data! (First offset not 8)", file.getShortAt(tiffOffset + 4, bigEnd));
+              return false;
+          }
+
+          tags = readTags(file, tiffOffset, tiffOffset + 8, TiffTags, bigEnd);
+
+          if (tags.ExifIFDPointer) {
+              exifData = readTags(file, tiffOffset, tiffOffset + tags.ExifIFDPointer, ExifTags, bigEnd);
+              for (tag in exifData) {
+                  switch (tag) {
+                      case "LightSource" :
+                      case "Flash" :
+                      case "MeteringMode" :
+                      case "ExposureProgram" :
+                      case "SensingMethod" :
+                      case "SceneCaptureType" :
+                      case "SceneType" :
+                      case "CustomRendered" :
+                      case "WhiteBalance" :
+                      case "GainControl" :
+                      case "Contrast" :
+                      case "Saturation" :
+                      case "Sharpness" :
+                      case "SubjectDistanceRange" :
+                      case "FileSource" :
+                          exifData[tag] = StringValues[tag][exifData[tag]];
+                          break;
+
+                      case "ExifVersion" :
+                      case "FlashpixVersion" :
+                          exifData[tag] = String.fromCharCode(exifData[tag][0], exifData[tag][1], exifData[tag][2], exifData[tag][3]);
+                          break;
+
+                      case "ComponentsConfiguration" :
+                          exifData[tag] =
+                                  StringValues.Components[exifData[tag][0]]
+                                  + StringValues.Components[exifData[tag][1]]
+                                  + StringValues.Components[exifData[tag][2]]
+                                  + StringValues.Components[exifData[tag][3]];
+                          break;
+                  }
+                  tags[tag] = exifData[tag];
+              }
+          }
+
+          if (tags.GPSInfoIFDPointer) {
+              gpsData = readTags(file, tiffOffset, tiffOffset + tags.GPSInfoIFDPointer, GPSTags, bigEnd);
+              for (tag in gpsData) {
+                  switch (tag) {
+                      case "GPSVersionID" :
+                          gpsData[tag] = gpsData[tag][0]
+                                  + "." + gpsData[tag][1]
+                                  + "." + gpsData[tag][2]
+                                  + "." + gpsData[tag][3];
+                          break;
+                  }
+                  tags[tag] = gpsData[tag];
+              }
+          }
+
+          return tags;
+      }
+
+
+      function getData(img, callback) {
+          if (!img.complete)
+              return false;
+          if (!imageHasData(img)) {
+              getImageData(img, callback);
+          } else {
+              if (callback) {
+                  callback.call(img);
+              }
+          }
+          return true;
+      }
+
+      function getTag(img, tag) {
+          if (!imageHasData(img))
+              return;
+          return img.exifdata[tag];
+      }
+
+      function getAllTags(img) {
+          if (!imageHasData(img))
+              return {};
+          var a,
+                  data = img.exifdata,
+                  tags = {};
+          for (a in data) {
+              if (data.hasOwnProperty(a)) {
+                  tags[a] = data[a];
+              }
+          }
+          return tags;
+      }
+
+      function pretty(img) {
+          if (!imageHasData(img))
+              return "";
+          var a,
+                  data = img.exifdata,
+                  strPretty = "";
+          for (a in data) {
+              if (data.hasOwnProperty(a)) {
+                  if (typeof data[a] == "object") {
+                      if (data[a] instanceof Number) {
+                          strPretty += a + " : " + data[a] + " [" + data[a].numerator + "/" + data[a].denominator + "]\r\n";
+                      } else {
+                          strPretty += a + " : [" + data[a].length + " values]\r\n";
+                      }
+                  } else {
+                      strPretty += a + " : " + data[a] + "\r\n";
+                  }
+              }
+          }
+          return strPretty;
+      }
+
+      function readFromBinaryFile(file) {
+          return findEXIFinJPEG(file);
+      }
+
+
+      return {
+          readFromBinaryFile: readFromBinaryFile,
+          pretty: pretty,
+          getTag: getTag,
+          getAllTags: getAllTags,
+          getData: getData,
+          Tags: ExifTags,
+          TiffTags: TiffTags,
+          GPSTags: GPSTags,
+          StringValues: StringValues
+      };
+
+  })();
+
+  angular.module('ImageCropper',[])
+    .directive('imageCrop', function() {
+
+      return {
+        template: '<div id="image-crop-{{ rand }}" class="ng-image-crop ng-image-crop--{{ shape }}" ng-style="moduleStyles"><section ng-style="sectionStyles" ng-show="step==1"></section><section ng-style="sectionStyles" ng-show="step==2"><canvas class="cropping-canvas" width="{{ canvasWidth }}" height="{{ canvasHeight }}" ng-mousemove="onCanvasMouseMove($event)" ng-mousedown="onCanvasMouseDown($event)"></canvas><div ng-style="croppingGuideStyles" class="cropping-guide"></div><div class="zoom-handle" ng-mousemove="onHandleMouseMove($event)" ng-mousedown="onHandleMouseDown($event)" ng-mouseup="onHandleMouseUp($event)"><span>&larr; zoom &rarr;</span></div></section><section ng-style="sectionStyles" class="image-crop-section-final" ng-show="step==3"><img class="image-crop-final" ng-src="{{ croppedDataUri }}" /></section></div>',
+        replace: true,
+        restrict: 'AE',
+        scope: {
+		  crop: '=',
+          width: '@',
+          height: '@',
+          shape: '@',
+		  src: '=',
+          resultBlob: '=',
+		  result: '=',
+          step: '=',
+          padding: '@',
+		  maxSize: '@'
+        },
+        link: function (scope, element, attributes) {
+		  
+		  var padding = scope.padding ? Number(scope.padding) : 200;
+		  
+          scope.rand = Math.round(Math.random() * 99999);
+          scope.step = scope.step || 1;
+          scope.shape = scope.shape || 'circle';
+          scope.width = parseInt(scope.width, 10) || 300;
+          scope.height = parseInt(scope.height, 10) || 300;
+
+          scope.canvasWidth = scope.width + padding;
+          scope.canvasHeight = scope.height + padding;
+
+          var $elm = element[0];
+
+          var $canvas = $elm.getElementsByClassName('cropping-canvas')[0];
+          var $handle = $elm.getElementsByClassName('zoom-handle')[0];
+          var $finalImg = $elm.getElementsByClassName('image-crop-final')[0];
+          var $img = new Image();
+          var fileReader = new FileReader();
+
+          var maxLeft = 0, minLeft = 0, maxTop = 0, minTop = 0, imgLoaded = false, imgWidth = 0, imgHeight = 0;
+          var currentX = 0, currentY = 0, dragging = false, startX = 0, startY = 0, zooming = false;
+          var newWidth = imgWidth, newHeight = imgHeight;
+          var targetX = 0, targetY = 0;
+          var zoom = 1;
+          var maxZoomGestureLength = 0;
+          var maxZoomedInLevel = 0, maxZoomedOutLevel = 2;
+          var minXPos = 0, maxXPos = (padding/2), minYPos = 0, maxYPos = (padding/2); // for dragging bounds		  
+		  var maxSize = scope.maxSize ? Number(scope.maxSize) : null; //max size of the image in px
+		  
+          var zoomWeight = .6;
+          var ctx = $canvas.getContext('2d');
+          var exif = null;
+          var files = [];
+
+          // ---------- INLINE STYLES ----------- //
+          scope.moduleStyles = {
+            width: (scope.width + padding) + 'px',
+            height: (scope.height + padding) + 'px'
+          };
+
+          scope.sectionStyles = {
+            width: (scope.width + padding) + 'px',
+            height: (scope.height + padding) + 'px'
+          };
+
+          scope.croppingGuideStyles = {
+            width: scope.width + 'px',
+            height: scope.height + 'px',
+            top: (padding/2)+'px',
+            left: (padding/2)+'px'
+          };
+  		  
+		  function handleSize(base64ImageSrc) {
+		  
+			return new Promise(function(resolve, reject) {
+				
+				if(!maxSize) {
+					return resolve(base64ImageSrc);
+				}
+				
+				var img = new Image();
+				img.src = base64ImageSrc;
+				
+				img.onload = function() {
+				
+					var height = img.height;
+					var width = img.width;
+															
+					//if the size is already ok, just return the image
+					if(height <= maxSize && width <= maxSize) {						
+						return resolve(base64ImageSrc);
+					}			 	
+					
+					var ratio = width/height;
+					
+					if(ratio > 1) {
+						width = maxSize;
+						height = maxSize/ratio;
+					}
+					else {
+						width = maxSize*ratio;
+						height = maxSize;
+					}							
+					
+					width = Math.round(width);
+					height = Math.round(height);			 	
+					
+					var canvas = document.createElement("canvas");
+					canvas.width = width;
+					canvas.height = height;			 	
+					
+					var context = canvas.getContext("2d");
+									
+					context.drawImage(img, 0, 0, img.width,    img.height,      // source
+										   0, 0, canvas.width, canvas.height);  // destination	 
+					
+					context.save();
+								
+					var dataUrl = canvas.toDataURL();
+					
+					resolve(dataUrl);
+
+				};
+					
+			});		  
+				
+		  }
+					
+		  function handleEXIF(base64ImageSrc, exif) {
+		  		
+			return new Promise(function(resolve, reject) {
+								
+				var img = new Image();
+				img.src = base64ImageSrc;
+				
+				img.onload = function() {
+				
+					var canvas = document.createElement("canvas");
+					
+					if(exif.Orientation >= 5) {
+						canvas.width = img.height;
+						canvas.height = img.width;
+					} else {
+						canvas.width = img.width;
+						canvas.height = img.height;
+					}
+					
+					var context = canvas.getContext("2d");
+		
+					// change mobile orientation, if required
+					switch(exif.Orientation){
+						case 1:
+							// nothing
+							break;
+						case 2:
+							// horizontal flip
+							context.translate(img.width, 0);
+							context.scale(-1, 1);
+							break;
+						case 3:
+							// 180 rotate left
+							context.translate(img.width, img.height);
+							context.rotate(Math.PI);
+							break;
+						case 4:
+							// vertical flip
+							context.translate(0, img.height);
+							context.scale(1, -1);
+							break;
+						case 5:
+							// vertical flip + 90 rotate right
+							context.rotate(0.5 * Math.PI);
+							context.scale(1, -1);
+							break;
+						case 6:
+							// 90 rotate right
+							context.rotate(0.5 * Math.PI);
+							context.translate(0, -img.height);
+							break;
+						case 7:
+							// horizontal flip + 90 rotate right
+							context.rotate(0.5 * Math.PI);
+							context.translate(img.width, -img.height);
+							context.scale(-1, 1);
+							break;
+						case 8:
+							// 90 rotate left					 		                   
+							context.rotate(-0.5 * Math.PI);
+							context.translate(-img.width, 0);
+							break;
+						default:
+							break;
+					}
+					
+					context.drawImage(img, 0, 0);	
+					context.save();
+					
+					var dataUrl = canvas.toDataURL();
+					
+					resolve(dataUrl);										
+				
+				};
+				
+			});				
+				
+		  }
+		  
+		  function loadImage(base64ImageSrc) {
+		  
+			//get the EXIF information from the image
+            var byteString = atob(base64ImageSrc.split(',')[1]);
+            var binary = new BinaryFile(byteString, 0, byteString.length);
+            exif = EXIF.readFromBinaryFile(binary);		  
+           
+		    //handle image size
+            handleSize(base64ImageSrc).then(function(base64ImageSrc) {
+			
+				//if the image has EXIF orientation..
+				if (exif && exif.Orientation && exif.Orientation > 1) {			
+					return handleEXIF(base64ImageSrc, exif);
+				} 
+				//otherwise, just return the image without any treatment
+				else {
+					return base64ImageSrc;
+				}
+				
+			}).then(function(base64ImageSrc) {
+			
+				$img.src = base64ImageSrc;
+				
+			}).catch(function(error) {							
+				console.log(error);				
+			});    
+			
+		  };
+		  
+          // ---------- EVENT HANDLERS ---------- //
+          fileReader.onload = function(e) {
+          	
+          	loadImage(this.resultBlob);	
+
+          };	  
+
+          $img.onload = function() {
+		  
+			scope.step = 2;
+			scope.$apply();		  
+			
+            ctx.drawImage($img, 0, 0);
+
+            imgWidth = $img.width;
+            imgHeight = $img.height;
+
+            minLeft = (scope.width + padding) - this.width;
+            minTop = (scope.height + padding) - this.height;
+            newWidth = imgWidth;
+            newHeight = imgHeight;
+            
+			if(imgWidth >= imgHeight) {
+				maxZoomedInLevel = ($canvas.height - padding) / imgHeight;
+			} else {
+				maxZoomedInLevel = ($canvas.width - padding) / imgWidth;
+			}		
+
+            maxZoomGestureLength = to2Dp(Math.sqrt(Math.pow($canvas.width, 2) + Math.pow($canvas.height, 2)));
+
+            updateDragBounds();
+			
+			var initialX = Math.round((minXPos + maxXPos)/2);
+			var initialY = Math.round((minYPos + maxYPos)/2);
+						
+			moveImage(initialX, initialY);
+			
+          };
+		  
+          function reset() {
+            files = [];
+            zoom = 1;
+			currentX = 0; 
+			currentY = 0; 
+			dragging = false; 
+			startX = 0; 
+			startY = 0; 
+			zooming = false;
+            ctx.clearRect(0, 0, $canvas.width, $canvas.height);            
+            $img.src = '';
+          }		  
+
+          // ---------- PRIVATE FUNCTIONS ---------- //
+          function moveImage(x, y) {
+			
+			x = x < minXPos ? minXPos : x;
+			x = x > maxXPos ? maxXPos : x;
+			y = y < minYPos ? minYPos : y;
+			y = y > maxYPos ? maxYPos : y;			
+
+            targetX = x;
+            targetY = y;
+			
+            ctx.clearRect(0, 0, $canvas.width, $canvas.height);
+            ctx.drawImage($img, x, y, newWidth, newHeight);
+			
+			return x == minXPos || x == maxXPos || y == minYPos || y == maxYPos;
+          }
+
+          function to2Dp(val) {
+            return Math.round(val * 1000) / 1000;
+          }
+
+          function updateDragBounds() {
+            // $img.width, $canvas.width, zoom
+
+            minXPos = $canvas.width - ($img.width * zoom) - (padding/2);
+            minYPos = $canvas.height - ($img.height * zoom) - (padding/2);
+
+          }
+
+          function zoomImage(val) {
+
+            if (!val) {
+              return;
+            }
+			
+            var proposedZoomLevel = to2Dp(zoom + val);
+			
+            if ((proposedZoomLevel < maxZoomedInLevel) || (proposedZoomLevel > maxZoomedOutLevel)) {
+              // image wont fill whole canvas
+              // or image is too far zoomed in, it's gonna get pretty pixelated!
+              return;
+            }
+
+            zoom = proposedZoomLevel;
+            // console.log('zoom', zoom);
+
+            updateDragBounds();
+
+            newWidth = $img.width * zoom;
+            newHeight = $img.height * zoom;
+
+            var newXPos = currentX * zoom;
+            var newYPos = currentY * zoom;
+
+            // check if we've exposed the gutter
+            if (newXPos < minXPos) {
+              newXPos = minXPos;
+            } else if (newXPos > maxXPos) {
+              newXPos = maxXPos;
+            }
+
+            if (newYPos < minYPos) {
+              newYPos = minYPos;
+            } else if (newYPos > maxYPos) {
+              newYPos = maxYPos;
+            }
+
+            // check if image is still going to fit the bounds of the box
+            ctx.clearRect(0, 0, $canvas.width, $canvas.height);
+            ctx.drawImage($img, newXPos, newYPos, newWidth, newHeight);
+          }
+
+          function calcZoomLevel(diffX, diffY) {
+
+            var hyp = Math.sqrt( Math.pow(diffX, 2) + Math.pow(diffY, 2) );
+            var zoomGestureRatio = to2Dp(hyp / maxZoomGestureLength);
+            var newZoomDiff = to2Dp((maxZoomedOutLevel - maxZoomedInLevel) * zoomGestureRatio * zoomWeight);
+            return diffX > 0 ? -newZoomDiff : newZoomDiff;
+			
+          }
+          
+		  function dataURItoBlob(dataURI) {
+			    var byteString, 
+			        mimestring;
+			
+			    if(dataURI.split(',')[0].indexOf('base64') !== -1 ) {
+			        byteString = atob(dataURI.split(',')[1]);
+			    } else {
+			        byteString = decodeURI(dataURI.split(',')[1]);
+			    }
+			
+			    mimestring = dataURI.split(',')[0].split(':')[1].split(';')[0];
+			
+			    var content = new Array();
+			    for (var i = 0; i < byteString.length; i++) {
+			        content[i] = byteString.charCodeAt(i);
+			    }
+			
+			    return new Blob([new Uint8Array(content)], {type: mimestring});
+		  }       
+
+          // ---------- SCOPE FUNCTIONS ---------- //
+
+		  scope.$watch('src', function(){
+			if(scope.src) {
+				if(scope.step != 3) {
+					if(typeof(scope.src) == 'Blob') {
+						fileReader.readAsDataURL(scope.src);	
+					} else {
+						loadImage(scope.src);
+					}
+				}		
+			} else {
+				scope.step = 1;
+				reset();
+			}
+		  });	
+
+		  scope.$watch('crop',function(){
+			if(scope.crop) {
+				scope.doCrop();
+				scope.crop = false;
+			}
+		  });	
+		  
+          $finalImg.onload = function() {			
+            var tempCanvas = document.createElement('canvas');
+            tempCanvas.width = this.width - padding;
+            tempCanvas.height = this.height - padding;
+            tempCanvas.style.display = 'none';
+
+            var tempCanvasContext = tempCanvas.getContext('2d');
+            tempCanvasContext.drawImage($finalImg, -(padding/2), -(padding/2));
+
+            $elm.getElementsByClassName('image-crop-section-final')[0].appendChild(tempCanvas);
+			
+			var dataUrl = tempCanvas.toDataURL();
+			
+			scope.result = dataUrl;
+            scope.resultBlob = dataURItoBlob(dataUrl);
+            
+            scope.$apply();
+          };
+
+          scope.doCrop = function() {
+            scope.croppedDataUri = $canvas.toDataURL();
+            scope.step = 3;
+          };
+
+          scope.onCanvasMouseUp = function(e) {
+
+            if (!dragging) {
+              return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation(); // if event was on canvas, stop it propagating up
+
+            startX = 0;
+            startY = 0;
+            dragging = false;
+            currentX = targetX;
+            currentY = targetY;
+
+            removeBodyEventListener('mouseup', scope.onCanvasMouseUp);
+            removeBodyEventListener('touchend', scope.onCanvasMouseUp);
+            removeBodyEventListener('mousemove', scope.onCanvasMouseMove);
+            removeBodyEventListener('touchmove', scope.onCanvasMouseMove);
+          };
+
+          $canvas.addEventListener('touchend', scope.onCanvasMouseUp, false);
+
+          scope.onCanvasMouseDown = function(e) {
+            startX = e.type === 'touchstart' ? e.changedTouches[0].clientX : e.clientX;
+            startY = e.type === 'touchstart' ? e.changedTouches[0].clientY : e.clientY;
+            zooming = false;
+            dragging = true;
+
+            addBodyEventListener('mouseup', scope.onCanvasMouseUp);
+            addBodyEventListener('mousemove', scope.onCanvasMouseMove);
+          };
+
+          $canvas.addEventListener('touchstart', scope.onCanvasMouseDown, false);
+
+          function addBodyEventListener(eventName, func) {
+            document.documentElement.addEventListener(eventName, func, false);
+          }
+
+          function removeBodyEventListener(eventName, func) {
+            document.documentElement.removeEventListener(eventName, func);
+          }
+
+          scope.onHandleMouseDown = function(e) {
+
+            e.preventDefault();
+            e.stopPropagation(); // if event was on handle, stop it propagating up
+
+            startX = lastHandleX = (e.type === 'touchstart') ? e.changedTouches[0].clientX : e.clientX;
+            startY = lastHandleY = (e.type === 'touchstart') ? e.changedTouches[0].clientY : e.clientY;
+            dragging = false;
+            zooming = true;
+
+            addBodyEventListener('mouseup', scope.onHandleMouseUp);
+            addBodyEventListener('touchend', scope.onHandleMouseUp);
+            addBodyEventListener('mousemove', scope.onHandleMouseMove);
+            addBodyEventListener('touchmove', scope.onHandleMouseMove);
+			
+          };
+
+          $handle.addEventListener('touchstart', scope.onHandleMouseDown, false);
+
+          scope.onHandleMouseUp = function(e) {
+
+            // this is applied on the whole section so check we're zooming
+            if (!zooming) {
+              return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation(); // if event was on canvas, stop it propagating up
+
+            startX = 0;
+            startY = 0;
+            zooming = false;
+            currentX = targetX;
+            currentY = targetY;
+
+            removeBodyEventListener('mouseup', scope.onHandleMouseUp);
+            removeBodyEventListener('touchend', scope.onHandleMouseUp);
+            removeBodyEventListener('mousemove', scope.onHandleMouseMove);
+            removeBodyEventListener('touchmove', scope.onHandleMouseMove);
+          };
+
+          $handle.addEventListener('touchend', scope.onHandleMouseUp, false);
+
+          scope.onCanvasMouseMove = function(e) {
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (!dragging) {
+              return;
+            }
+
+            var diffX = startX - ((e.type === 'touchmove') ? e.changedTouches[0].clientX : e.clientX); // how far mouse has moved in current drag
+            var diffY = startY - ((e.type === 'touchmove') ? e.changedTouches[0].clientY : e.clientY); // how far mouse has moved in current drag
+            /*targetX = currentX - diffX; // desired new X position
+            targetY = currentY - diffY; // desired new X position*/
+
+            moveImage(currentX - diffX, currentY - diffY);
+
+          };
+
+          $canvas.addEventListener('touchmove', scope.onCanvasMouseMove, false);
+
+          var lastHandleX = null, lastHandleY = null;
+
+          scope.onHandleMouseMove = function(e) {
+
+            e.stopPropagation();
+            e.preventDefault();
+
+            // this is applied on the whole section so check we're zooming
+            if (!zooming) {
+              return false;
+            }
+
+            var diffX = lastHandleX - ((e.type === 'touchmove') ? e.changedTouches[0].clientX : e.clientX); // how far mouse has moved in current drag
+            var diffY = lastHandleY - ((e.type === 'touchmove') ? e.changedTouches[0].clientY : e.clientY); // how far mouse has moved in current drag
+
+            lastHandleX = (e.type === 'touchmove') ? e.changedTouches[0].clientX : e.clientX;
+            lastHandleY = (e.type === 'touchmove') ? e.changedTouches[0].clientY : e.clientY;
+
+            var zoomVal = calcZoomLevel(diffX, diffY);			
+            zoomImage(zoomVal);
+
+          };
+
+          $handle.addEventListener('touchmove', scope.onHandleMouseMove, false);	  		 
+		  	  		  
+		  scope.onHandleMouseWheel = function(e){
+			  e.preventDefault();		  
+			  
+			  zoomImage(e.deltaY > 0 ? -0.05 : 0.05);			  
+		  };
+
+		  $canvas.addEventListener('mousewheel', scope.onHandleMouseWheel);
+		  $handle.addEventListener('mousewheel', scope.onHandleMouseWheel);
+
+        }
+      };
+    });
+
+
+})();;/**
  * angular-ui-utils - Swiss-Army-Knife of AngularJS tools (with no external dependencies!)
  * @version v0.1.1 - 2014-02-05
  * @link http://angular-ui.github.com
@@ -39055,3 +40398,315 @@ H=h("script,style"),t=e.extend({},z,q,k,u),y=h("background,cite,href,longdesc,sr
 [];D(a,v(d,function(a,b){return!/^unsafe:/.test(c(a,b))}));return d.join("")}}];this.enableSvg=function(c){return e.isDefined(c)?(a=c,this):a}});e.module("ngSanitize").filter("linky",["$sanitize",function(a){var c=/((ftp|https?):\/\/|(www\.)|(mailto:)?[A-Za-z0-9._%+-]+@)\S*[^\s.;,(){}<>"\u201d\u2019]/i,b=/^mailto:/i,d=e.$$minErr("linky"),g=e.isString;return function(f,h,m){function k(a){a&&p.push(C(a))}function q(a,b){var c;p.push("<a ");e.isFunction(m)&&(m=m(a));if(e.isObject(m))for(c in m)p.push(c+
 '="'+m[c]+'" ');else m={};!e.isDefined(h)||"target"in m||p.push('target="',h,'" ');p.push('href="',a.replace(/"/g,"&quot;"),'">');k(b);p.push("</a>")}if(null==f||""===f)return f;if(!g(f))throw d("notstring",f);for(var r=f,p=[],s,n;f=r.match(c);)s=f[0],f[2]||f[4]||(s=(f[3]?"http://":"mailto:")+s),n=f.index,k(r.substr(0,n)),q(s,f[0].replace(b,"")),r=r.substring(n+f[0].length);k(r);return a(p.join(""))}}])})(window,window.angular);
 //# sourceMappingURL=angular-sanitize.min.js.map
+;/*! ngTagsInput v3.0.0 License: MIT */!function(){"use strict";var a={backspace:8,tab:9,enter:13,escape:27,space:32,up:38,down:40,left:37,right:39,"delete":46,comma:188},b=9007199254740991,c=["text","email","url"],d=angular.module("ngTagsInput",[]);d.directive("tagsInput",["$timeout","$document","$window","tagsInputConfig","tiUtil",function(d,e,f,g,h){function i(a,b,c,d){var e,f,g,i={};return e=function(b){return h.safeToString(b[a.displayProperty])},f=function(b,c){b[a.displayProperty]=c},g=function(b){var d=e(b);return d&&d.length>=a.minLength&&d.length<=a.maxLength&&a.allowedTagsPattern.test(d)&&!h.findInObjectArray(i.items,b,a.keyProperty||a.displayProperty)&&c({$tag:b})},i.items=[],i.addText=function(a){var b={};return f(b,a),i.add(b)},i.add=function(c){var d=e(c);return a.replaceSpacesWithDashes&&(d=h.replaceSpacesWithDashes(d)),f(c,d),g(c)?(i.items.push(c),b.trigger("tag-added",{$tag:c})):d&&b.trigger("invalid-tag",{$tag:c}),c},i.remove=function(a){var c=i.items[a];return d({$tag:c})?(i.items.splice(a,1),i.clearSelection(),b.trigger("tag-removed",{$tag:c}),c):void 0},i.select=function(a){0>a?a=i.items.length-1:a>=i.items.length&&(a=0),i.index=a,i.selected=i.items[a]},i.selectPrior=function(){i.select(--i.index)},i.selectNext=function(){i.select(++i.index)},i.removeSelected=function(){return i.remove(i.index)},i.clearSelection=function(){i.selected=null,i.index=-1},i.clearSelection(),i}function j(a){return-1!==c.indexOf(a)}return{restrict:"E",require:"ngModel",scope:{tags:"=ngModel",text:"=?",onTagAdding:"&",onTagAdded:"&",onInvalidTag:"&",onTagRemoving:"&",onTagRemoved:"&",onTagClicked:"&"},replace:!1,transclude:!0,templateUrl:"ngTagsInput/tags-input.html",controller:["$scope","$attrs","$element",function(a,c,d){a.events=h.simplePubSub(),g.load("tagsInput",a,c,{template:[String,"ngTagsInput/tag-item.html"],type:[String,"text",j],placeholder:[String,"Add a tag"],tabindex:[Number,null],removeTagSymbol:[String,String.fromCharCode(215)],replaceSpacesWithDashes:[Boolean,!0],minLength:[Number,3],maxLength:[Number,b],addOnEnter:[Boolean,!0],addOnSpace:[Boolean,!1],addOnComma:[Boolean,!0],addOnBlur:[Boolean,!0],addOnPaste:[Boolean,!1],pasteSplitPattern:[RegExp,/,/],allowedTagsPattern:[RegExp,/.+/],enableEditingLastTag:[Boolean,!1],minTags:[Number,0],maxTags:[Number,b],displayProperty:[String,"text"],keyProperty:[String,""],allowLeftoverText:[Boolean,!1],addFromAutocompleteOnly:[Boolean,!1],spellcheck:[Boolean,!0]}),a.tagList=new i(a.options,a.events,h.handleUndefinedResult(a.onTagAdding,!0),h.handleUndefinedResult(a.onTagRemoving,!0)),this.registerAutocomplete=function(){var b=d.find("input");return{addTag:function(b){return a.tagList.add(b)},focusInput:function(){b[0].focus()},getTags:function(){return a.tagList.items},getCurrentTagText:function(){return a.newTag.text()},getOptions:function(){return a.options},on:function(b,c){return a.events.on(b,c),this}}},this.registerTagItem=function(){return{getOptions:function(){return a.options},removeTag:function(b){a.disabled||a.tagList.remove(b)}}}}],link:function(b,c,g,i){var j,k=[a.enter,a.comma,a.space,a.backspace,a["delete"],a.left,a.right],l=b.tagList,m=b.events,n=b.options,o=c.find("input"),p=["minTags","maxTags","allowLeftoverText"];j=function(){i.$setValidity("maxTags",l.items.length<=n.maxTags),i.$setValidity("minTags",l.items.length>=n.minTags),i.$setValidity("leftoverText",b.hasFocus||n.allowLeftoverText?!0:!b.newTag.text())},i.$isEmpty=function(a){return!a||!a.length},b.newTag={text:function(a){return angular.isDefined(a)?(b.text=a,void m.trigger("input-change",a)):b.text||""},invalid:null},b.track=function(a){return a[n.keyProperty||n.displayProperty]},b.$watch("tags",function(a){a?(l.items=h.makeObjectArray(a,n.displayProperty),b.tags=l.items):l.items=[]}),b.$watch("tags.length",function(){j(),i.$validate()}),g.$observe("disabled",function(a){b.disabled=a}),b.eventHandlers={input:{keydown:function(a){m.trigger("input-keydown",a)},focus:function(){b.hasFocus||(b.hasFocus=!0,m.trigger("input-focus"))},blur:function(){d(function(){var a=e.prop("activeElement"),d=a===o[0],f=c[0].contains(a);(d||!f)&&(b.hasFocus=!1,m.trigger("input-blur"))})},paste:function(a){a.getTextData=function(){var b=a.clipboardData||a.originalEvent&&a.originalEvent.clipboardData;return b?b.getData("text/plain"):f.clipboardData.getData("Text")},m.trigger("input-paste",a)}},host:{click:function(){b.disabled||o[0].focus()}},tag:{click:function(a){m.trigger("tag-clicked",{$tag:a})}}},m.on("tag-added",b.onTagAdded).on("invalid-tag",b.onInvalidTag).on("tag-removed",b.onTagRemoved).on("tag-clicked",b.onTagClicked).on("tag-added",function(){b.newTag.text("")}).on("tag-added tag-removed",function(){b.tags=l.items,i.$setDirty()}).on("invalid-tag",function(){b.newTag.invalid=!0}).on("option-change",function(a){-1!==p.indexOf(a.name)&&j()}).on("input-change",function(){l.clearSelection(),b.newTag.invalid=null}).on("input-focus",function(){c.triggerHandler("focus"),i.$setValidity("leftoverText",!0)}).on("input-blur",function(){n.addOnBlur&&!n.addFromAutocompleteOnly&&l.addText(b.newTag.text()),c.triggerHandler("blur"),j()}).on("input-keydown",function(c){var d,e,f,g,i=c.keyCode,j={};if(!h.isModifierOn(c)&&-1!==k.indexOf(i)){if(j[a.enter]=n.addOnEnter,j[a.comma]=n.addOnComma,j[a.space]=n.addOnSpace,d=!n.addFromAutocompleteOnly&&j[i],e=(i===a.backspace||i===a["delete"])&&l.selected,g=i===a.backspace&&0===b.newTag.text().length&&n.enableEditingLastTag,f=(i===a.backspace||i===a.left||i===a.right)&&0===b.newTag.text().length&&!n.enableEditingLastTag,d)l.addText(b.newTag.text());else if(g){var m;l.selectPrior(),m=l.removeSelected(),m&&b.newTag.text(m[n.displayProperty])}else e?l.removeSelected():f&&(i===a.left||i===a.backspace?l.selectPrior():i===a.right&&l.selectNext());(d||f||e||g)&&c.preventDefault()}}).on("input-paste",function(a){if(n.addOnPaste){var b=a.getTextData(),c=b.split(n.pasteSplitPattern);c.length>1&&(c.forEach(function(a){l.addText(a)}),a.preventDefault())}})}}}]),d.directive("tiTagItem",["tiUtil",function(a){return{restrict:"E",require:"^tagsInput",template:'<ng-include src="$$template"></ng-include>',scope:{data:"="},link:function(b,c,d,e){var f=e.registerTagItem(),g=f.getOptions();b.$$template=g.template,b.$$removeTagSymbol=g.removeTagSymbol,b.$getDisplayText=function(){return a.safeToString(b.data[g.displayProperty])},b.$removeTag=function(){f.removeTag(b.$index)},b.$watch("$parent.$index",function(a){b.$index=a})}}}]),d.directive("autoComplete",["$document","$timeout","$sce","$q","tagsInputConfig","tiUtil",function(b,c,d,e,f,g){function h(a,b,c){var d,f,h,i={};return h=function(){return b.tagsInput.keyProperty||b.tagsInput.displayProperty},d=function(a,c){return a.filter(function(a){return!g.findInObjectArray(c,a,h(),function(a,c){return b.tagsInput.replaceSpacesWithDashes&&(a=g.replaceSpacesWithDashes(a),c=g.replaceSpacesWithDashes(c)),g.defaultComparer(a,c)})})},i.reset=function(){f=null,i.items=[],i.visible=!1,i.index=-1,i.selected=null,i.query=null},i.show=function(){b.selectFirstMatch?i.select(0):i.selected=null,i.visible=!0},i.load=g.debounce(function(c,j){i.query=c;var k=e.when(a({$query:c}));f=k,k.then(function(a){k===f&&(a=g.makeObjectArray(a.data||a,h()),a=d(a,j),i.items=a.slice(0,b.maxResultsToShow),i.items.length>0?i.show():i.reset())})},b.debounceDelay),i.selectNext=function(){i.select(++i.index)},i.selectPrior=function(){i.select(--i.index)},i.select=function(a){0>a?a=i.items.length-1:a>=i.items.length&&(a=0),i.index=a,i.selected=i.items[a],c.trigger("suggestion-selected",a)},i.reset(),i}function i(a,b){var c=a.find("li").eq(b),d=c.parent(),e=c.prop("offsetTop"),f=c.prop("offsetHeight"),g=d.prop("clientHeight"),h=d.prop("scrollTop");h>e?d.prop("scrollTop",e):e+f>g+h&&d.prop("scrollTop",e+f-g)}return{restrict:"E",require:"^tagsInput",scope:{source:"&"},templateUrl:"ngTagsInput/auto-complete.html",controller:["$scope","$element","$attrs",function(a,b,c){a.events=g.simplePubSub(),f.load("autoComplete",a,c,{template:[String,"ngTagsInput/auto-complete-match.html"],debounceDelay:[Number,100],minLength:[Number,3],highlightMatchedText:[Boolean,!0],maxResultsToShow:[Number,10],loadOnDownArrow:[Boolean,!1],loadOnEmpty:[Boolean,!1],loadOnFocus:[Boolean,!1],selectFirstMatch:[Boolean,!0],displayProperty:[String,""]}),a.suggestionList=new h(a.source,a.options,a.events),this.registerAutocompleteMatch=function(){return{getOptions:function(){return a.options},getQuery:function(){return a.suggestionList.query}}}}],link:function(b,c,d,e){var f,h=[a.enter,a.tab,a.escape,a.up,a.down],j=b.suggestionList,k=e.registerAutocomplete(),l=b.options,m=b.events;l.tagsInput=k.getOptions(),f=function(a){return a&&a.length>=l.minLength||!a&&l.loadOnEmpty},b.addSuggestionByIndex=function(a){j.select(a),b.addSuggestion()},b.addSuggestion=function(){var a=!1;return j.selected&&(k.addTag(angular.copy(j.selected)),j.reset(),k.focusInput(),a=!0),a},b.track=function(a){return a[l.tagsInput.keyProperty||l.tagsInput.displayProperty]},k.on("tag-added tag-removed invalid-tag input-blur",function(){j.reset()}).on("input-change",function(a){f(a)?j.load(a,k.getTags()):j.reset()}).on("input-focus",function(){var a=k.getCurrentTagText();l.loadOnFocus&&f(a)&&j.load(a,k.getTags())}).on("input-keydown",function(c){var d=c.keyCode,e=!1;if(!g.isModifierOn(c)&&-1!==h.indexOf(d))return j.visible?d===a.down?(j.selectNext(),e=!0):d===a.up?(j.selectPrior(),e=!0):d===a.escape?(j.reset(),e=!0):(d===a.enter||d===a.tab)&&(e=b.addSuggestion()):d===a.down&&b.options.loadOnDownArrow&&(j.load(k.getCurrentTagText(),k.getTags()),e=!0),e?(c.preventDefault(),c.stopImmediatePropagation(),!1):void 0}),m.on("suggestion-selected",function(a){i(c,a)})}}}]),d.directive("tiAutocompleteMatch",["$sce","tiUtil",function(a,b){return{restrict:"E",require:"^autoComplete",template:'<ng-include src="$$template"></ng-include>',scope:{data:"="},link:function(c,d,e,f){var g=f.registerAutocompleteMatch(),h=g.getOptions();c.$$template=h.template,c.$index=c.$parent.$index,c.$highlight=function(c){return h.highlightMatchedText&&(c=b.safeHighlight(c,g.getQuery())),a.trustAsHtml(c)},c.$getDisplayText=function(){return b.safeToString(c.data[h.displayProperty||h.tagsInput.displayProperty])}}}}]),d.directive("tiTranscludeAppend",function(){return function(a,b,c,d,e){e(function(a){b.append(a)})}}),d.directive("tiAutosize",["tagsInputConfig",function(a){return{restrict:"A",require:"ngModel",link:function(b,c,d,e){var f,g,h=a.getTextAutosizeThreshold();f=angular.element('<span class="input"></span>'),f.css("display","none").css("visibility","hidden").css("width","auto").css("white-space","pre"),c.parent().append(f),g=function(a){var b,e=a;return angular.isString(e)&&0===e.length&&(e=d.placeholder),e&&(f.text(e),f.css("display",""),b=f.prop("offsetWidth"),f.css("display","none")),c.css("width",b?b+h+"px":""),a},e.$parsers.unshift(g),e.$formatters.unshift(g),d.$observe("placeholder",function(a){e.$modelValue||g(a)})}}}]),d.directive("tiBindAttrs",function(){return function(a,b,c){a.$watch(c.tiBindAttrs,function(a){angular.forEach(a,function(a,b){c.$set(b,a)})},!0)}}),d.provider("tagsInputConfig",function(){var a={},b={},c=3;this.setDefaults=function(b,c){return a[b]=c,this},this.setActiveInterpolation=function(a,c){return b[a]=c,this},this.setTextAutosizeThreshold=function(a){return c=a,this},this.$get=["$interpolate",function(d){var e={};return e[String]=function(a){return a},e[Number]=function(a){return parseInt(a,10)},e[Boolean]=function(a){return"true"===a.toLowerCase()},e[RegExp]=function(a){return new RegExp(a)},{load:function(c,f,g,h){var i=function(){return!0};f.options={},angular.forEach(h,function(h,j){var k,l,m,n,o,p;k=h[0],l=h[1],m=h[2]||i,n=e[k],o=function(){var b=a[c]&&a[c][j];return angular.isDefined(b)?b:l},p=function(a){f.options[j]=a&&m(a)?n(a):o()},b[c]&&b[c][j]?g.$observe(j,function(a){p(a),f.events.trigger("option-change",{name:j,newValue:a})}):p(g[j]&&d(g[j])(f.$parent))})},getTextAutosizeThreshold:function(){return c}}}]}),d.factory("tiUtil",["$timeout",function(a){var b={};return b.debounce=function(b,c){var d;return function(){var e=arguments;a.cancel(d),d=a(function(){b.apply(null,e)},c)}},b.makeObjectArray=function(a,b){if(!angular.isArray(a)||0===a.length||angular.isObject(a[0]))return a;var c=[];return a.forEach(function(a){var d={};d[b]=a,c.push(d)}),c},b.findInObjectArray=function(a,c,d,e){var f=null;return e=e||b.defaultComparer,a.some(function(a){return e(a[d],c[d])?(f=a,!0):void 0}),f},b.defaultComparer=function(a,c){return b.safeToString(a).toLowerCase()===b.safeToString(c).toLowerCase()},b.safeHighlight=function(a,c){function d(a){return a.replace(/([.?*+^$[\]\\(){}|-])/g,"\\$1")}if(!c)return a;a=b.encodeHTML(a),c=b.encodeHTML(c);var e=new RegExp("&[^;]+;|"+d(c),"gi");return a.replace(e,function(a){return a.toLowerCase()===c.toLowerCase()?"<em>"+a+"</em>":a})},b.safeToString=function(a){return angular.isUndefined(a)||null==a?"":a.toString().trim()},b.encodeHTML=function(a){return b.safeToString(a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")},b.handleUndefinedResult=function(a,b){return function(){var c=a.apply(null,arguments);return angular.isUndefined(c)?b:c}},b.replaceSpacesWithDashes=function(a){return b.safeToString(a).replace(/\s/g,"-")},b.isModifierOn=function(a){return a.shiftKey||a.ctrlKey||a.altKey||a.metaKey},b.simplePubSub=function(){var a={};return{on:function(b,c){return b.split(" ").forEach(function(b){a[b]||(a[b]=[]),a[b].push(c)}),this},trigger:function(c,d){var e=a[c]||[];return e.every(function(a){return b.handleUndefinedResult(a,!0)(d)}),this}}},b}]),d.run(["$templateCache",function(a){a.put("ngTagsInput/tags-input.html",'<div class="host" tabindex="-1" ng-click="eventHandlers.host.click()" ti-transclude-append><div class="tags" ng-class="{focused: hasFocus}"><ul class="tag-list"><li class="tag-item" ng-repeat="tag in tagList.items track by track(tag)" ng-class="{ selected: tag == tagList.selected }" ng-click="eventHandlers.tag.click(tag)"><ti-tag-item data="::tag"></ti-tag-item></li></ul><input class="input" autocomplete="off" ng-model="newTag.text" ng-model-options="{getterSetter: true}" ng-keydown="eventHandlers.input.keydown($event)" ng-focus="eventHandlers.input.focus($event)" ng-blur="eventHandlers.input.blur($event)" ng-paste="eventHandlers.input.paste($event)" ng-trim="false" ng-class="{\'invalid-tag\': newTag.invalid}" ng-disabled="disabled" ti-bind-attrs="{type: options.type, placeholder: options.placeholder, tabindex: options.tabindex, spellcheck: options.spellcheck}" ti-autosize></div></div>'),a.put("ngTagsInput/tag-item.html",'<span ng-bind="$getDisplayText()"></span> <a class="remove-button" ng-click="$removeTag()" ng-bind="::$$removeTagSymbol"></a>'),a.put("ngTagsInput/auto-complete.html",'<div class="autocomplete" ng-if="suggestionList.visible"><ul class="suggestion-list"><li class="suggestion-item" ng-repeat="item in suggestionList.items track by track(item)" ng-class="{selected: item == suggestionList.selected}" ng-click="addSuggestionByIndex($index)" ng-mouseenter="suggestionList.select($index)"><ti-autocomplete-match data="::item"></ti-autocomplete-match></li></ul></div>'),a.put("ngTagsInput/auto-complete-match.html",'<span ng-bind-html="$highlight($getDisplayText())"></span>')}])}();;/* --- Made by justgoscha and licensed under MIT license --- */
+
+var app = angular.module('autocomplete', []);
+
+app.directive('autocomplete', function() {
+  var index = -1;
+
+  return {
+    restrict: 'E',
+    scope: {
+      searchParam: '=ngModel',
+      suggestions: '=data',
+      onType: '=onType',
+      onSelect: '=onSelect',
+      autocompleteRequired: '='
+    },
+    controller: ['$scope', function($scope){
+      // the index of the suggestions that's currently selected
+      $scope.selectedIndex = -1;
+
+      $scope.initLock = true;
+
+      // set new index
+      $scope.setIndex = function(i){
+        $scope.selectedIndex = parseInt(i);
+      };
+
+      this.setIndex = function(i){
+        $scope.setIndex(i);
+        $scope.$apply();
+      };
+
+      $scope.getIndex = function(i){
+        return $scope.selectedIndex;
+      };
+
+      // watches if the parameter filter should be changed
+      var watching = true;
+
+      // autocompleting drop down on/off
+      $scope.completing = false;
+
+      // starts autocompleting on typing in something
+      $scope.$watch('searchParam', function(newValue, oldValue){
+
+        if (oldValue === newValue || (!oldValue && $scope.initLock)) {
+          return;
+        }
+
+        if(watching && typeof $scope.searchParam !== 'undefined' && $scope.searchParam !== null) {
+          $scope.completing = true;
+          $scope.searchFilter = $scope.searchParam;
+          $scope.selectedIndex = -1;
+        }
+
+        // function thats passed to on-type attribute gets executed
+        if($scope.onType)
+          $scope.onType($scope.searchParam);
+      });
+
+      // for hovering over suggestions
+      this.preSelect = function(suggestion){
+
+        watching = false;
+
+        // this line determines if it is shown
+        // in the input field before it's selected:
+        //$scope.searchParam = suggestion;
+
+        $scope.$apply();
+        watching = true;
+
+      };
+
+      $scope.preSelect = this.preSelect;
+
+      this.preSelectOff = function(){
+        watching = true;
+      };
+
+      $scope.preSelectOff = this.preSelectOff;
+
+      // selecting a suggestion with RIGHT ARROW or ENTER
+      $scope.select = function(suggestion){
+        if(suggestion){
+          $scope.searchParam = suggestion;
+          $scope.searchFilter = suggestion;
+          if($scope.onSelect)
+            $scope.onSelect(suggestion);
+        }
+        watching = false;
+        $scope.completing = false;
+        setTimeout(function(){watching = true;},1000);
+        $scope.setIndex(-1);
+      };
+
+
+    }],
+    link: function(scope, element, attrs){
+
+      setTimeout(function() {
+        scope.initLock = false;
+        scope.$apply();
+      }, 250);
+
+      var attr = '';
+
+      // Default atts
+      scope.attrs = {
+        "placeholder": attrs.placeholder,
+        "class": attrs.class,
+        "id": "",
+        "inputclass": "",
+        "inputid": ""
+      };
+
+      for (var a in attrs) {
+        attr = a.replace('attr', '').toLowerCase();
+        // add attribute overriding defaults
+        // and preventing duplication
+        if (a.indexOf('attr') === 0) {
+          scope.attrs[attr] = attrs[a];
+        }
+      }
+
+      if (attrs.clickActivation) {
+        element[0].onclick = function(e){
+          if(!scope.searchParam){
+            setTimeout(function() {
+              scope.completing = true;
+              scope.$apply();
+            }, 200);
+          }
+        };
+      }
+
+      var key = {left: 37, up: 38, right: 39, down: 40 , enter: 13, esc: 27, tab: 9};
+
+      document.addEventListener("keydown", function(e){
+        var keycode = e.keyCode || e.which;
+
+        switch (keycode){
+          case key.esc:
+            // disable suggestions on escape
+            scope.select();
+            scope.setIndex(-1);
+            scope.$apply();
+            e.preventDefault();
+        }
+      }, true);
+
+      document.addEventListener("blur", function(e){
+        // disable suggestions on blur
+        // we do a timeout to prevent hiding it before a click event is registered
+        setTimeout(function() {
+          scope.select();
+          scope.setIndex(-1);
+          scope.$apply();
+        }, 150);
+      }, true);
+
+      element[0].addEventListener("keydown",function (e){
+        var keycode = e.keyCode || e.which;
+
+        var l = angular.element(this).find('li').length;
+
+        // this allows submitting forms by pressing Enter in the autocompleted field
+        if(!scope.completing || l == 0) return;
+
+        // implementation of the up and down movement in the list of suggestions
+        switch (keycode){
+          case key.up:
+
+            index = scope.getIndex()-1;
+            if(index<-1){
+              index = l-1;
+            } else if (index >= l ){
+              index = -1;
+              scope.setIndex(index);
+              scope.preSelectOff();
+              break;
+            }
+            scope.setIndex(index);
+
+            if(index!==-1)
+              scope.preSelect(angular.element(angular.element(this).find('li')[index]).text());
+
+            scope.$apply();
+
+            break;
+          case key.down:
+            index = scope.getIndex()+1;
+            if(index<-1){
+              index = l-1;
+            } else if (index >= l ){
+              index = -1;
+              scope.setIndex(index);
+              scope.preSelectOff();
+              scope.$apply();
+              break;
+            }
+            scope.setIndex(index);
+
+            if(index!==-1)
+              scope.preSelect(angular.element(angular.element(this).find('li')[index]).text());
+
+            break;
+          case key.left:
+            break;
+          case key.right:
+          case key.enter:
+          case key.tab:
+
+            index = scope.getIndex();
+            // scope.preSelectOff();
+            if(index !== -1) {
+              scope.select(angular.element(angular.element(this).find('li')[index]).text());
+              if(keycode == key.enter) {
+                e.preventDefault();
+              }
+            } else {
+              if(keycode == key.enter) {
+                scope.select();
+              }
+            }
+            scope.setIndex(-1);
+            scope.$apply();
+
+            break;
+          case key.esc:
+            // disable suggestions on escape
+            scope.select();
+            scope.setIndex(-1);
+            scope.$apply();
+            e.preventDefault();
+            break;
+          default:
+            return;
+        }
+
+      });
+    },
+    template: '\
+        <div class="autocomplete" id="{{ attrs.id }}">\
+          <input\
+            type="text"\
+            ng-model="searchParam"\
+            placeholder="{{ attrs.placeholder }}"\
+            class="{{ attrs.class }}"\
+            id="{{ attrs.inputid }}"\
+            ng-required="{{ autocompleteRequired }}" />\
+          <ul ng-show="completing && (suggestions | filter:searchFilter).length > 0" class="suggestion-field">\
+            <li\
+              suggestion\
+              ng-repeat="suggestion in suggestions | startsSuggestion:searchFilter | orderBy:\'toString()\' track by $index"\
+              index="{{ $index }}"\
+              val="{{ suggestion }}"\
+              ng-class="{ active: ($index === selectedIndex) }"\
+              ng-click="select(suggestion)"\
+              ng-bind-html="suggestion | highlight:searchParam"></li>\
+          </ul>\
+        </div>'
+  };
+});
+app.filter('startsSuggestion', function () {
+  return function (items,letter) {
+    if(items && letter){
+      var filtered = [];
+      var letterMatch = new RegExp(letter, 'i');
+      angular.forEach(items,function(item){
+        if(item)
+          if (letterMatch.test(item.substring(0, letter.length))) {
+            filtered.push(item);
+          }
+      })
+      return filtered;
+    }
+  };
+});
+app.filter('highlight', ['$sce', function ($sce) {
+  return function (input, searchParam) {
+    if (typeof input === 'function') return '';
+    if (searchParam) {
+      var words = '(' +
+            searchParam.split(/\ /).join(' |') + '|' +
+            searchParam.split(/\ /).join('|') +
+          ')',
+          exp = new RegExp(words, 'gi');
+      if (words.length) {
+        input = input.replace(exp, "<span class=\"highlight\">$1</span>");
+      }
+    }
+    return $sce.trustAsHtml(input);
+  };
+}]);
+
+app.directive('suggestion', function(){
+  return {
+    restrict: 'A',
+    require: '^autocomplete', // ^look for controller on parents element
+    link: function(scope, element, attrs, autoCtrl){
+      element.bind('mouseenter', function() {
+        autoCtrl.preSelect(attrs.val);
+        autoCtrl.setIndex(attrs.index);
+      });
+
+      element.bind('mouseleave', function() {
+        autoCtrl.preSelectOff();
+      });
+    }
+  };
+});

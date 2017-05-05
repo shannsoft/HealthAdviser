@@ -247,7 +247,7 @@ a:hover{ color:#000;}
     border-color: #10cfbd;
 }
 .radio.radio-primary input[type=radio]:checked+label:before {
-    border-color: #6d5cae;
+    border-color: #0088a4;
 }
 .radio.radio-info input[type=radio]:checked+label:before {
     border-color: #3b4752;
@@ -591,6 +591,7 @@ a:hover{ color:#000;}
 	font-size:20px;
 	font-weight:bold;
 	margin:0px 0px 20px;
+	text-transform: uppercase;
 }
 .footer-section .ftr-block-list ul {
 	margin:0px;
@@ -928,6 +929,15 @@ a:hover{ color:#000;}
 	font-size:18px;
 	margin:0px;
 	font-weight:bold;
+}
+.awards-content h3:after{
+	top: 40px!important;
+    content: "";
+    height: 2px;
+    left: 2%;
+    position: absolute;
+    width: 100px;
+    background-color: #8795a1;
 }
 .award-content span{
 	font-size:18px;
@@ -2036,6 +2046,7 @@ dl {
 	bottom: 0;
 	left: 0;
 	width: 50%;
+	z-index: 999;
 }
 .color-red{
 	color:red;
@@ -2199,6 +2210,7 @@ dl {
 .form-block-wrap h3{
 	margin:0;
 	padding:0;
+	font-size: 22px;
 }
 .form-block-wrap h3:after{
 	top: 58px;
@@ -2413,3 +2425,121 @@ dl {
 	width:100px;
 }
 
+.head-alfas{
+	border: 2px solid #fff;
+    border-radius: 50px;
+    padding: 3px;
+}
+.m-t-28{
+	margin-top:28px;
+}
+.img-fileUpload {
+    position: relative;
+    overflow: hidden;
+    width: 90px;
+    padding:9px 0px;
+    line-height: 15px;
+}
+.img-fileUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+.update-cancel-btn{
+	background:#EF4B46;
+	color:#fff;
+	padding:9px 0px;
+	width:90px;
+	line-height: 15px;
+}
+.update-cancel-btn:hover{
+	background:#e03f3a;
+	color:#fff!important;
+	padding:9px 0px;
+	width:90px;
+}
+.update-cancel-btn:focus{
+	background:#e03f3a;
+	color:#fff!important;
+	padding:9px 0px;
+	width:90px;
+}
+.prof-position{
+	width: 100%;
+}
+
+* Some of these styles you can override, things like colors,
+ * however some styles are required for the structure, and are critical to this module behaving properly!
+ */
+
+/* Core component styles */
+.ng-image-crop {
+  text-align: center;
+  margin: 0 auto;
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+/* Each of the 3 steps in the process are contained within sections */
+.ng-image-crop > section {
+  background: #ccc;
+}
+/* The cropping button */
+.ng-image-crop button {
+  margin-top: 10px;
+}
+/* The dashed cropping guideline */
+.ng-image-crop .cropping-guide {
+  display: block;
+  background: rgba(255, 255, 255, .3);
+  border: 2px dashed white;
+  position: absolute;
+  pointer-events: none;
+}
+/* The circular themed cropping guideline */
+.ng-image-crop--circle .cropping-guide {
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+/* The canvas where the user positions the image via dragging and zooming */
+.ng-image-crop .cropping-canvas {
+  background: rgba(255, 255, 255, .3);
+  margin: 0 auto;
+  cursor: move;
+}
+/* The overlayed draggable zoom handle in the corner of the module */
+.ng-image-crop .zoom-handle {
+  display: block;
+  position: absolute;
+  bottom: 1px;
+  left: 1px;
+  background: rgba(255,255,255,0.7);
+  width: 80px;
+  height: 80px;
+  cursor: move;
+  border-radius: 200px 50px;
+}
+/* The text within the zoom handle */
+.ng-image-crop .zoom-handle > span {
+  color: rgba(0, 0, 0, 0.5);
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  display: block;
+  position: relative;
+  top: 32px;
+}

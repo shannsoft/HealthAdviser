@@ -13,6 +13,15 @@ app.factory('DoctorDetailsService',function($http,HealthAuth,CONFIG){
 		        method: 'GET',
 		        url: CONFIG.API_PATH+'_Profile_Education?type=GET_EDUCATION',
 		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
+		    })
+		    return response;
+		},
+		updatePersonalProfile : function(dataDetails){
+		    var response = $http({
+		        method: 'PUT',
+		        url: CONFIG.API_PATH+'_User',
+		        data: dataDetails,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
 		    });
 		    return response;		
 		}
