@@ -122,6 +122,22 @@ app.config(function($stateProvider, $urlRouterProvider,$provide) {
       loggedout: confirmLogin
     }
   })
+  .state('review-preview', {
+    templateUrl: 'src/views/doctors/review/review-preview.html',
+    url: '/review-preview/:profileName',
+    controller:"ReviewController",
+    resolve: {
+      loggedout: confirmLogin
+    }
+  })
+  .state('review-success', {
+    templateUrl: 'src/views/doctors/review/review-success.html',
+    url: '/review-success/:profileName',
+    controller:"ReviewController",
+    resolve: {
+      loggedout: confirmLogin
+    }
+  })
 
 
   function checkLoggedout($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {

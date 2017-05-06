@@ -125,6 +125,22 @@ app.config(["$stateProvider", "$urlRouterProvider", "$provide", function($stateP
       loggedout: confirmLogin
     }
   })
+  .state('review-preview', {
+    templateUrl: 'src/views/doctors/review/review-preview.html',
+    url: '/review-preview/:profileName',
+    controller:"ReviewController",
+    resolve: {
+      loggedout: confirmLogin
+    }
+  })
+  .state('review-success', {
+    templateUrl: 'src/views/doctors/review/review-success.html',
+    url: '/review-success/:profileName',
+    controller:"ReviewController",
+    resolve: {
+      loggedout: confirmLogin
+    }
+  })
 
 
   function checkLoggedout($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
@@ -541,6 +557,9 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 	}
 
 }]);app.controller('DoctorDetailsController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorDetailsService", function($scope,$rootScope,DoctorService,$stateParams,DoctorDetailsService){
+  
+  $scope.signed_lawyer = $stateParams.profileName;
+  
 	$scope.loadDoctorDetails = function(){
 		$rootScope.showPreloader = true;
 		if($stateParams.profileName){
@@ -741,7 +760,7 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
     if($scope.profile_image){
       personalDetails.fileData = {
         "fileName" : $scope.imagename,
-        "inputStream" : $scope.imageSrc.split(";base64,")[1]
+        "inputStream" : $scope.profile_image.split(";base64,")[1]
       };
     }
     DoctorDetailsService.updatePersonalProfile(personalDetails).then(function (response) {
@@ -793,9 +812,21 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
       }
     }
 }])
-;app.controller('ReviewController',["$scope", "$rootScope", "$stateParams", "DoctorService", function($scope, $rootScope, $stateParams, DoctorService){
+;app.controller('ReviewController',["$scope", "$rootScope", "$stateParams", "DoctorService", "CommonService", "$state", function($scope, $rootScope, $stateParams, DoctorService,CommonService,$state){
 	$rootScope.isReload = false;
+  	$scope.loadCurrentReview = function(){
+	var tempReview = CommonService.getReviewDetails();
+	    $scope.doctorDetails = tempReview.doctorDetails;
+	    $scope.review = tempReview.review;
+	    if(!$scope.doctorDetails){
+	    	$scope.getDoctorDetails();
+	    }
+	}
   	$scope.getDoctorDetails = function(){
+  		$scope.review = {};
+  		$scope.review.isAnonymous = false;
+  		$scope.review.willRecomended = false;
+  		$scope.review.hasConsulted = false;
   		$rootScope.showPreloader = true;
   		if($stateParams.profileName){
 			DoctorService.doctorDetails($stateParams.profileName).then(function(response){
@@ -803,6 +834,42 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 				$scope.doctorDetails = response.data.Data.result;
 			})
 		}
+  	}
+  	$scope.gotoPreview = function(){
+  		var review = {
+  			"review" : $scope.review,
+  			"doctorDetails" : $scope.doctorDetails
+  		}
+	    CommonService.setReviewDetails(review);
+	    $state.go('review-preview',{profileName: $stateParams.profileName});
+	}
+  	$scope.currentRatings = function(review) {
+	    rating = review.rating.toString().split(".");
+	    ratingArr = [];
+	    halfStar = false;
+	    var isFloat = false;
+	    for (var i = 0; i < 5; i++) {
+	      if (i < parseInt(rating[0])) {
+	        ratingArr.push("color-yellow fa fa-star");
+	      } else if (parseInt(rating[1]) && !halfStar) {
+	        ratingArr.push("color-yellow fa fa-star-half-o");
+	        halfStar = true;
+	      } else {
+	        ratingArr.push("color-yellow fa fa-star-o");
+	      }
+	    }
+	    $scope.currentRating = ratingArr;
+	}
+  	$scope.submitReview = function(){
+  		$scope.review.doctorId = $scope.doctorDetails.userCode
+  		console.log($scope.review);
+  		$rootScope.showPreloader = true;
+  		CommonService.reviewDoctor($scope.review).then(function(response){
+  			$rootScope.showPreloader = false;
+  			if(response.data.StatusCode == 200){
+  				$state.go('review-success',{profileName: $stateParams.profileName});
+  			}
+  		})
   	}
 }])
 ;app.controller('DoctorsController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorModel", "$state", "orderByFilter", function($scope,$rootScope,DoctorService,$stateParams,DoctorModel,$state,orderByFilter){
@@ -1063,12 +1130,24 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 }]);app.controller("HomeController",["$scope", function($scope){
 	$scope.name = "adfasdfa";
 }])
-;app.controller('MainController',["$scope", "$rootScope", "CommonService", "Config", "$timeout", "$state", "DoctorService", "$timeout", "HealthAuth", "DoctorDetailsService", "AuthorizeService", function($scope,$rootScope,CommonService,Config,$timeout,$state,DoctorService,$timeout,HealthAuth,DoctorDetailsService,AuthorizeService){
+;app.controller('MainController',["$scope", "$rootScope", "CommonService", "Config", "$timeout", "$state", "DoctorService", "$timeout", "HealthAuth", "DoctorDetailsService", "AuthorizeService", "$uibModal", function($scope,$rootScope,CommonService,Config,$timeout,$state,DoctorService,$timeout,HealthAuth,DoctorDetailsService,AuthorizeService,$uibModal){
   	$scope.$on('$viewContentLoaded', function(event) {
 	  	$(document).trigger("TemplateLoaded");
 	});
   	$rootScope.$on('SESSION_EXPIRED',function(){
-  		alert('Sesstion Expired');
+  		var modalInstance = $uibModal.open({
+		    animation: true,
+		    templateUrl: 'src/views/modals/sessionExpiryModal.html',
+		    controller: 'modalController',
+		    backdrop: 'static', 
+		    keyboard: false,
+		    size: 'sm',
+		    resolve : {
+		    	logout : function () {
+			        return $scope.logout;
+			    }
+		    }
+		});
   	})
 	$rootScope.$on('login-success', function(event) {
 	    $scope.signedView = false;
@@ -1106,11 +1185,11 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 	    AuthorizeService.logout().then(function (response) {
 	        $scope.signedView = false;
 	        $rootScope.logedInUser = {};
-	        $state.go('home');
+	        $state.go('login');
 	    }, function (errorResponse) {
 	        $scope.signedView = false;
 	        $rootScope.logedInUser = {};
-	        $state.go('home');
+	        $state.go('login');
 	    });
 	};
   	google = typeof google === 'undefined' ? "" : google;
@@ -1244,6 +1323,16 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 	    });
 	};
 }]);
+app.controller("modalController", ["$scope", "$rootScope", "$uibModalInstance", "$localStorage", "Util", "$state", "logout", function($scope, $rootScope, $uibModalInstance, $localStorage, Util, $state,logout){
+	$scope.cancel = function () {
+		logout();
+	    $uibModalInstance.dismiss('cancel');
+	};
+	$scope.ok = function() {
+		logout();
+		$uibModalInstance.dismiss('cancel');
+	}
+}])
 ;app.directive('phonenumberDirective', ['$filter', function($filter) {
 	function link(scope, element, attributes) {
 		scope.inputValue = scope.phonenumberModel;
@@ -1549,6 +1638,7 @@ app.factory("HealthAuth",["HEALTH_ADVISER", function(HEALTH_ADVISER){
     return new HealthAuth();
 }])
 ;app.factory("CommonService", ["$http", "$q", "CONFIG", "HealthAuth", function ($http,$q,CONFIG,HealthAuth) {
+  var reviewDetails = {};
   return{
     fetchLocation: function(params) {
       var response = $http.get(params);
@@ -1594,7 +1684,22 @@ app.factory("HealthAuth",["HEALTH_ADVISER", function(HEALTH_ADVISER){
           headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
       });
       return response;
-    }
+    },
+    setReviewDetails : function(obj){
+      reviewDetails = obj;
+    },
+    getReviewDetails : function(){
+      return reviewDetails;
+    },
+    reviewDoctor : function(obj){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.API_PATH+'_Profile_Review',
+          data: obj,
+          headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
+      });
+      return response;
+    },
   }
 }]);
 app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){

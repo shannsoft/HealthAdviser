@@ -23,7 +23,6 @@
 					</ul>
 					<p>{{doctorDetails.totalReview}} Review(s)</p>
 				</div>
-					
 			</div>
 			<div class="col-sm-9">
 				<form name="reviewFrm">
@@ -43,8 +42,8 @@
 							<label class="control-label col-md-5 col-sm-7 m-b-10">Have you consulted with Doctor? </label>
 							<div class="col-sm-5"> 
 								<div class="btn-group btn-group-sm" role="group" aria-label="Small button group"> 
-									<button type="button" ng-class="{'btn-blue':review.hasConsulted,'btn-gray':!review.hasConsulted}" class="btn switch-button text-u-c" ng-click="review.hasConsulted=true">Yes</button>
-									<button type="button" ng-class="{'btn-gray':review.hasConsulted,'btn-blue':!review.hasConsulted}" class="btn switch-button text-u-c" ng-click="review.hasConsulted=false">No</button>
+									<button type="button" ng-class="{'btn-blue':review.hasConsulted,'btn-gray':!review.hasConsulted}" class="btn switch-button text-u-c">Yes</button>
+									<button type="button" ng-class="{'btn-gray':review.hasConsulted,'btn-blue':!review.hasConsulted}" class="btn switch-button text-u-c" >No</button>
 								</div>
 							</div>
 						</div>
@@ -52,8 +51,8 @@
 							<label class="control-label col-md-5 col-sm-7">Would you recommend this Doctor ? </label>
 							<div class="col-sm-5"> 
 								<div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-									<button type="button" ng-class="{'btn-blue':review.willRecomended,'btn-gray':!review.willRecomended}" class="btn switch-button text-u-c" ng-click="review.willRecomended=true">Yes</button>
-									<button type="button" ng-class="{'btn-gray':review.willRecomended,'btn-blue':!review.willRecomended}" class="btn switch-button text-u-c" ng-click="review.willRecomended=false">No</button>
+									<button type="button" ng-class="{'btn-blue':review.willRecomended,'btn-gray':!review.willRecomended}" class="btn switch-button text-u-c">Yes</button>
+									<button type="button" ng-class="{'btn-gray':review.willRecomended,'btn-blue':!review.willRecomended}" class="btn switch-button text-u-c">No</button>
 								</div>							
 							</div>							
 						</div>
@@ -61,32 +60,34 @@
 							<label class="control-label col-md-5 m-b-10 col-sm-7">Do you want to post anonymously? </label>
 							<div class="col-sm-5"> 
 								<div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-									<button type="button" ng-class="{'btn-blue':review.isAnonymous,'btn-gray':!review.isAnonymous}" class="btn switch-button text-u-c" ng-click="review.isAnonymous=true">Yes</button>
-									<button type="button" ng-class="{'btn-gray':review.isAnonymous,'btn-blue':!review.isAnonymous}" class="btn switch-button text-u-c" ng-click="review.isAnonymous=false">No</button>
+									<button type="button" ng-class="{'btn-blue':review.isAnonymous,'btn-gray':!review.isAnonymous}" class="btn switch-button text-u-c">Yes</button>
+									<button type="button" ng-class="{'btn-gray':review.isAnonymous,'btn-blue':!review.isAnonymous}" class="btn switch-button text-u-c">No</button>
 								</div>
 							</div>
 						</div>
 						<div class="row m-t-10">
-							<label class="control-label col-md-5 m-b-10 col-xs-7">Rate this Doctor </label>
-							<div class="col-sm-5"> 
-								<star-rating ng-model="review.rating" current-rating="1" readonly="false"></star-rating>
+							<label class="control-label col-md-5 m-b-10 col-xs-7">Rating</label>
+							<div class="col-sm-5 rating-icons-inline"> 
+								<ul ng-if="review" ng-init="currentRatings(review)">
+									<li ng-repeat="star in currentRating track by $index">
+										<i class="{{star}}"></i>
+									</li>
+								</ul>
 							</div>
 						</div>
 					</div>
 					<div class="form-group">
-						<label>Review Title</label>
-						<input type="text" name="title" class="form-control" id="" placeholder="Review Title" ng-model="review.title" required>
+						<h3>{{review.title}}</h3>
 					</div>		
 					<div class="form-group">
-						<label>Your Comments</label>
-						<textarea class="form-control" name="comment" rows="4" placeholder="content goes here..." ng-model="review.review" required></textarea>
+						<p>{{review.review}}</p>
 					</div>	
 					<div class="row">
 						<!-- <div class="col-sm-8">
 							<div class="text-green">Submission Successful !</div>
 						</div> -->
 						<div class="col-sm-12 text-right">
-							<button ng-disabled="reviewFrm.$invalid" ng-click="gotoPreview()" class="btn btn-blue btn-md text-u-c">Preview</button>	
+							<button ng-click="submitReview()" class="btn btn-blue btn-md text-u-c">Submit</button>	
 						</div>				
 					</div>
 				</form>			

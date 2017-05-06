@@ -125,7 +125,7 @@
     margin: 0;
   }
   .fluid_header .navbar-nav.navbar-right {
-    height: 300px;
+    height: 200px;
     margin: 0!important;
   }
   .fluid_header {
@@ -183,6 +183,12 @@
 	}
 	.banner-block {
 		padding: 30px 20px;
+	}
+	.details-banner-content {
+		margin-top: 25px;
+	}
+	.details-banner-section {
+		padding: 20px 0px 0px;
 	}
 
 

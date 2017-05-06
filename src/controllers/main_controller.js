@@ -1,4 +1,4 @@
-app.controller('MainController',function($scope,$rootScope,CommonService,Config,$timeout,$state,DoctorService,$timeout,HealthAuth,DoctorDetailsService,AuthorizeService){
+app.controller('MainController',function($scope,$rootScope,CommonService,Config,$timeout,$state,DoctorService,$timeout,HealthAuth,DoctorDetailsService,AuthorizeService,$uibModal){
 	/****************************************************************************/
     /****************fUNCTION USE FOR FIRE A EVENT TO JAVASCRIPT*****************/
   	/****************************************************************************/
@@ -9,7 +9,19 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
     /****************THIS EVENT IS LISTEN AFTER SESSION EXPIRED******************/
   	/****************************************************************************/
   	$rootScope.$on('SESSION_EXPIRED',function(){
-  		alert('Sesstion Expired');
+  		var modalInstance = $uibModal.open({
+		    animation: true,
+		    templateUrl: 'src/views/modals/sessionExpiryModal.html',
+		    controller: 'modalController',
+		    backdrop: 'static', 
+		    keyboard: false,
+		    size: 'sm',
+		    resolve : {
+		    	logout : function () {
+			        return $scope.logout;
+			    }
+		    }
+		});
   	})
   	/****************************************************************************/
     /****************THIS EVENT IS LISTEN ON LOGIN SUCCESS***********************/
@@ -65,11 +77,11 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
 	    AuthorizeService.logout().then(function (response) {
 	        $scope.signedView = false;
 	        $rootScope.logedInUser = {};
-	        $state.go('home');
+	        $state.go('login');
 	    }, function (errorResponse) {
 	        $scope.signedView = false;
 	        $rootScope.logedInUser = {};
-	        $state.go('home');
+	        $state.go('login');
 	    });
 	};
 
@@ -218,3 +230,13 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
 	    });
 	};
 });
+app.controller("modalController", function($scope, $rootScope, $uibModalInstance, $localStorage, Util, $state,logout){
+	$scope.cancel = function () {
+		logout();
+	    $uibModalInstance.dismiss('cancel');
+	};
+	$scope.ok = function() {
+		logout();
+		$uibModalInstance.dismiss('cancel');
+	}
+})
