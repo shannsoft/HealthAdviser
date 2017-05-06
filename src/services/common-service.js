@@ -1,4 +1,5 @@
 app.factory("CommonService", function ($http,$q,CONFIG,HealthAuth) {
+  var reviewDetails = {};
   return{
     fetchLocation: function(params) {
       var response = $http.get(params);
@@ -44,7 +45,22 @@ app.factory("CommonService", function ($http,$q,CONFIG,HealthAuth) {
           headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
       });
       return response;
-    }
+    },
+    setReviewDetails : function(obj){
+      reviewDetails = obj;
+    },
+    getReviewDetails : function(){
+      return reviewDetails;
+    },
+    reviewDoctor : function(obj){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.API_PATH+'_Profile_Review',
+          data: obj,
+          headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
+      });
+      return response;
+    },
   }
 });
 app.factory('Util', function( $rootScope, $timeout){

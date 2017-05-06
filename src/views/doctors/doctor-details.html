@@ -1,7 +1,7 @@
 <section class="details-banner-section" ng-init="loadDoctorDetails()">
 	<div class="container">
 		<div class="row">
-			<div class="col-md-3">
+			<div class="col-sm-6 col-md-3">
 				<div class="profile-image">
 					<div ng-if="!doctorDetails.photo" class="text">{{doctorDetails.profile.name | getShortName}}</div>
 					<img ng-if="doctorDetails.photo" class="img-responsive" ng-src="{{doctorDetails.photo}}" />
@@ -22,7 +22,7 @@
 					<p ng-if="!doctorDetails.consulation.is_free_consultation">Fees - INR {{doctorDetails.consulation.fees}} /-</p>
 					<div class="m-t-30 m-b-20">
 						<a href="book-appointment.html" class="btn btn-blue btn-md m-r-5">Book Appointment</a>
-						<a ui-sref="review-doctor({profileName:doctorDetails.profile.profileName})" class="btn btn-white btn-md">Review a Doctor</a>
+						<a ng-if="signed_lawyer" ui-sref="review-doctor({profileName:doctorDetails.profile.profileName})" class="btn btn-white btn-md">Review a Doctor</a>
 					</div>
 				</div>
 			</div>

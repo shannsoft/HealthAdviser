@@ -200,7 +200,7 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
     if($scope.profile_image){
       personalDetails.fileData = {
         "fileName" : $scope.imagename,
-        "inputStream" : $scope.imageSrc.split(";base64,")[1]
+        "inputStream" : $scope.profile_image.split(";base64,")[1]
       };
     }
     DoctorDetailsService.updatePersonalProfile(personalDetails).then(function (response) {
