@@ -225,8 +225,7 @@ app.constant('CONFIG', {
 }]);
 app.constant("HEALTH_ADVISER",function(){
 	ACCESS_TOKEN_EXPIRES_IN:300
-});
-app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "Util", "AuthorizeService", "$state", "DoctorDetailsService", "$state", "$localStorage", "$location", function($scope,$rootScope,$timeout,Util,AuthorizeService,$state,DoctorDetailsService,$state,$localStorage,$location){
+});app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "Util", "AuthorizeService", "$state", "DoctorDetailsService", "$state", "$localStorage", "$location", function($scope,$rootScope,$timeout,Util,AuthorizeService,$state,DoctorDetailsService,$state,$localStorage,$location){
 	$scope.user = {};
 	google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
@@ -235,26 +234,26 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 	    types: ['(cities)']
 	};
 	$scope.initRegister = function(){
-		if(google=="" || !google.maps || !google.maps.places)
-        	googleTime = $timeout($scope.initRegister , 3000);
+			if(google=="" || !google.maps || !google.maps.places)
+	      	googleTime = $timeout($scope.initRegister , 3000);
 	    else {
-	      	clearTimeout(googleTime);
-			var inputFrom = document.getElementById('city');
-			var autocompleteFrom = new google.maps.places.Autocomplete(inputFrom, options);
-			google.maps.event.addListener(autocompleteFrom, 'place_changed', function() {
-			    populateAddressFields(autocompleteFrom.getPlace());
-			    $scope.$apply();
-			});
-		}
+      	clearTimeout(googleTime);
+				var inputFrom = document.getElementById('city');
+				var autocompleteFrom = new google.maps.places.Autocomplete(inputFrom, options);
+				google.maps.event.addListener(autocompleteFrom, 'place_changed', function() {
+				    populateAddressFields(autocompleteFrom.getPlace());
+				    $scope.$apply();
+				});
+			}
 	}
 	function populateAddressFields(place) {
-	    if (place.geometry) {
-	      $scope.user.latLng = place.geometry.location.lat() + "," + place.geometry.location.lng();
-	    }
-	    $scope.user.city = place.name;
+    if (place.geometry) {
+      $scope.user.latLng = place.geometry.location.lat() + "," + place.geometry.location.lng();
+    }
+    $scope.user.city = place.name;
 	}
 	$scope.validatePassword = function(){
-		if($scope.user.password !== $scope.user.c_pass){
+			if($scope.user.password !== $scope.user.c_pass){
 	      $scope.showPasswordMisMatch = true;
 	    }
 	   	if($scope.user.password === $scope.user.c_pass) {
@@ -265,75 +264,74 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 		var obj = {
 			"email":email
 		}
-      	AuthorizeService.validateUserName(obj).then(function (response) {
-          console.log(response);
-          if(response.data.StatusCode == 302){
-          	$scope.isExist = true;
-          }
-          else{
-          	$scope.isExist = false;
-          }
-      	}, function (errorResponse) {
-      	});
-  	}
-  	$scope.register = function(){
-  		var userData = {
-  			"actType": "I",
-	      	"address": {
-	        	"city": $scope.user.city,
-	        	"lat":$scope.user.latLng
-	      	},
-	      	"phone": $scope.user.phone,
-	      	"profile": {
-	        	"fName": $scope.user.first_name,
-	        	"lName": $scope.user.last_name
-	      	},
-	      	"email": $scope.user.email,
-	      	"initial_signup_method": "health adviser",
-	      	"isDoctor": $scope.user.isDoctor,
-	      	"password": $scope.user.password,
-	      	"userName": $scope.user.email,
-	      	"hearAboutUs":$scope.user.hear_about
-	    };
-	    $rootScope.showPreloader = true;
-	    AuthorizeService.register(userData).then(function (response) {
-	    	$rootScope.showPreloader = false;
-          	if(response.data.StatusCode == 200){
-          	var obj = {
-					"userId": $scope.user.email,
-					"password": $scope.user.password
-	   			}
-	          	AuthorizeService.login(obj).then(function (response) {
-	          		$rootScope.$emit('login-success');
-	          		if($scope.user.isDoctor == true){
-					    $state.go('doctor-verify');
-	          		}
-	          		else{
-	          			$state.go('updateUserProfile');
-	          		}
-	          	},function(error){
-					$rootScope.showPreloader = false;
+  	AuthorizeService.validateUserName(obj).then(function (response) {
+      if(response.data.StatusCode == 302){
+      	$scope.isExist = true;
+      }
+      else{
+      	$scope.isExist = false;
+      }
+  	}, function (errorResponse) {
+  	});
+  }
+	$scope.register = function(){
+		var userData = {
+			"actType": "I",
+      	"address": {
+        	"city": $scope.user.city,
+        	"lat":$scope.user.latLng
+      	},
+      	"phone": $scope.user.phone,
+      	"profile": {
+        	"fName": $scope.user.first_name,
+        	"lName": $scope.user.last_name
+      	},
+      	"email": $scope.user.email,
+      	"initial_signup_method": "health adviser",
+      	"isDoctor": $scope.user.isDoctor,
+      	"password": $scope.user.password,
+      	"userName": $scope.user.email,
+      	"hearAboutUs":$scope.user.hear_about
+    };
+    $rootScope.showPreloader = true;
+    AuthorizeService.register(userData).then(function (response) {
+    	$rootScope.showPreloader = false;
+    	if(response.data.StatusCode == 200){
+    	var obj = {
+				"userId": $scope.user.email,
+				"password": $scope.user.password
+   		}
+          AuthorizeService.login(obj).then(function (response) {
+          		$rootScope.$emit('login-success');
+          		if($scope.user.isDoctor == true){
+				    		$state.go('doctor-verify');
+          		}
+          		else{
+          			$state.go('updateUserProfile');
+          		}
+          	},function(error){
+							$rootScope.showPreloader = false;
+							Util.alertMessage('danger',"Something went wrong! unable to register");
+          	})
+        	}
+        else{
 					Util.alertMessage('danger',"Something went wrong! unable to register");
-	          	})
-          	}
-	        else{
-				Util.alertMessage('danger',"Something went wrong! unable to register");
-	        }
-      	}, function (errorResponse) {
-			$rootScope.showPreloader = false;
-          	Util.alertMessage('danger',"Something went wrong! unable to register");
-      	});
+        }
+    	}, function (errorResponse) {
+					$rootScope.showPreloader = false;
+        	Util.alertMessage('danger',"Something went wrong! unable to register");
+    	});
 	}
-  	$scope.login = function(){
-  		var obj = {
+	$scope.login = function(){
+		var obj = {
 			"userId": $scope.user.email,
 			"password": $scope.user.password
 		}
 		$rootScope.showPreloader = true;
-      	AuthorizeService.login(obj).then(function (response) {
-      		$rootScope.showPreloader = false;
+  	AuthorizeService.login(obj).then(function (response) {
+  		$rootScope.showPreloader = false;
 			$rootScope.$emit('login-success');
-      		if(response.data.StatusCode == 200){
+  		if(response.data.StatusCode == 200){
 				if($scope.user.remember){
 					$localStorage.user = {
 						"uname" : $scope.user.email,
@@ -346,36 +344,40 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 				else{
 					$state.go('signedDoctor');
 				}
-      		}
+  		}
 			else{
 				Util.alertMessage('danger',"Something went wrong! unable to login");
 			}
-      	},function(error){
+  	},function(error){
 			$rootScope.showPreloader = false;
 			Util.alertMessage('danger',"Authentication faild");
 		})
-  	}
+	}
 	$scope.initLogin = function(){
 		$scope.user = {};
 		$scope.user.email = ($localStorage.user) ? $localStorage.user.uname : '';
 		$scope.user.password = ($localStorage.user) ? $localStorage.user.password : '';
 	}
-	$scope.forgotPassword = function(){		
-		AuthorizeService.forgotPassword($scope.user.email).then(function (response) {      		
-      		if(response.data.StatusCode == 200){
+	$scope.forgotPassword = function(){
+		$rootScope.showPreloader = true;
+		AuthorizeService.forgotPassword($scope.user.email).then(function (response) {
+			$rootScope.showPreloader = false;
+  		if(response.data.StatusCode == 200){
 				Util.alertMessage('success',"Please check your mail we have sent a Password");
 				$state.go('login');
-      		}
+  		}
 			else{
 				Util.alertMessage('danger',"Something went wrong!");
 			}
 		})
 	}
-	$scope.changePassword = function(){	
-		AuthorizeService.changePassword($scope.user).then(function (response) {      		
-      		if(response.data.StatusCode == 200){
+	$scope.changePassword = function(){
+		$rootScope.showPreloader = true;
+		AuthorizeService.changePassword($scope.user).then(function (response) {
+			$rootScope.showPreloader = false;
+  		if(response.data.StatusCode == 200){
 				Util.alertMessage('success',"Password successfully changed'");
-      		}
+  		}
 			else{
 				Util.alertMessage('danger',"Something went wrong!");
 			}
@@ -626,7 +628,7 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
     }
   }
 }]);app.controller("DoctorProfileController",["$scope", "$rootScope", "CommonService", "$timeout", "DoctorDetailsService", "Util", "$filter", function($scope, $rootScope,CommonService,$timeout,DoctorDetailsService,Util,$filter){
-	google = typeof google === 'undefined' ? "" : google;
+		google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
 	  $scope.signupCollapse = {
         aboutme: false,
@@ -638,6 +640,7 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
         publications: true,
         conference: true
     };
+		$scope.specialize = {};
     $scope.collapseSignUp = function (filter) {
         angular.forEach($scope.signupCollapse, function(value, key) {
             if(key == filter){
@@ -667,6 +670,10 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
   			$rootScope.showPreloader = false;
   			if(response.data.StatusCode == 200)
   				$scope.profileDetails = response.data.Data.result;
+					$scope.specialize.languageTags = [];
+          angular.forEach($scope.profileDetails.profile.language,function(item){
+            $scope.specialize.languageTags.push(item.language);
+          })
   				$scope.initMapLocation();
   		},function(error){
   			$rootScope.showPreloader = false;
@@ -678,7 +685,6 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
           contact.isPreffered = false;
         }
       });
-      console.log($scope.profileDetails.phone);
     }
   	$scope.loadSpecialization = function(){
 			CommonService.specialization().then(function(response){
@@ -793,6 +799,33 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
         "inputStream" : $scope.profile_image.split(";base64,")[1]
       };
     }
+    DoctorDetailsService.updatePersonalProfile(personalDetails).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        Util.alertMessage('success', 'your information successfully updated. Thank you.');
+        $scope.$emit('login-success');
+      }
+      else{
+        Util.alertMessage('danger', 'Somthing went wrong ! unable to update your information.');
+      }
+    }, function (errorResponse) {
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger','Somthing went wrong ! unable to update your information.');
+    });
+  };
+	$scope.updateSpecializationDetails = function () {
+    $rootScope.showPreloader = true;
+    var personalDetails = {};
+    personalDetails.specialization = $scope.profileDetails.specialization;
+    personalDetails.yearsOfExperience = $scope.profileDetails.yearsOfExperience;
+		personalDetails.profile = {};
+		personalDetails.profile.language = [];
+		angular.forEach($scope.specialize.languageTags,function(item){
+			var obj = {};
+			obj.language = item.text;
+			personalDetails.profile.language.push(obj);
+		});
+		console.log(personalDetails);
     DoctorDetailsService.updatePersonalProfile(personalDetails).then(function (response) {
       $rootScope.showPreloader = false;
       if(response.data.StatusCode == 200){

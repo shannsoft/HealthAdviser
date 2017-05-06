@@ -1,5 +1,5 @@
 app.controller("DoctorProfileController",function($scope, $rootScope,CommonService,$timeout,DoctorDetailsService,Util,$filter){
-	google = typeof google === 'undefined' ? "" : google;
+		google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
 	  $scope.signupCollapse = {
         aboutme: false,
@@ -11,6 +11,7 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
         publications: true,
         conference: true
     };
+		$scope.specialize = {};
     /****************************************************************************/
     /***********************fUNCTION USE FOR COLLAPSEMENU************************/
   	/****************************************************************************/
@@ -49,9 +50,10 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
   			$rootScope.showPreloader = false;
   			if(response.data.StatusCode == 200)
   				$scope.profileDetails = response.data.Data.result;
-          // angular.forEach($scope.profileDetails.phone,function(item){
-          //   item.isPreffered = (item.isPreffered ) ? 'true' : 'false';
-          // })
+					$scope.specialize.languageTags = [];
+          angular.forEach($scope.profileDetails.profile.language,function(item){
+            $scope.specialize.languageTags.push(item.language);
+          })
   				$scope.initMapLocation();
   		},function(error){
   			$rootScope.showPreloader = false;
@@ -63,7 +65,6 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
           contact.isPreffered = false;
         }
       });
-      console.log($scope.profileDetails.phone);
     }
     /****************************************************************************/
     /*************FUNCTION USE FOR LOAD THE Specialization list******************/
@@ -203,6 +204,33 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
         "inputStream" : $scope.profile_image.split(";base64,")[1]
       };
     }
+    DoctorDetailsService.updatePersonalProfile(personalDetails).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        Util.alertMessage('success', 'your information successfully updated. Thank you.');
+        $scope.$emit('login-success');
+      }
+      else{
+        Util.alertMessage('danger', 'Somthing went wrong ! unable to update your information.');
+      }
+    }, function (errorResponse) {
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger','Somthing went wrong ! unable to update your information.');
+    });
+  };
+	$scope.updateSpecializationDetails = function () {
+    $rootScope.showPreloader = true;
+    var personalDetails = {};
+    personalDetails.specialization = $scope.profileDetails.specialization;
+    personalDetails.yearsOfExperience = $scope.profileDetails.yearsOfExperience;
+		personalDetails.profile = {};
+		personalDetails.profile.language = [];
+		angular.forEach($scope.specialize.languageTags,function(item){
+			var obj = {};
+			obj.language = item.text;
+			personalDetails.profile.language.push(obj);
+		});
+		console.log(personalDetails);
     DoctorDetailsService.updatePersonalProfile(personalDetails).then(function (response) {
       $rootScope.showPreloader = false;
       if(response.data.StatusCode == 200){
