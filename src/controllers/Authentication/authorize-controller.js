@@ -150,5 +150,32 @@ app.controller('AuthenticationController',function($scope,$rootScope,$timeout,Ut
 		$scope.user.email = ($localStorage.user) ? $localStorage.user.uname : '';
 		$scope.user.password = ($localStorage.user) ? $localStorage.user.password : '';
 	}
-
+	/****************************************************************************/
+    /***********************FUNCTION USE FOR FORGOT PASSWORD*********************/
+  	/****************************************************************************/
+	$scope.forgotPassword = function(){		
+		AuthorizeService.forgotPassword($scope.user.email).then(function (response) {      		
+      		if(response.data.StatusCode == 200){
+				Util.alertMessage('success',"Please check your mail we have sent a Password");
+				$state.go('login');
+      		}
+			else{
+				Util.alertMessage('danger',"Something went wrong!");
+			}
+		})
+	}
+	/****************************************************************************/
+    /***********************FUNCTION USE FOR FORGOT PASSWORD*********************/
+  	/****************************************************************************/
+	$scope.changePassword = function(){	
+		AuthorizeService.changePassword($scope.user).then(function (response) {      		
+      		if(response.data.StatusCode == 200){
+				Util.alertMessage('success',"Password successfully changed'");
+				//$state.go('home');
+      		}
+			else{
+				Util.alertMessage('danger',"Something went wrong!");
+			}
+		})
+	}
 });

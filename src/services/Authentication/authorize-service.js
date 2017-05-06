@@ -61,6 +61,33 @@ app.factory("AuthorizeService", function($http,CONFIG,$q,HEALTH_ADVISER,$interva
         });
         return deferred.promise;
     };
+	var forgotPassword = function(email){
+      var obj = {
+        "email": email
+      }
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.API_PATH+'_ForgotPassword',
+          data : obj,
+          headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    };
+	
+	var changePassword = function(user){
+      var obj = {
+        "newPwd" : user.password,
+        "oldPwd" : user.oldPwd
+      }
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.API_PATH+'_ChangePassword',
+          data: obj,
+          headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
+      })
+      return response;
+    };
+	
     var logout  = function(){
     	var deferred = $q.defer();
         $http({
@@ -87,7 +114,9 @@ app.factory("AuthorizeService", function($http,CONFIG,$q,HEALTH_ADVISER,$interva
     	validateUserName	: validateUserName,
     	register			: register,
     	login 				: login,
-    	logout				: logout
+    	logout				: logout,
+		forgotPassword		: forgotPassword,
+		changePassword		: changePassword
 	};
 })
 app.factory("HealthAuth",function(HEALTH_ADVISER){

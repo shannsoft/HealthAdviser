@@ -15,6 +15,16 @@ app.config(function($stateProvider, $urlRouterProvider,$provide) {
       loggedout: checkLoggedin
     }
   })
+  .state('forgot-password', {
+    templateUrl: 'src/views/header/forgot-password.html',
+    controller: "AuthenticationController",
+    url: '/forgot-password'
+  })
+  .state('change-password', {
+    templateUrl: 'src/views/header/resetPassword.html',
+    controller: "AuthenticationController",
+    url: '/change-password'
+  })
   .state('register', {
     templateUrl: 'src/views/header/register.html',
     controller: "AuthenticationController",

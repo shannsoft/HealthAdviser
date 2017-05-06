@@ -18,6 +18,16 @@ app.config(["$stateProvider", "$urlRouterProvider", "$provide", function($stateP
       loggedout: checkLoggedin
     }
   })
+  .state('forgot-password', {
+    templateUrl: 'src/views/header/forgot-password.html',
+    controller: "AuthenticationController",
+    url: '/forgot-password'
+  })
+  .state('change-password', {
+    templateUrl: 'src/views/header/resetPassword.html',
+    controller: "AuthenticationController",
+    url: '/change-password'
+  })
   .state('register', {
     templateUrl: 'src/views/header/register.html',
     controller: "AuthenticationController",
@@ -334,7 +344,27 @@ app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "
 		$scope.user.email = ($localStorage.user) ? $localStorage.user.uname : '';
 		$scope.user.password = ($localStorage.user) ? $localStorage.user.password : '';
 	}
-
+	$scope.forgotPassword = function(){		
+		AuthorizeService.forgotPassword($scope.user.email).then(function (response) {      		
+      		if(response.data.StatusCode == 200){
+				Util.alertMessage('success',"Please check your mail we have sent a Password");
+				$state.go('login');
+      		}
+			else{
+				Util.alertMessage('danger',"Something went wrong!");
+			}
+		})
+	}
+	$scope.changePassword = function(){	
+		AuthorizeService.changePassword($scope.user).then(function (response) {      		
+      		if(response.data.StatusCode == 200){
+				Util.alertMessage('success',"Password successfully changed'");
+      		}
+			else{
+				Util.alertMessage('danger',"Something went wrong!");
+			}
+		})
+	}
 }]);
 ;app.controller("CommonController",["$scope", "$rootScope", "CommonService", "Util", function($scope,$rootScope,CommonService,Util){
 		$scope.contact = {};
@@ -1469,6 +1499,33 @@ app.filter('phonenumber', function() {
         });
         return deferred.promise;
     };
+	var forgotPassword = function(email){
+      var obj = {
+        "email": email
+      }
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.API_PATH+'_ForgotPassword',
+          data : obj,
+          headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
+      })
+      return response;
+    };
+	
+	var changePassword = function(user){
+      var obj = {
+        "newPwd" : user.password,
+        "oldPwd" : user.oldPwd
+      }
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.API_PATH+'_ChangePassword',
+          data: obj,
+          headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
+      })
+      return response;
+    };
+	
     var logout  = function(){
     	var deferred = $q.defer();
         $http({
@@ -1495,7 +1552,9 @@ app.filter('phonenumber', function() {
     	validateUserName	: validateUserName,
     	register			: register,
     	login 				: login,
-    	logout				: logout
+    	logout				: logout,
+		forgotPassword		: forgotPassword,
+		changePassword		: changePassword
 	};
 }])
 app.factory("HealthAuth",["HEALTH_ADVISER", function(HEALTH_ADVISER){
