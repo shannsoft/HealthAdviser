@@ -40,6 +40,23 @@ module.exports = function(grunt) {
                 dest: 'ng-libs.js'
             },
         },
+        connect: {
+          server: {
+            options: {
+              protocol:'http',
+              livereload: true,
+              hostname:'localhost',
+              open:{
+                // target:'http://localhost:3006/clientapp/index.html?pid=<%=appsettings.first_product_id%>', // target url to open
+                target:'http://localhost:3006/', // target url to open
+                //appName:'Chrome', // name of the app that opens, ie: open, start, xdg-open
+                callback: function() {} // called when the app has opened
+              },
+             
+              port: 3006
+            }
+          }
+        },
         uglify: {
             options: {
                 mangle: true,
@@ -91,7 +108,6 @@ module.exports = function(grunt) {
                     livereload: true
                 }
             }
-
         },
         clean: ["custom.js","libs.js","ng-libs.js"],
         cssmin: {
@@ -117,22 +133,6 @@ module.exports = function(grunt) {
                 }
             }
         }
-        // connect: {
-        //     server: {
-        //         options: {
-        //             protocol: 'http',
-        //             livereload: true,
-        //             hostname: 'localhost',
-        //             open: {
-        //                 target: 'http://localhost/external_projects/ui.lawsuit.com/', // target url to open
-        //                 //appName:'Chrome', // name of the app that opens, ie: open, start, xdg-open
-        //                 callback: function() {} // called when the app has opened
-        //             },
-        //
-        //             port: 3006
-        //         }
-        //     }
-        // },
     });
 
     // Load the plugin that provides the "uglify" task.
@@ -144,10 +144,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-cache-breaker');
+    grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     // grunt.loadNpmTasks('grunt-contrib-connect');
     // grunt.loadNpmTasks('grunt-notify');
     // Default task(s).
-    grunt.registerTask('default', ['clean','concat', 'comments:my_target', 'ngAnnotate:appannotate', 'cachebreaker:dev','watch:debug']);
-    grunt.registerTask('built', ['concat', 'comments:my_target', 'ngAnnotate:appannotate', 'uglify:my_target', 'cssmin:combine','cachebreaker:dev', 'watch:built']);
+    grunt.registerTask('default', ['clean','concat', 'connect','comments:my_target', 'ngAnnotate:appannotate', 'cachebreaker:dev','watch:debug']);
+    grunt.registerTask('built', ['concat', 'comments:my_target', 'connect', 'ngAnnotate:appannotate', 'uglify:my_target', 'cssmin:combine','cachebreaker:dev', 'watch:built']);
 
 };

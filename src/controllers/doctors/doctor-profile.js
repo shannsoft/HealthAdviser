@@ -1,4 +1,4 @@
-app.controller("DoctorProfileController",function($scope, $rootScope,CommonService,$timeout,DoctorDetailsService,Util,$filter){
+app.controller("DoctorProfileController",function($scope, $rootScope,CommonService,$timeout,DoctorDetailsService,Util,$filter, $uibModal){
 		google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
 	  $scope.signupCollapse = {
@@ -235,7 +235,6 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
       $rootScope.showPreloader = false;
       if(response.data.StatusCode == 200){
         Util.alertMessage('success', 'your information successfully updated. Thank you.');
-        $scope.$emit('login-success');
       }
       else{
         Util.alertMessage('danger', 'Somthing went wrong ! unable to update your information.');
@@ -250,7 +249,98 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
       return result;
   };
 	/****************************************************************************/
-  /**************FUNCTION HIDE EDIT FORM***********************/
+  /************************FUNCTION SHOW EDIT FORM*****************************/
+  /****************************************************************************/
+  $scope.editWorkExperience = function (index,work) {
+    $scope.tempwork = {};
+    $scope.tempwork.id = work.id;
+    $scope.tempwork.organizationName = work.organizationName;
+    $scope.tempwork.description = work.description;
+    $scope.tempwork.designation = work.designation;
+    $scope.tempwork.dateTo = work.dateTo;
+    $scope.tempwork.dateFrom = work.dateFrom;
+    $scope.workEdit = index;
+  };
+  $scope.cancelWorkEdit = function () {
+    delete $scope.workEdit;
+  };
+  $scope.updateWorkExpDoctor = function (work) {
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.updateWorkExperience($scope.tempwork).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        work.organizationName = $scope.tempwork.organizationName;
+        work.description = $scope.tempwork.description;
+        work.designation = $scope.tempwork.designation;
+        work.dateTo = $scope.tempwork.dateTo;
+        work.dateFrom = $scope.tempwork.dateFrom;
+        Util.alertMessage('success', 'You have successfully updated your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in update !!!');
+      }
+    }, function (errorResponse) {
+        $rootScope.showPreloader = false;
+        Util.alertMessage('danger', 'Error in update !!!');
+    });
+  };
+  $scope.addWorkExpDoctor = function () {
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.addWorkExperience($scope.workexperience).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.profileDetails.experience.push(response.data.Data);
+        Util.alertMessage('success', 'You have successfully added your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in update !!!');
+      }
+    }, function (errorResponse) {
+        $rootScope.showPreloader = false;
+        Util.alertMessage('danger', 'Error in update !!!');
+    });
+  };
+  /****************************************************************************/
+  /*****************FUNCTION IS USED TO OPEN DELETE MODAL**********************/
+  /****************************************************************************/
+  $scope.deleteWorkExperience = function (id) {
+      var obj = {};
+      obj.id = id;
+      DoctorDetailsService.deleteWorkExperience(obj).then(function (response) {
+        if(response.data.StatusCode == 200){
+          $scope.profileDetails.experience.splice($scope.deleteIndex,1);
+          Util.alertMessage('success', 'You have successfully deleted your information Thank You.');
+        }
+        else{
+          Util.alertMessage('danger', 'Error in Delete !!!');
+        }
+      }, function (errorResponse) {
+          Util.alertMessage('danger', 'Error in Delete !!!');
+      });
+  };
+  /****************************************************************************/
+  /*****************FUNCTION IS USED TO OPEN DELETE MODAL**********************/
+  /****************************************************************************/
+  $scope.deleteWorkExperienceModal = function(size,workExpId,index){
+    $scope.deleteIndex = index;
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/workExpDeleteModal.html',
+     controller: 'deleteWorkExperienceModalCtrl',
+     size: size,
+     resolve: {
+       deleteWorkExperience: function () {
+         return $scope.deleteWorkExperience;
+       },
+       workExpId:function () {
+         return workExpId;
+       }
+     }
+   });
+  }
+
+  /****************************************************************************/
+  /************************FUNCTION HIDE EDIT FORM*****************************/
 	/****************************************************************************/
 	$scope.processForm = function() {
 		$scope.showTheForm = false;

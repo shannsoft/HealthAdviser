@@ -400,6 +400,15 @@ app.constant("HEALTH_ADVISER",function(){
 		})
 	}
 }])
+;app.controller('deleteWorkExperienceModalCtrl', ["$scope", "$uibModalInstance", "deleteWorkExperience", "workExpId", function ($scope, $uibModalInstance,deleteWorkExperience,workExpId) {
+  $scope.ok = function () {
+    deleteWorkExperience(workExpId);
+    $uibModalInstance.close();
+  };
+  $scope.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+}]);
 ;app.controller("SpecializationController", ["$scope", "$rootScope", "CommonService", "$localStorage", "$state", function($scope,$rootScope,CommonService,$localStorage,$state){
 	$scope.getSpecializationList = function(){
 		$scope.specialization = [];
@@ -627,7 +636,7 @@ app.constant("HEALTH_ADVISER",function(){
       }
     }
   }
-}]);app.controller("DoctorProfileController",["$scope", "$rootScope", "CommonService", "$timeout", "DoctorDetailsService", "Util", "$filter", function($scope, $rootScope,CommonService,$timeout,DoctorDetailsService,Util,$filter){
+}]);app.controller("DoctorProfileController",["$scope", "$rootScope", "CommonService", "$timeout", "DoctorDetailsService", "Util", "$filter", "$uibModal", function($scope, $rootScope,CommonService,$timeout,DoctorDetailsService,Util,$filter, $uibModal){
 		google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
 	  $scope.signupCollapse = {
@@ -830,7 +839,6 @@ app.constant("HEALTH_ADVISER",function(){
       $rootScope.showPreloader = false;
       if(response.data.StatusCode == 200){
         Util.alertMessage('success', 'your information successfully updated. Thank you.');
-        $scope.$emit('login-success');
       }
       else{
         Util.alertMessage('danger', 'Somthing went wrong ! unable to update your information.');
@@ -844,6 +852,87 @@ app.constant("HEALTH_ADVISER",function(){
       var result = $filter('filter')($scope.languages, query);
       return result;
   };
+  $scope.editWorkExperience = function (index,work) {
+    $scope.tempwork = {};
+    $scope.tempwork.id = work.id;
+    $scope.tempwork.organizationName = work.organizationName;
+    $scope.tempwork.description = work.description;
+    $scope.tempwork.designation = work.designation;
+    $scope.tempwork.dateTo = work.dateTo;
+    $scope.tempwork.dateFrom = work.dateFrom;
+    $scope.workEdit = index;
+  };
+  $scope.cancelWorkEdit = function () {
+    delete $scope.workEdit;
+  };
+  $scope.updateWorkExpDoctor = function (work) {
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.updateWorkExperience($scope.tempwork).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        work.organizationName = $scope.tempwork.organizationName;
+        work.description = $scope.tempwork.description;
+        work.designation = $scope.tempwork.designation;
+        work.dateTo = $scope.tempwork.dateTo;
+        work.dateFrom = $scope.tempwork.dateFrom;
+        Util.alertMessage('success', 'You have successfully updated your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in update !!!');
+      }
+    }, function (errorResponse) {
+        $rootScope.showPreloader = false;
+        Util.alertMessage('danger', 'Error in update !!!');
+    });
+  };
+  $scope.addWorkExpDoctor = function () {
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.addWorkExperience($scope.workexperience).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.profileDetails.experience.push(response.data.Data);
+        Util.alertMessage('success', 'You have successfully added your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in update !!!');
+      }
+    }, function (errorResponse) {
+        $rootScope.showPreloader = false;
+        Util.alertMessage('danger', 'Error in update !!!');
+    });
+  };
+  $scope.deleteWorkExperience = function (id) {
+      var obj = {};
+      obj.id = id;
+      DoctorDetailsService.deleteWorkExperience(obj).then(function (response) {
+        if(response.data.StatusCode == 200){
+          $scope.profileDetails.experience.splice($scope.deleteIndex,1);
+          Util.alertMessage('success', 'You have successfully deleted your information Thank You.');
+        }
+        else{
+          Util.alertMessage('danger', 'Error in Delete !!!');
+        }
+      }, function (errorResponse) {
+          Util.alertMessage('danger', 'Error in Delete !!!');
+      });
+  };
+  $scope.deleteWorkExperienceModal = function(size,workExpId,index){
+    $scope.deleteIndex = index;
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/workExpDeleteModal.html',
+     controller: 'deleteWorkExperienceModalCtrl',
+     size: size,
+     resolve: {
+       deleteWorkExperience: function () {
+         return $scope.deleteWorkExperience;
+       },
+       workExpId:function () {
+         return workExpId;
+       }
+     }
+   });
+  }
 	$scope.processForm = function() {
 		$scope.showTheForm = false;
 	}
@@ -1829,9 +1918,36 @@ app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){
 		        method: 'PUT',
 		        url: CONFIG.API_PATH+'_User',
 		        data: dataDetails,
-		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
 		    });
 		    return response;		
+		},
+		updateWorkExperience : function(dataDetails){
+			var response = $http({
+		        method: 'PUT',
+		        url: CONFIG.API_PATH+'_Profile_Experience',
+		        data: dataDetails,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		addWorkExperience : function(dataDetails){
+			var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_Profile_Experience',
+		        data: dataDetails,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		deleteWorkExperience : function(obj){
+			var response = $http({
+		        method: 'DELETE',
+		        url: CONFIG.API_PATH+'_Profile_Experience',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
 		}
 	}
 }]);app.factory("DoctorService",["$http", "CONFIG", function($http,CONFIG){

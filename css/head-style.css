@@ -37,6 +37,7 @@
 }
 .fluid_header .navbar-header .navbar-brand img {
   display: inline-block;
+  width:170px;
 }
 
 .fluid_header .navbar-nav.navbar-left li a {

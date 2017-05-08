@@ -21,9 +21,36 @@ app.factory('DoctorDetailsService',function($http,HealthAuth,CONFIG){
 		        method: 'PUT',
 		        url: CONFIG.API_PATH+'_User',
 		        data: dataDetails,
-		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
 		    });
 		    return response;		
+		},
+		updateWorkExperience : function(dataDetails){
+			var response = $http({
+		        method: 'PUT',
+		        url: CONFIG.API_PATH+'_Profile_Experience',
+		        data: dataDetails,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		addWorkExperience : function(dataDetails){
+			var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_Profile_Experience',
+		        data: dataDetails,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		deleteWorkExperience : function(obj){
+			var response = $http({
+		        method: 'DELETE',
+		        url: CONFIG.API_PATH+'_Profile_Experience',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
 		}
 	}
 })
