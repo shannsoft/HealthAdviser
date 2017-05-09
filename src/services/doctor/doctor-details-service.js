@@ -51,6 +51,34 @@ app.factory('DoctorDetailsService',function($http,HealthAuth,CONFIG){
 		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
 		    });
 		    return response;
+		},
+		saveAwards : function (obj) {
+			var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_Profile_Awards',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		deleteAwards : function (obj) {
+				console.log(obj);
+			var response = $http({
+		        method: 'DELETE',
+		        url: CONFIG.API_PATH+'_Profile_Awards',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		updateAwards : function (obj) {
+			var response = $http({
+			    method: 'PUT',
+			    url: CONFIG.API_PATH+'_Profile_Awards',
+			    data: obj,
+			    headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
 		}
 	}
 })

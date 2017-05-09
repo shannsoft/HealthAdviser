@@ -934,7 +934,7 @@ a:hover{ color:#000;}
 	margin:0px;
 	font-weight:bold;
 }
-.awards-content h3:after{
+/*.awards-content h3:after{
 	top: 40px!important;
     content: "";
     height: 2px;
@@ -942,7 +942,7 @@ a:hover{ color:#000;}
     position: absolute;
     width: 100px;
     background-color: #8795a1;
-}
+}*/
 .award-content span{
 	font-size:18px;
 	padding:10px 0px;
@@ -2235,8 +2235,9 @@ dl {
 	margin:0;
 	padding:0;
 	font-size: 22px;
+	color: #0088a4;
 }
-.form-block-wrap h3:after{
+/*.form-block-wrap h3:after{
 	top: 58px;
     content: "";
     height: 2px;
@@ -2244,7 +2245,7 @@ dl {
     position: absolute;
     width: 100px;
     background-color: #8795a1;
-}
+}*/
 .form-block-wrap p{
 	clear:both;
 	display:block;
@@ -2259,9 +2260,19 @@ dl {
     font-size: 11px;
     transition: border 0.2s linear 0s,color 0.2s linear 0s;
 }
+.p-t-10{
+	padding-top:10px;
+}
+.p-t-20{
+	padding-top:20px;
+}
+.p-t-30{
+	padding-top:30px;
+}
 .p-t-40{
 	padding-top:40px;
 }
+.bold{font-weight: bold;}
 .spec-ok-btn{
 	height: 42px;
     line-height: 29px;
@@ -2577,4 +2588,8 @@ dl {
     cursor: default;
     background-color: #0088A3;
     border-color: #0088a3;
+}
+tags-input .tags .tag-item {
+    border-radius: 0px!important;
+    background: #f1f1f1!important;
 }

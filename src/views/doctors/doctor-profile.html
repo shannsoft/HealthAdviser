@@ -340,9 +340,9 @@
 										</div>
 										<div class="form-block-wrap">
 											<h3 class="pull-left">{{work.organizationName}}</h3>
-											<span> ({{work.designation}})</span>
 											<span class="pull-right">{{work.dateFrom | dateformat4}} {{' - '}} <span ng-if="work.dateTo !== null">{{work.dateTo | dateformat4}}</span><span ng-if="work.dateTo == ''">Present</span></span>
-											<p class="p-t-40">{{work.description}} </p>
+											<p class="p-t-10 bold"> ({{work.designation}})</p>
+											<p>{{work.description}} </p>
 										</div>
 									</div>
 									<div class="form-block-wrap" ng-if="workEdit == $index">
@@ -435,7 +435,7 @@
 											<div class="col-sm-12">
 												<div class="form-group">
 													<label>Work experience description</label>
-													<textarea class="form-control b-a" rows="3" ng-model="workexperience.description" name="description" required></textarea>
+													<textarea class="form-control b-a" rows="3" ng-model="workexperience.description" name="description" required placeholder="Description"></textarea>
 												</div>
 											</div>
 										</div>
@@ -472,7 +472,7 @@
 										<div class="form-block-wrap">
 											<h3 class="pull-left">{{edu.educationType}}</h3>
 											<span class="pull-right">{{edu.year | dateYear}}</span>
-											<p class="p-t-40">{{edu.university}}</p>
+											<p class="p-t-10">{{edu.university}}</p>
 											<p  ng-if=edu.major> Major: {{edu.major}}</p>
 											<p>Score: {{edu.score}}%</p>
 											<p>{{edu.description}} </p>
@@ -595,10 +595,10 @@
 						<div id="collapseFour" class="panel-collapse collapse" uib-collapse="signupCollapse.awards">
 							<div class="panel-body">
 								<div class="m-b-20" ng-repeat="awards in profileDetails.award">
-									<div>
+									<div ng-if="awardEdit != $index">
 										<div class="tab-custom-icon">
-											<a href="" ng-click="showTheForm = !showTheForm"><i class="fa fa-edit"></i> </a>
-											<a href="" ng-click="deleteAwards('md',work.id)" ><i class="fa fa-trash"></i></a>
+											<a href="" ng-click="editAwards($index, awards)"><i class="fa fa-edit"></i> </a>
+											<a href="" ng-click="deleteAwardsModal('md',awards.id,$index)" ><i class="fa fa-trash"></i></a>
 										</div>
 										<div class="form-block-wrap">
 											<div class="row">
@@ -609,7 +609,7 @@
 												<div class="col-sm-10">
 													<div class="awards-content">
 														<h3>{{awards.awardFor}}</h3>
-														<p class="p-t-40">{{awards.awardDate | dateYear}}</span>
+														<p class="p-t-10">{{awards.awardDate | dateYear}}</p>
 														<p>{{awards.organizationName}}</p>
 														<p>{{awards.description}}</p>
 													</div>
@@ -617,21 +617,72 @@
 											</div>
 										</div>
 									</div>
-									<div class="form-block-wrap" ng-show="showTheForm" ng-submit="processForm()">
+									<div class="form-block-wrap" ng-if="awardEdit == $index">
+										<form name="awardeditFrm" ng-submit="">
+											<div class="row">
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>Upload Logo</label>
+														<div class="fileUpload btn btn-md btn-block btn-white b-a">
+															<span>Upload Logo</span>
+															<input name="image" type="file" file-model fileread="tempaward.image" filename="tempaward.imageName"/>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>Award For</label>
+														<input type="text" class="form-control" name="awardfor" placeholder="Award For" ng-model="tempaward.awardFor" required>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>Awarded By</label>
+														<input type="text" class="form-control" name="awardby" placeholder="Award By" ng-model="tempaward.organizationName" required>
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="form-group" ng-controller="DatePickerCtrl">
+														<label>Awarded Year</label>
+														<input type="text" class="form-control b-a h-40" name="e_awardedYear" placeholder="2016, January" ng-change="changeSingleDate('add',tempaward.awardDate)" ng-model="tempaward.awardDate"  is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)" datepicker-popup="yyyy, MMMM" datepicker-options="{minMode: 'month'}" datepicker-mode="'month'"  close-text="Close" required>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="form-group">
+														<label>Description</label>
+														<textarea class="form-control" rows="3" ng-model="tempaward.description" name="description" required placeholder="Description"></textarea>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12 m-t-10 text-right">
+												  <button class="btn btn-blue btn-md text-u-c" ng-click="updateAwards(awards)">Save Change</button>
+												  <button class="btn btn-red btn-md text-u-c" ng-click="cancelAwardEdit()">Cancel</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+								<div class="form-block-wrap" ng-show="showTheForm1">
+									<form name="awardFrm">
 										<div class="row">
 											<div class="col-sm-6">
 												<div class="form-group">
 													<label>Upload Logo</label>
 													<div class="fileUpload btn btn-md btn-block btn-white b-a">
 														<span>Upload Logo</span>
-														<input type="file" class="upload" name="resume">
+														<input name="image" type="file" file-model fileread="photo.image" filename="photo.imageName"/>
 													</div>
 												</div>
 											</div>
 											<div class="col-sm-6">
 												<div class="form-group">
 													<label>Award For</label>
-													<input type="text" class="form-control" id="" placeholder="" ng-model="awards.awardFor">
+													<input type="text" class="form-control" name="awardfor" placeholder="Award For" ng-model="awards.awardFor" required>
 												</div>
 											</div>
 										</div>
@@ -639,13 +690,13 @@
 											<div class="col-sm-6">
 												<div class="form-group">
 													<label>Awarded By</label>
-													<input type="text" class="form-control" id="" placeholder="" ng-model="awards.organizationName">
+													<input type="text" class="form-control" name="awardby" placeholder="Organization Name" ng-model="awards.organizationName" required>
 												</div>
 											</div>
 											<div class="col-sm-6">
-												<div class="form-group">
+												<div class="form-group" ng-controller="DatePickerCtrl">
 													<label>Awarded Year</label>
-													<input type="text" class="form-control" id="" placeholder="" ng-model="awards.awardDate">
+													<input type="text" class="form-control b-a h-40" name="awardedYear" placeholder="2016, January" ng-change="changeSingleDate('add',awards.awardDate)" ng-model="awards.awardDate"  is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)" datepicker-popup="yyyy, MMMM" datepicker-options="{minMode: 'month'}" datepicker-mode="'month'"  close-text="Close" required>
 												</div>
 											</div>
 										</div>
@@ -653,64 +704,17 @@
 											<div class="col-sm-12">
 												<div class="form-group">
 													<label>Description</label>
-													<input type="text" class="form-control" id="" placeholder="" ng-model="awards.description">
+													<textarea class="form-control" rows="3" ng-model="awards.description" name="description" required placeholder="Description"></textarea>
 												</div>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-sm-12 m-t-10 text-right">
-											  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
+											  <button class="btn btn-blue btn-md text-u-c" ng-disabled="awardFrm.$invalid" ng-click="saveAwards()">Save Change</button>
 											  <button class="btn btn-red btn-md text-u-c">Cancel</button>
 											</div>
 										</div>
-									</div>
-								</div>
-								<div class="form-block-wrap" ng-show="showTheForm1" ng-submit="processForm1()">
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Upload Logo</label>
-												<div class="fileUpload btn btn-md btn-block btn-white b-a">
-													<span>Upload Logo</span>
-													<input type="file" class="upload" name="resume">
-												</div>
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Award For</label>
-												<input type="text" class="form-control" id="" placeholder="Award For">
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Awarded By</label>
-												<input type="text" class="form-control" id="" placeholder="Organization Name">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Awarded Year</label>
-												<input type="text" class="form-control" id="" placeholder="Year">
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-12">
-											<div class="form-group">
-												<label>Description</label>
-												<input type="text" class="form-control" id="" placeholder="">
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-12 m-t-10 text-right">
-										  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-										  <button class="btn btn-red btn-md text-u-c">Cancel</button>
-										</div>
-									</div>
+									</form>
 								</div>
 								<a href="" class="btn btn-success btn-md text-u-c m-t-10" ng-click="showTheForm1 = !showTheForm1"><i class="fa fa-plus"></i> Add New Awards</a>
 							</div>
@@ -736,7 +740,7 @@
 										<div class="form-block-wrap">
 											<div class="associate-content">
 												<h3>{{associate.associationName}}</h3>
-												<p class="p-t-40">{{associate.position}} ({{associate.startDate | dateformat1}}   {{associate.endDate | dateformat1}})</p>
+												<p class="p-t-10">{{associate.position}} ({{associate.startDate | dateformat1}}   {{associate.endDate | dateformat1}})</p>
 											</div>
 										</div>
 									</div>
@@ -837,7 +841,7 @@
 										<div class="form-block-wrap">
 											<div class="publications-content">
 												<h3>{{publications.publicaitonName}}</h3>
-												<p class="p-t-40">{{publications.date | dateformat1}}</p>
+												<p class="p-t-10">{{publications.date | dateformat1}}</p>
 												<p>{{publications.description}}</p>
 											</div>
 										</div>
@@ -927,7 +931,7 @@
 										<div class="form-block-wrap">
 											<div class="conferences-content">
 												<h3>{{conferences.conferenceName}}</h3>
-												<p class="p-t-40">{{conferences.startDate | dateformat1}} - {{conferences.endDate | dateformat1}}</p>
+												<p class="p-t-10">{{conferences.startDate | dateformat1}} - {{conferences.endDate | dateformat1}}</p>
 												<p>{{conferences.location}}</p>
 												<p>{{conferences.topic}}</p>
 											</div>

@@ -230,7 +230,6 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
 			obj.language = item.text;
 			personalDetails.profile.language.push(obj);
 		});
-		console.log(personalDetails);
     DoctorDetailsService.updatePersonalProfile(personalDetails).then(function (response) {
       $rootScope.showPreloader = false;
       if(response.data.StatusCode == 200){
@@ -306,7 +305,9 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
   $scope.deleteWorkExperience = function (id) {
       var obj = {};
       obj.id = id;
+      $rootScope.showPreloader = true;
       DoctorDetailsService.deleteWorkExperience(obj).then(function (response) {
+        $rootScope.showPreloader = false;
         if(response.data.StatusCode == 200){
           $scope.profileDetails.experience.splice($scope.deleteIndex,1);
           Util.alertMessage('success', 'You have successfully deleted your information Thank You.');
@@ -315,6 +316,7 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
           Util.alertMessage('danger', 'Error in Delete !!!');
         }
       }, function (errorResponse) {
+        $rootScope.showPreloader = false;
           Util.alertMessage('danger', 'Error in Delete !!!');
       });
   };
@@ -335,10 +337,111 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
        workExpId:function () {
          return workExpId;
        }
+
      }
    });
   }
-
+  /****************************************************************************/
+  /*****************FUNCTION IS USED TO SAVE AWARD SECTION*********************/
+  /****************************************************************************/
+  $scope.saveAwards = function(){
+    var fileData = {
+      "fileName": $scope.photo.imageName,
+      "inputStream": $scope.photo.image.split(";base64,")[1]
+    }
+    $scope.awards.fileData = fileData;
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.saveAwards($scope.awards).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        $scope.profileDetails.award.push(response.data.Data);
+        Util.alertMessage('success', 'You have successfully added your information Thank You.'); 
+      }
+    })
+  }
+  /****************************************************************************/
+  /**************FUNCTION IS USED TO OPEN AWARD DELETE MODAL*******************/
+  /****************************************************************************/
+  $scope.deleteAwardsModal = function(size,awardId,index){
+    $scope.deleteIndex = index;
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/awardsDetailDeleteModal.html',
+     controller: 'awardDetailsModalCtrl',
+     size: size,
+     resolve: {
+       deleteAwardsDetails: function () {
+         return $scope.deleteAwardsDetails;
+       },
+       awardId:function () {
+         return awardId;
+       }
+     }
+    })
+  }
+  /****************************************************************************/
+  /**************FUNCTION IS USED TO OPEN AWARD DELETE MODAL*******************/
+  /****************************************************************************/
+  $scope.deleteAwardsDetails = function(id){
+    var obj = {};
+    obj.id = id;
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.deleteAwards(obj).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.profileDetails.award.splice($scope.deleteIndex,1);
+        Util.alertMessage('success', 'You have successfully deleted your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in Delete !!!');
+      }
+    }, function (errorResponse) {
+      $rootScope.showPreloader = false;
+        Util.alertMessage('danger', 'Error in Delete !!!');
+    });
+  }
+  /****************************************************************************/
+  /************************FUNCTION SHOW EDIT FORM*****************************/
+  /****************************************************************************/
+  $scope.editAwards = function (index,award) {
+    $scope.tempaward = {};
+    $scope.tempaward.id = award.id;
+    $scope.tempaward.organizationName = award.organizationName;
+    $scope.tempaward.description = award.description;
+    $scope.tempaward.awardFor = award.awardFor;
+    $scope.tempaward.awardDate = award.awardDate;
+    $scope.awardEdit = index;
+  };
+  $scope.cancelAwardEdit = function () {
+    delete $scope.awardEdit;
+  };
+  $scope.updateAwards = function (award) {
+    $rootScope.showPreloader = true;
+    if($scope.tempaward.imageName){
+      var fileData = {
+        "fileName": $scope.tempaward.imageName,
+        "inputStream": $scope.tempaward.image.split(";base64,")[1]
+      }
+     $scope.tempaward.fileData = fileData;
+    }
+    DoctorDetailsService.updateAwards($scope.tempaward).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        award.organizationName = $scope.tempaward.organizationName;
+        award.description = $scope.tempaward.description;
+        award.awardFor = $scope.tempaward.awardFor;
+        award.awardDate = $scope.tempaward.awardDate;
+        award.image = response.data.Data.image;
+        Util.alertMessage('success', 'You have successfully updated your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in update !!!');
+      }
+    }, function (errorResponse) {
+        $rootScope.showPreloader = false;
+        Util.alertMessage('danger', 'Error in update !!!');
+    });
+  };
   /****************************************************************************/
   /************************FUNCTION HIDE EDIT FORM*****************************/
 	/****************************************************************************/

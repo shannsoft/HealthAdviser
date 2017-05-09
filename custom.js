@@ -409,6 +409,15 @@ app.constant("HEALTH_ADVISER",function(){
     $uibModalInstance.dismiss('cancel');
   };
 }]);
+app.controller('awardDetailsModalCtrl', ["$scope", "$uibModalInstance", "deleteAwardsDetails", "awardId", function ($scope, $uibModalInstance,deleteAwardsDetails,awardId) {
+    $scope.ok = function () {
+        deleteAwardsDetails(awardId);
+        $uibModalInstance.close();
+    };
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+}]);
 ;app.controller("SpecializationController", ["$scope", "$rootScope", "CommonService", "$localStorage", "$state", function($scope,$rootScope,CommonService,$localStorage,$state){
 	$scope.getSpecializationList = function(){
 		$scope.specialization = [];
@@ -834,7 +843,6 @@ app.constant("HEALTH_ADVISER",function(){
 			obj.language = item.text;
 			personalDetails.profile.language.push(obj);
 		});
-		console.log(personalDetails);
     DoctorDetailsService.updatePersonalProfile(personalDetails).then(function (response) {
       $rootScope.showPreloader = false;
       if(response.data.StatusCode == 200){
@@ -904,7 +912,9 @@ app.constant("HEALTH_ADVISER",function(){
   $scope.deleteWorkExperience = function (id) {
       var obj = {};
       obj.id = id;
+      $rootScope.showPreloader = true;
       DoctorDetailsService.deleteWorkExperience(obj).then(function (response) {
+        $rootScope.showPreloader = false;
         if(response.data.StatusCode == 200){
           $scope.profileDetails.experience.splice($scope.deleteIndex,1);
           Util.alertMessage('success', 'You have successfully deleted your information Thank You.');
@@ -913,6 +923,7 @@ app.constant("HEALTH_ADVISER",function(){
           Util.alertMessage('danger', 'Error in Delete !!!');
         }
       }, function (errorResponse) {
+        $rootScope.showPreloader = false;
           Util.alertMessage('danger', 'Error in Delete !!!');
       });
   };
@@ -930,9 +941,99 @@ app.constant("HEALTH_ADVISER",function(){
        workExpId:function () {
          return workExpId;
        }
+
      }
    });
   }
+  $scope.saveAwards = function(){
+    var fileData = {
+      "fileName": $scope.photo.imageName,
+      "inputStream": $scope.photo.image.split(";base64,")[1]
+    }
+    $scope.awards.fileData = fileData;
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.saveAwards($scope.awards).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        $scope.profileDetails.award.push(response.data.Data);
+        Util.alertMessage('success', 'You have successfully added your information Thank You.'); 
+      }
+    })
+  }
+  $scope.deleteAwardsModal = function(size,awardId,index){
+    $scope.deleteIndex = index;
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/awardsDetailDeleteModal.html',
+     controller: 'awardDetailsModalCtrl',
+     size: size,
+     resolve: {
+       deleteAwardsDetails: function () {
+         return $scope.deleteAwardsDetails;
+       },
+       awardId:function () {
+         return awardId;
+       }
+     }
+    })
+  }
+  $scope.deleteAwardsDetails = function(id){
+    var obj = {};
+    obj.id = id;
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.deleteAwards(obj).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.profileDetails.award.splice($scope.deleteIndex,1);
+        Util.alertMessage('success', 'You have successfully deleted your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in Delete !!!');
+      }
+    }, function (errorResponse) {
+      $rootScope.showPreloader = false;
+        Util.alertMessage('danger', 'Error in Delete !!!');
+    });
+  }
+  $scope.editAwards = function (index,award) {
+    $scope.tempaward = {};
+    $scope.tempaward.id = award.id;
+    $scope.tempaward.organizationName = award.organizationName;
+    $scope.tempaward.description = award.description;
+    $scope.tempaward.awardFor = award.awardFor;
+    $scope.tempaward.awardDate = award.awardDate;
+    $scope.awardEdit = index;
+  };
+  $scope.cancelAwardEdit = function () {
+    delete $scope.awardEdit;
+  };
+  $scope.updateAwards = function (award) {
+    $rootScope.showPreloader = true;
+    if($scope.tempaward.imageName){
+      var fileData = {
+        "fileName": $scope.tempaward.imageName,
+        "inputStream": $scope.tempaward.image.split(";base64,")[1]
+      }
+     $scope.tempaward.fileData = fileData;
+    }
+    DoctorDetailsService.updateAwards($scope.tempaward).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        award.organizationName = $scope.tempaward.organizationName;
+        award.description = $scope.tempaward.description;
+        award.awardFor = $scope.tempaward.awardFor;
+        award.awardDate = $scope.tempaward.awardDate;
+        award.image = response.data.Data.image;
+        Util.alertMessage('success', 'You have successfully updated your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in update !!!');
+      }
+    }, function (errorResponse) {
+        $rootScope.showPreloader = false;
+        Util.alertMessage('danger', 'Error in update !!!');
+    });
+  };
 	$scope.processForm = function() {
 		$scope.showTheForm = false;
 	}
@@ -1553,7 +1654,28 @@ app.directive("starRating",function(){
         });
       }
     };
-});;app.filter('getShortName', function () {
+});
+app.directive('fileModel', ['$parse', function ($parse) {
+   return {
+      restrict: 'A',
+      scope: {
+         fileread: "=",
+         filename: "=",
+      },
+      link: function(scope, element, attrs) {
+         element.bind('change', function(){
+            var fileReader = new FileReader();
+            fileReader.onload = function(e) {
+               scope.$apply(function(){
+                  scope.fileread = e.target.result;
+                  scope.filename = element[0].files[0].name;
+               });
+            };
+            fileReader.readAsDataURL(element[0].files[0]);
+         });
+      }
+   };
+}]);;app.filter('getShortName', function () {
     return function (value) {
       if(value){
         var temp = angular.copy(value);
@@ -1946,6 +2068,34 @@ app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){
 		        url: CONFIG.API_PATH+'_Profile_Experience',
 		        data: obj,
 		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		saveAwards : function (obj) {
+			var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_Profile_Awards',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		deleteAwards : function (obj) {
+				console.log(obj);
+			var response = $http({
+		        method: 'DELETE',
+		        url: CONFIG.API_PATH+'_Profile_Awards',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		updateAwards : function (obj) {
+			var response = $http({
+			    method: 'PUT',
+			    url: CONFIG.API_PATH+'_Profile_Awards',
+			    data: obj,
+			    headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
 		    });
 		    return response;
 		}
