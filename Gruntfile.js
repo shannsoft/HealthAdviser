@@ -52,7 +52,7 @@ module.exports = function(grunt) {
                 //appName:'Chrome', // name of the app that opens, ie: open, start, xdg-open
                 callback: function() {} // called when the app has opened
               },
-             
+
               port: 3006
             }
           }
@@ -109,7 +109,7 @@ module.exports = function(grunt) {
                 }
             }
         },
-        clean: ["custom.js","libs.js","ng-libs.js"],
+        clean: ["custom.js","libs.js","ng-libs.js","healthApp"],
         cssmin: {
             combine: {
                 files: {
@@ -132,6 +132,18 @@ module.exports = function(grunt) {
                     src: ['index.html']
                 }
             }
+        },
+        copy:{
+          main: {
+            files:[
+              {
+                expand: true,
+                cwd:'',
+                src: ['**','!**/*.js','!**/*.less','!**/*.css','!**/node_modules/**','!**/healthApp/**'],
+                dest: 'healthApp/'
+              }
+            ]
+          }
         }
     });
 
@@ -146,10 +158,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-cache-breaker');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-copy');
-    // grunt.loadNpmTasks('grunt-contrib-connect');
     // grunt.loadNpmTasks('grunt-notify');
     // Default task(s).
-    grunt.registerTask('default', ['clean','concat', 'connect','comments:my_target', 'ngAnnotate:appannotate', 'cachebreaker:dev','watch:debug']);
+    grunt.registerTask('default', ['clean','concat', 'copy:main','connect','comments:my_target', 'ngAnnotate:appannotate', 'cachebreaker:dev','watch:debug']);
     grunt.registerTask('built', ['concat', 'comments:my_target', 'connect', 'ngAnnotate:appannotate', 'uglify:my_target', 'cssmin:combine','cachebreaker:dev', 'watch:built']);
 
 };
