@@ -609,7 +609,7 @@
 												<div class="col-sm-10">
 													<div class="awards-content">
 														<h3>{{awards.awardFor}}</h3>
-														<p class="p-t-10">{{awards.awardDate | dateYear}}</p>
+														<p class="p-t-10">{{awards.awardDate | dateformat4}}</p>
 														<p>{{awards.organizationName}}</p>
 														<p>{{awards.description}}</p>
 													</div>
@@ -633,6 +633,7 @@
 													<div class="form-group">
 														<label>Award For</label>
 														<input type="text" class="form-control" name="awardfor" placeholder="Award For" ng-model="tempaward.awardFor" required>
+														<span class="color-red" ng-if="awardeditFrm.awardfor.$touched && awardeditFrm.awardfor.$error.required">Please enter award for</span>
 													</div>
 												</div>
 											</div>
@@ -641,6 +642,7 @@
 													<div class="form-group">
 														<label>Awarded By</label>
 														<input type="text" class="form-control" name="awardby" placeholder="Award By" ng-model="tempaward.organizationName" required>
+														<span class="color-red" ng-if="awardeditFrm.awardby.$touched && awardeditFrm.awardby.$error.required">Please enter awarded by</span>
 													</div>
 												</div>
 												<div class="col-sm-6">
@@ -655,12 +657,13 @@
 													<div class="form-group">
 														<label>Description</label>
 														<textarea class="form-control" rows="3" ng-model="tempaward.description" name="description" required placeholder="Description"></textarea>
+														<span class="color-red" ng-if="awardeditFrm.description.$touched && awardeditFrm.description.$error.required">Please enter award description</span>
 													</div>
 												</div>
 											</div>
 											<div class="row">
 												<div class="col-sm-12 m-t-10 text-right">
-												  <button class="btn btn-blue btn-md text-u-c" ng-click="updateAwards(awards)">Save Change</button>
+												  <button class="btn btn-blue btn-md text-u-c" ng-click="updateAwards(awards)" ng-disabled="awardeditFrm.awardfor.$invalid|| awardeditFrm.awardby.$invalid|| awardeditFrm.description.$invalid">Save Change</button>
 												  <button class="btn btn-red btn-md text-u-c" ng-click="cancelAwardEdit()">Cancel</button>
 												</div>
 											</div>
@@ -683,6 +686,7 @@
 												<div class="form-group">
 													<label>Award For</label>
 													<input type="text" class="form-control" name="awardfor" placeholder="Award For" ng-model="awards.awardFor" required>
+													<span class="color-red" ng-if="awardFrm.awardfor.$touched && awardFrm.awardfor.$error.required">Please enter award for</span>
 												</div>
 											</div>
 										</div>
@@ -691,6 +695,7 @@
 												<div class="form-group">
 													<label>Awarded By</label>
 													<input type="text" class="form-control" name="awardby" placeholder="Organization Name" ng-model="awards.organizationName" required>
+													<span class="color-red" ng-if="awardFrm.awardby.$touched && awardFrm.awardby.$error.required">Please enter awarded by</span>
 												</div>
 											</div>
 											<div class="col-sm-6">
@@ -705,13 +710,14 @@
 												<div class="form-group">
 													<label>Description</label>
 													<textarea class="form-control" rows="3" ng-model="awards.description" name="description" required placeholder="Description"></textarea>
+													<span class="color-red" ng-if="awardFrm.awardby.$touched && awardFrm.description.$error.required">Please enter award description</span>
 												</div>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-sm-12 m-t-10 text-right">
-											  <button class="btn btn-blue btn-md text-u-c" ng-disabled="awardFrm.$invalid" ng-click="saveAwards()">Save Change</button>
-											  <button class="btn btn-red btn-md text-u-c">Cancel</button>
+											  <button class="btn btn-blue btn-md text-u-c" ng-disabled="awardFrm.$invalid" ng-click="saveAwards()" ng-disabled="awardFrm.awardfor.$invalid|| awardFrm.awardby.$invalid|| awardFrm.description.$invalid">Save Change</button>
+											  <button class="btn btn-red btn-md text-u-c" ng-click="showTheForm1 = false">Cancel</button>
 											</div>
 										</div>
 									</form>
