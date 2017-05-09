@@ -345,19 +345,21 @@
 											<p class="p-t-40">{{work.description}} </p>
 										</div>
 									</div>
-									<div class="form-block-wrap" ng-if="workEdit == $index" ng-submit="processForm()">
-										<form name="e_wrokFrm">
+									<div class="form-block-wrap" ng-if="workEdit == $index">
+										<form name="e_workFrm">
 											<div class="row">
 												<div class="col-sm-6">
 													<div class="form-group">
 														<label class="control-label">Organisation Name</label>
 														<input type="text" name="e_companyname" class="form-control b-a h-40" placeholder="Organisation Name" ng-model="tempwork.organizationName" required>
+														<span class="color-red" ng-show="e_workFrm.e_companyname.$touched && e_workFrm.e_companyname.$error.required">Please enter Organisation Name</span>
 													</div>
 												</div>
 												<div class="col-sm-6">
 													<div class="form-group">
 														<label>Designation</label>
 														<input type="text" name="e_designation" class="form-control b-a h-40" placeholder="Doctor" ng-model="tempwork.designation" required>
+														<span class="color-red" ng-if="e_workFrm.e_designation.$touched && e_workFrm.e_designation.$error.required">Please enter Designation</span>
 													</div>
 												</div>
 											</div>
@@ -365,15 +367,16 @@
 												<div class="col-sm-6">
 													<div class="form-group" ng-controller="DatePickerCtrl">
 														<label>Start Month/Year</label>
-														<input type="text" class="form-control" name="e_startDate" ng-change="changeSelect('start',tempwork.dateFrom,tempwork.dateTo)" placeholder="2016, January" ng-model="tempwork.dateFrom" datepicker-popup="yyyy, MMMM" datepicker-options="{minMode: 'month'}" datepicker-mode="'month'" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)"  ng-required="true" close-text="Close" required/>
-
+														<input type="text" class="form-control" name="e_startDate" ng-change="changeSelect('start',tempwork.dateFrom,tempwork.dateTo)" placeholder="2017, January" ng-model="tempwork.dateFrom" datepicker-popup="yyyy, MMMM" datepicker-options="{minMode: 'month'}" datepicker-mode="'month'" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)" close-text="Close"/>
+														<span class="color-red" ng-if="isEstartError">Start date sholud not be more than End date</span>
 														<!-- <input type="text" class="form-control b-a h-40" name="dateFrom" placeholder=""  required> -->
 													</div>
 												</div>
 												<div class="col-sm-6">
 													<div class="form-group" ng-controller="DatePickerCtrl">
 														<label>End Month/Year</label>
-														<input type="text" class="form-control b-a h-40" name="e_endDate" ng-change="changeSelect('end',tempwork.dateFrom,tempwork.dateTo)" placeholder="2016, January" ng-model="tempwork.dateTo" datepicker-popup="yyyy, MMMM" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)"  datepicker-options="{minMode: 'month'}" datepicker-mode="'month'" ng-required="true" close-text="Close" />
+														<input type="text" class="form-control b-a h-40" name="e_endDate" ng-change="changeSelect('end',tempwork.dateFrom,tempwork.dateTo)" placeholder="2017, January" ng-model="tempwork.dateTo" datepicker-popup="yyyy, MMMM" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)"  datepicker-options="{minMode: 'month'}" datepicker-mode="'month'" close-text="Close" />
+														<span class="color-red" ng-if="is_EendError">End date sholud not be less than Start date</span>
 													</div>
 												</div>
 											</div>
@@ -387,58 +390,62 @@
 											</div>
 											<div class="row">
 												<div class="col-sm-12 m-t-10 text-right">
-												  <button class="btn btn-blue btn-md text-u-c" ng-click="updateWorkExpDoctor(work)">Save Change</button>
-												  <button class="btn btn-red btn-md text-u-c" ng-click="cancelWorkEdit()">Cancel</button>
+													<button ng-click="updateWorkExpDoctor(work)" class="btn btn-primary btn-md bold w-150" ng-disabled="e_workFrm.e_companyname.$invalid|| e_workFrm.e_designation.$invalid">Save Change</button>							  
+													<button class="btn btn-red btn-md text-u-c" ng-click="cancelWorkEdit()">Cancel</button>
 												</div>
 											</div>
 										</div>
 									</form>
 								</div>
 								<div class="form-block-wrap"  ng-show="showTheForm1" ng-submit="processForm1()">
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label class="control-label">Organisation Name</label>
-												<input type="text" name="companyname" class="form-control" placeholder="Organisation Name" ng-model="workexperience.organizationName" required>
+									<form name="a_workFrm">
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label class="control-label">Organisation Name</label>
+													<input type="text" name="a_companyname" class="form-control" placeholder="Organisation Name" ng-model="workexperience.organizationName" required>
+													<span class="color-red" ng-show="a_workFrm.a_companyname.$touched && a_workFrm.a_companyname.$error.required">Please enter Organisation Name</span>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Designation</label>
+													<input type="text" name="a_designation" class="form-control" placeholder="Doctor" ng-model="workexperience.designation" required>
+													<span class="color-red" ng-show="a_workFrm.a_designation.$touched && a_workFrm.a_designation.$error.required">Please enter Organisation Name</span>
+												</div>
 											</div>
 										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Designation</label>
-												<input type="text" name="designation" class="form-control" placeholder="Doctor" ng-model="workexperience.designation" required>
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group" ng-controller="DatePickerCtrl">
+													<label>Start Month/Year</label>
+													<input type="text" class="form-control" name="startDate" ng-change="changeSelect('start',workexperience.dateFrom,workexperience.dateTo)" placeholder="2017, January" ng-model="workexperience.dateFrom" datepicker-popup="yyyy, MMMM" datepicker-options="{minMode: 'month'}" datepicker-mode="'month'" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)"  ng-required="true" close-text="Close" required/>
+													<span class="color-red" ng-if="is_endError">Start date sholud not be more than End date</span>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group" ng-controller="DatePickerCtrl">
+													<label>End Month/Year</label>
+													<input type="text" class="form-control b-a h-40" name="endDate" ng-change="changeSelect('end',workexperience.dateFrom,workexperience.dateTo)" placeholder="2017, January" ng-model="workexperience.dateTo" datepicker-popup="yyyy, MMMM" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)"  datepicker-options="{minMode: 'month'}" datepicker-mode="'month'" ng-required="true" close-text="Close" />
+													<span class="color-red" ng-if="is_endError">End date sholud not be less than Start date</span>
+												</div>
 											</div>
 										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group" ng-controller="DatePickerCtrl">
-												<label>Start Month/Year</label>
-												<input type="text" class="form-control" name="startDate" ng-change="changeSelect('start',workexperience.dateFrom,workexperience.dateTo)" placeholder="2016, January" ng-model="workexperience.dateFrom" datepicker-popup="yyyy, MMMM" datepicker-options="{minMode: 'month'}" datepicker-mode="'month'" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)"  ng-required="true" close-text="Close" required/>
-												<span class="color-red" ng-if="is_endError">Start date sholud not be more than End date</span>
+										<div class="row">
+											<div class="col-sm-12">
+												<div class="form-group">
+													<label>Work experience description</label>
+													<textarea class="form-control b-a" rows="3" ng-model="workexperience.description" name="description" required></textarea>
+												</div>
 											</div>
 										</div>
-										<div class="col-sm-6">
-											<div class="form-group" ng-controller="DatePickerCtrl">
-												<label>End Month/Year</label>
-												<input type="text" class="form-control b-a h-40" name="endDate" ng-change="changeSelect('end',workexperience.dateFrom,workexperience.dateTo)" placeholder="2016, January" ng-model="workexperience.dateTo" datepicker-popup="yyyy, MMMM" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)"  datepicker-options="{minMode: 'month'}" datepicker-mode="'month'" ng-required="true" close-text="Close" />
-												<span class="color-red" ng-if="is_endError">End date sholud not be less than Start date</span>
+										<div class="row">
+											<div class="col-sm-12 m-t-10 text-right">
+											  <button class="btn btn-blue btn-md text-u-c" ng-click="addWorkExpDoctor()" ng-disabled="a_workFrm.a_companyname.$invalid|| a_workFrm.a_designation.$invalid">Save Change</button>
+											  <button class="btn btn-red btn-md text-u-c" ng-click="showTheForm1 = !showTheForm1">Cancel</button>
 											</div>
 										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-12">
-											<div class="form-group">
-												<label>Work experience description</label>
-												<textarea class="form-control b-a" rows="3" ng-model="workexperience.description" name="description" required></textarea>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-12 m-t-10 text-right">
-										  <button class="btn btn-blue btn-md text-u-c" ng-click="addWorkExpDoctor()">Save Change</button>
-										  <button class="btn btn-red btn-md text-u-c" ng-click="showTheForm1 = !showTheForm1">Cancel</button>
-										</div>
-									</div>
+									</form>
 								</div>
 								<a href="" class="btn btn-success btn-md text-u-c m-t-10" ng-click="showTheForm1 = !showTheForm1"><i class="fa fa-plus"></i> Add New Work Experience</a>
 					  		</div>
@@ -495,8 +502,8 @@
 											</div>
 											<div class="col-sm-4">
 												<div class="form-group">
-													<label>Year</label>
-													<input type="text" class="form-control b-a h-40" name="year" placeholder="" ng-model="edu.year" required>
+													<label>Year</label>													
+													<input type="text" class="form-control b-a h-40" name="year" placeholder="" ng-model="edu.year" required/>
 												</div>
 											</div>
 											<div class="col-sm-4">
