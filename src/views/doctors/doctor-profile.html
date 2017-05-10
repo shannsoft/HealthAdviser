@@ -478,55 +478,61 @@
 										</div>
 									</div>
 									<div class="form-block-wrap" ng-if="eduEdit == $index">
-										<div class="row">
-											<div class="col-sm-6">
-												<div class="form-group">
-													<label class="control-label">University</label>
-													<input type="text" name="e_university" class="form-control b-a h-40" placeholder="University" ng-model="tempEducation.university" required>
+										<form name="eduEditForm">
+											<div class="row">
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label class="control-label">University</label>
+														<input type="text" name="e_university" class="form-control b-a h-40" placeholder="University" ng-model="tempEducation.university" required>
+														<span class="color-red" ng-show="eduEditForm.e_university.$touched && eduEditForm.e_university.$error.required">Please enter University Name</span>
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>Degree</label>
+														<input type="text" name="e_degree" class="form-control b-a h-40" placeholder="Degree" ng-model="tempEducation.educationType" required>
+														<span class="color-red" ng-show="eduEditForm.e_degree.$touched && eduEditForm.e_degree.$error.required">Please enter Education Type</span>
+													</div>
 												</div>
 											</div>
-											<div class="col-sm-6">
-												<div class="form-group">
-													<label>Degree</label>
-													<input type="text" name="e_degree" class="form-control b-a h-40" placeholder="Degree" ng-model="tempEducation.educationType" required>
+											<div class="row">
+												<div class="col-sm-4">
+													<div class="form-group">
+														<label>Major</label>
+														<input type="text" class="form-control b-a h-40" name="e_major" placeholder="" ng-model="tempEducation.major" >
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<div class="form-group" ng-controller="DatePickerCtrl">
+														<label>Year</label>													
+														<input type="text" class="form-control b-a h-40" name="e_year" placeholder="2017" ng-model="tempEducation.year" datepicker-popup="yyyy" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)"  datepicker-options="{minMode: 'month'}" datepicker-mode="'month'" close-text="Close" />
+														<span class="color-red" ng-if="is_EendError">End date sholud not be less than Start date</span>
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<div class="form-group">
+														<label>Score</label>
+														<input type="text" class="form-control b-a h-40" name="e_score" placeholder="Score in %" ng-model="tempEducation.score" required >
+														<span class="color-red" ng-show="eduEditForm.e_score.$touched && eduEditForm.e_score.$error.required">Please enter Score in %</span>
+														
+													</div>
 												</div>
 											</div>
-										</div>
-										<div class="row">
-											<div class="col-sm-4">
-												<div class="form-group">
-													<label>Major</label>
-													<input type="text" class="form-control b-a h-40" name="e_major" placeholder="" ng-model="tempEducation.major" >
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="form-group">
+														<label>Description</label>
+														<textarea class="form-control b-a" rows="3" ng-model="tempEducation.description" name="e_description" placeholder="Description"></textarea>
+													</div>
 												</div>
 											</div>
-											<div class="col-sm-4">
-												<div class="form-group" ng-controller="DatePickerCtrl">
-													<label>Year</label>													
-													<input type="text" class="form-control b-a h-40" name="e_year" placeholder="2017" ng-model="tempEducation.year" datepicker-popup="yyyy" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)"  datepicker-options="{minMode: 'month'}" datepicker-mode="'month'" close-text="Close" />
-													<span class="color-red" ng-if="is_EendError">End date sholud not be less than Start date</span>
+											<div class="row">
+												<div class="col-sm-12 m-t-10 text-right">
+												  <button class="btn btn-blue btn-md text-u-c" ng-click="updateEducation(edu)" ng-disabled="eduEditForm.e_university.$invalid|| eduEditForm.e_degree.$invalid|| eduEditForm.e_score.$invalid">Save Change</button>
+												  <button class="btn btn-red btn-md text-u-c" ng-click="cancelEduEdit();">Cancel</button>
 												</div>
 											</div>
-											<div class="col-sm-4">
-												<div class="form-group">
-													<label>Score</label>
-													<input type="text" class="form-control b-a h-40" name="e_score" placeholder="Score in %" ng-model="tempEducation.score" required >
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-sm-12">
-												<div class="form-group">
-													<label>Description</label>
-													<textarea class="form-control b-a" rows="3" ng-model="tempEducation.description" name="e_description" placeholder="Description"></textarea>
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-sm-12 m-t-10 text-right">
-											  <button class="btn btn-blue btn-md text-u-c" ng-click="updateEducation(edu)">Save Change</button>
-											  <button class="btn btn-red btn-md text-u-c" ng-click="cancelEduEdit();">Cancel</button>
-											</div>
-										</div>
+										</form>
 									</div>
 								</div>
 								<div class="form-block-wrap" ng-show="showEduForm">
@@ -536,12 +542,14 @@
 												<div class="form-group">
 													<label class="control-label">University</label>
 													<input type="text" name="schoolname" class="form-control b-a h-40" placeholder="University" ng-model="education.university" required>
+													<span class="color-red" ng-show="eduFrm.schoolname.$touched && eduFrm.schoolname.$error.required">Please enter University Name</span>
 												</div>
 											</div>
 											<div class="col-sm-6">
 												<div class="form-group">
 													<label>Degree</label>
 													<input type="text" name="degree" class="form-control b-a h-40" placeholder="Degree" ng-model="education.educationType" required>
+													<span class="color-red" ng-show="eduFrm.degree.$touched && eduFrm.degree.$error.required">Please enter Education Type</span>
 												</div>
 											</div>
 										</div>
@@ -563,6 +571,7 @@
 												<div class="form-group">
 													<label>Score</label>
 													<input type="number" class="form-control b-a h-40" name="score" placeholder="Score in %" ng-model="education.score" required>
+													<span class="color-red" ng-show="eduFrm.score.$touched && eduFrm.score.$error.required">Please enter Score in %</span>
 												</div>
 											</div>
 										</div>
@@ -576,7 +585,7 @@
 										</div>
 										<div class="row">
 											<div class="col-sm-12 m-t-10 text-right">
-											  <button class="btn btn-blue btn-md text-u-c" ng-click="saveEducation()">Save Change</button>
+											  <button class="btn btn-blue btn-md text-u-c" ng-click="saveEducation()" ng-disabled="eduFrm.schoolname.$invalid|| eduFrm.degree.$invalid|| eduFrm.score.$invalid">Save Change</button>
 											  <button class="btn btn-red btn-md text-u-c" ng-click="showEduForm = !showEduForm">Cancel</button>
 											</div>
 										</div>
@@ -1078,12 +1087,14 @@
 													<div class="form-group">
 														<label>License No</label>
 														<input type="text" class="form-control" name="e_lno" placeholder="Liccense Number" ng-model="tempLicense.licenseNumber" required>
+														<span class="color-red" ng-show="licenseEditFrm.e_lno.$touched && licenseEditFrm.e_lno.$error.required">Please enter License No.</span>
 													</div>
 												</div>
 												<div class="col-sm-6">
 													<div class="form-group">
 														<label>Issue By</label>
 														<input type="text" class="form-control" name="e_issueby" placeholder="Issued by" ng-model="tempLicense.organizationName" required>
+														<span class="color-red" ng-show="licenseEditFrm.e_issueby.$touched && licenseEditFrm.e_issueby.$error.required">Please enter License by.</span>
 													</div>
 												</div>
 											</div>
@@ -1107,12 +1118,13 @@
 													<div class="form-group">
 														<label>Description</label>
 														<textarea class="form-control b-a" rows="3" placeholder="Description" ng-model="tempLicense.description" name="e_description" required></textarea>
+														<span class="color-red" ng-show="licenseEditFrm.e_description.$touched && licenseEditFrm.e_description.$error.required">Please enter description</span>
 													</div>
 												</div>
 											</div>
 											<div class="row">
 												<div class="col-sm-12 m-t-10 text-right">
-												  <button class="btn btn-blue btn-md text-u-c" ng-click="updateLicense(license)">Save Change</button>
+												  <button class="btn btn-blue btn-md text-u-c" ng-click="updateLicense(license)" ng-disabled="licenseEditFrm.e_lno.$invalid|| licenseEditFrm.e_issueby.$invalid|| licenseEditFrm.e_description.$invalid">Save Change</button>
 												  <button class="btn btn-red btn-md text-u-c" ng-click="cancelLicenseEdit()">Cancel</button>
 												</div>
 											</div>
@@ -1126,12 +1138,14 @@
 												<div class="form-group">
 													<label>License No</label>
 													<input type="text" class="form-control" name="lno" placeholder="License Number" ng-model="license.licenseNumber" required>
+													<span class="color-red" ng-show="licenseFrm.lno.$touched && licenseFrm.lno.$error.required">Please enter License Number</span>
 												</div>
 											</div>
 											<div class="col-sm-6">
 												<div class="form-group">
 													<label>Issue By</label>
 													<input type="text" class="form-control" name="issueby" placeholder="Issued by" ng-model="license.organizationName" required>
+													<span class="color-red" ng-show="licenseFrm.issueby.$touched && licenseFrm.issueby.$error.required">Please enter license issued by</span>
 												</div>
 											</div>
 										</div>
@@ -1154,13 +1168,14 @@
 											<div class="col-sm-12">
 												<div class="form-group">
 													<label>Description</label>
-													<textarea class="form-control b-a" rows="3" placeholder="Description" ng-model="license.description" name="description"></textarea>
+													<textarea class="form-control b-a" rows="3" placeholder="Description" ng-model="license.description" name="description" required></textarea>
+													<span class="color-red" ng-show="licenseFrm.description.$touched && licenseFrm.description.$error.required">Please enter license issued by</span>
 												</div>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-sm-12 m-t-10 text-right">
-											  <button class="btn btn-blue btn-md text-u-c" ng-click="saveLicense(licenseObj)">Save Change</button>
+											  <button class="btn btn-blue btn-md text-u-c" ng-click="saveLicense(licenseObj)" ng-disabled="licenseFrm.lno.$invalid|| licenseFrm.issueby.$invalid|| licenseFrm.description.$invalid">Save Change</button>
 											  <button class="btn btn-red btn-md text-u-c" ng-click="showLicenseForm = !showLicenseForm">Cancel</button>
 											</div>
 										</div>
