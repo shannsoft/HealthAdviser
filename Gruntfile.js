@@ -52,7 +52,6 @@ module.exports = function(grunt) {
                 //appName:'Chrome', // name of the app that opens, ie: open, start, xdg-open
                 callback: function() {} // called when the app has opened
               },
-
               port: 3006
             }
           }
@@ -95,14 +94,14 @@ module.exports = function(grunt) {
             },
             debug: {
                 files: ['src/*.js', 'src/**/*.js','*.html','**/*.html','!**/healthApp/**'],
-                tasks: ['concat', 'comments:my_target', 'ngAnnotate:appannotate','copy:main','notify:complete'],
+                tasks: ['concat', 'comments:my_target', 'ngAnnotate:appannotate','copy:main','htmlmin:dist'],
                 options: {
                     livereload: true
                 }
             },
             built: {
                 files: ['src/*.js', 'src/**/*.js','*.html','**/*.html','!**/healthApp/**'],
-                tasks: ['concat', 'comments:my_target', 'ngAnnotate:appannotate', 'uglify:my_target', "cssmin:combine",'copy:main','notify:complete'],
+                tasks: ['concat', 'comments:my_target', 'ngAnnotate:appannotate', 'uglify:my_target', "cssmin:combine",'copy:main','htmlmin:dist'],
                 options: {
                     livereload: true
                 }
@@ -140,7 +139,7 @@ module.exports = function(grunt) {
               {
                 expand: true,
                 cwd:'',
-                src: ['**','!**/*.js','!**/*.less','!**/*.map','!**/node_modules/**','!**/healthApp/**','custom.js','ng-libs.js','libs.js','css/all.css'],
+                src: ['css/**','fonts/**','images/**','custom.js','ng-libs.js','libs.js'],
                 dest: 'healthApp/'
               }
             ]
@@ -158,6 +157,20 @@ module.exports = function(grunt) {
                 message: 'Refresh your browser', //required
               }
             }
+        },
+        htmlmin: {                                     // Task
+            dist: {                                      // Target
+              options: {                                 // Target options
+                removeComments: true,
+                collapseWhitespace: true
+              },
+              files: [{
+                expand: true,
+                cwd: '',
+                src: ['src/**/*.html', '*.html'],
+                dest: 'healthApp'
+              }]
+            }
         }
     });
 
@@ -173,8 +186,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-notify');
+    grunt.loadNpmTasks('grunt-contrib-htmlmin');
     // Default task(s).
-    grunt.registerTask('default', ['clean','concat', 'copy:main','connect','comments:my_target', 'ngAnnotate:appannotate', 'cachebreaker:dev','watch:debug']);
+    grunt.registerTask('default', ['clean','concat', 'copy:main','htmlmin:dist','connect','comments:my_target', 'ngAnnotate:appannotate', 'cachebreaker:dev','watch:debug']);
     grunt.registerTask('built', ['clean','concat','copy:main','comments:my_target','connect','ngAnnotate:appannotate','uglify:my_target','cssmin:combine','cachebreaker:dev', 'watch:built']);
 
 };
