@@ -67,7 +67,7 @@ app.controller("SpecializationController", function($scope,$rootScope,CommonServ
         $scope.initDate = new Date();
         $scope.formats = ['MM-dd-yyyy', 'dd-MMM-yyyy', 'dd-MMMM-yyyy', 'yyyy-MM-dd', 'dd/MM/yyyy', 'yyyy-MMM','shortDate'];
         $scope.format = $scope.formats[4];
-        $scope.format1=$scope.formats[5];
+        $scope.format1 = $scope.formats[5];
 
     }
     ]);

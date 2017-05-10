@@ -48,7 +48,7 @@ module.exports = function(grunt) {
               hostname:'localhost',
               open:{
                 // target:'http://localhost:3006/clientapp/index.html?pid=<%=appsettings.first_product_id%>', // target url to open
-                target:'http://localhost:3006/', // target url to open
+                target:'http://localhost:3006/healthApp', // target url to open
                 //appName:'Chrome', // name of the app that opens, ie: open, start, xdg-open
                 callback: function() {} // called when the app has opened
               },
@@ -88,28 +88,27 @@ module.exports = function(grunt) {
                     'custom.js': ['custom.js']
                 },
             },
-
         },
         watch: {
             options: {
                 livereload: true,
             },
             debug: {
-                files: ['src/*.js', 'src/**/*.js'],
-                tasks: ['concat', 'comments:my_target', 'ngAnnotate:appannotate'],
+                files: ['src/*.js', 'src/**/*.js','*.html','**/*.html','!**/healthApp/**'],
+                tasks: ['concat', 'comments:my_target', 'ngAnnotate:appannotate','copy:main','notify:complete'],
                 options: {
                     livereload: true
                 }
             },
             built: {
-                files: ['src/*.js', 'src/**/*.js'],
-                tasks: ['concat', 'comments:my_target', 'ngAnnotate:appannotate', 'uglify:my_target', "cssmin:combine"],
+                files: ['src/*.js', 'src/**/*.js','*.html','**/*.html','!**/healthApp/**'],
+                tasks: ['concat', 'comments:my_target', 'ngAnnotate:appannotate', 'uglify:my_target', "cssmin:combine",'copy:main','notify:complete'],
                 options: {
                     livereload: true
                 }
             }
         },
-        clean: ["custom.js","libs.js","ng-libs.js","healthApp"],
+        clean: ["custom.js","libs.js","ng-libs.js","css/all.css","healthApp"],
         cssmin: {
             combine: {
                 files: {
@@ -117,7 +116,9 @@ module.exports = function(grunt) {
                         "css/bootstrap.min.css",
                         "css/head-style.css",
                         "css/responsive.css",
-                        "css/font-awesome.min.css"
+                        "css/flip.css",
+                        "css/font-awesome.min.css",
+                        "css/ng-tags-input.min.css"
                     ],
 
                 }
@@ -139,11 +140,24 @@ module.exports = function(grunt) {
               {
                 expand: true,
                 cwd:'',
-                src: ['**','!**/*.js','!**/*.less','!**/*.css','!**/node_modules/**','!**/healthApp/**'],
+                src: ['**','!**/*.js','!**/*.less','!**/*.map','!**/node_modules/**','!**/healthApp/**','custom.js','ng-libs.js','libs.js','css/all.css'],
                 dest: 'healthApp/'
               }
             ]
-          }
+          }   
+        },
+        notify: {
+            task_name: {
+              options: {
+                // Task-specific options go here.
+              }
+            },
+            complete: {
+              options: {
+                title: 'Compiled Successfully!!',  // optional
+                message: 'Refresh your browser', //required
+              }
+            }
         }
     });
 
@@ -158,9 +172,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-cache-breaker');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-copy');
-    // grunt.loadNpmTasks('grunt-notify');
+    grunt.loadNpmTasks('grunt-notify');
     // Default task(s).
     grunt.registerTask('default', ['clean','concat', 'copy:main','connect','comments:my_target', 'ngAnnotate:appannotate', 'cachebreaker:dev','watch:debug']);
-    grunt.registerTask('built', ['concat', 'comments:my_target', 'connect', 'ngAnnotate:appannotate', 'uglify:my_target', 'cssmin:combine','cachebreaker:dev', 'watch:built']);
+    grunt.registerTask('built', ['clean','concat','copy:main','comments:my_target','connect','ngAnnotate:appannotate','uglify:my_target','cssmin:combine','cachebreaker:dev', 'watch:built']);
 
 };

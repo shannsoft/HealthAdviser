@@ -16,3 +16,22 @@ app.controller('awardDetailsModalCtrl', function ($scope, $uibModalInstance,dele
         $uibModalInstance.dismiss('cancel');
     };
 });
+app.controller('educationModalCtrl', function ($scope, $uibModalInstance,deleteEducation,eduid) {
+    $scope.ok = function () {
+        deleteEducation(eduid);
+        $uibModalInstance.close();
+    };
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+});
+app.controller('LicenseModalCtrl', function ($scope, $uibModalInstance,deleteLicense,lid) {
+    $scope.ok = function () {
+        deleteLicense(lid);
+        $uibModalInstance.close();
+    };
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+    
+});

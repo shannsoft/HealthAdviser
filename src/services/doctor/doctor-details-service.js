@@ -62,7 +62,6 @@ app.factory('DoctorDetailsService',function($http,HealthAuth,CONFIG){
 		    return response;
 		},
 		deleteAwards : function (obj) {
-				console.log(obj);
 			var response = $http({
 		        method: 'DELETE',
 		        url: CONFIG.API_PATH+'_Profile_Awards',
@@ -75,6 +74,60 @@ app.factory('DoctorDetailsService',function($http,HealthAuth,CONFIG){
 			var response = $http({
 			    method: 'PUT',
 			    url: CONFIG.API_PATH+'_Profile_Awards',
+			    data: obj,
+			    headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		saveEducation : function (obj) {
+			var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_Profile_Education',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		deleteEducation : function (obj) {
+			var response = $http({
+		        method: 'DELETE',
+		        url: CONFIG.API_PATH+'_Profile_Education',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		updateEducation : function (obj) {
+			var response = $http({
+			    method: 'PUT',
+			    url: CONFIG.API_PATH+'_Profile_Education',
+			    data: obj,
+			    headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		saveLicense : function (obj) {
+			var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_Profile_License',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		deleteLicense : function (obj) {
+			var response = $http({
+		        method: 'DELETE',
+		        url: CONFIG.API_PATH+'_Profile_License',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		updateLicense : function (obj) {
+			var response = $http({
+			    method: 'PUT',
+			    url: CONFIG.API_PATH+'_Profile_License',
 			    data: obj,
 			    headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
 		    });

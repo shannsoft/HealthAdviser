@@ -321,7 +321,7 @@
 							</div>
 						</div>
 					</div>
-<!----------------------------------------------------Work Experence------------------------------------------------------------------>
+					<!--***********************************Work Experence**************************************-->
 					<div class="panel panel-default">
 					  	<div class="panel-heading">
 							<h4 class="panel-title">
@@ -451,8 +451,7 @@
 					  		</div>
 						</div>
 					</div>
-<!------------------------------------------------------Education--------------------------------------------------------------------------->
-
+					<!--*8*************************** Education section****************************************-->
 					<div class="panel panel-default">
 					  	<div class="panel-heading">
 							<h4 class="panel-title">
@@ -466,8 +465,8 @@
 								<div class="m-b-20" ng-repeat="edu in profileDetails.education">
 									<div>
 										<div class="tab-custom-icon">
-											<a href="" ng-click="showTheForm = !showTheForm"><i class="fa fa-edit"></i> </a>
-											<a href="" ng-click="deleteEducation('md',work.id)" ><i class="fa fa-trash"></i></a>
+											<a href="" ng-click="editEducationOpen($index, edu)"><i class="fa fa-edit"></i> </a>
+											<a href="" ng-click="deleteEducationModal('md', edu.id, $index)" ><i class="fa fa-trash"></i></a>
 										</div>
 										<div class="form-block-wrap">
 											<h3 class="pull-left">{{edu.educationType}}</h3>
@@ -478,18 +477,18 @@
 											<p>{{edu.description}} </p>
 										</div>
 									</div>
-									<div class="form-block-wrap" ng-show="showTheForm" ng-submit="processForm()">
+									<div class="form-block-wrap" ng-if="eduEdit == $index">
 										<div class="row">
 											<div class="col-sm-6">
 												<div class="form-group">
 													<label class="control-label">University</label>
-													<input type="text" name="university" class="form-control b-a h-40" placeholder="University" ng-model="edu.university" required>
+													<input type="text" name="e_university" class="form-control b-a h-40" placeholder="University" ng-model="tempEducation.university" required>
 												</div>
 											</div>
 											<div class="col-sm-6">
 												<div class="form-group">
 													<label>Degree</label>
-													<input type="text" name="degree" class="form-control b-a h-40" placeholder="Degree" ng-model="edu.educationType" required>
+													<input type="text" name="e_degree" class="form-control b-a h-40" placeholder="Degree" ng-model="tempEducation.educationType" required>
 												</div>
 											</div>
 										</div>
@@ -497,19 +496,20 @@
 											<div class="col-sm-4">
 												<div class="form-group">
 													<label>Major</label>
-													<input type="text" class="form-control b-a h-40" name="major" placeholder="" ng-model="edu.major" >
+													<input type="text" class="form-control b-a h-40" name="e_major" placeholder="" ng-model="tempEducation.major" >
 												</div>
 											</div>
 											<div class="col-sm-4">
-												<div class="form-group">
+												<div class="form-group" ng-controller="DatePickerCtrl">
 													<label>Year</label>													
-													<input type="text" class="form-control b-a h-40" name="year" placeholder="" ng-model="edu.year" required/>
+													<input type="text" class="form-control b-a h-40" name="e_year" placeholder="2017" ng-model="tempEducation.year" datepicker-popup="yyyy" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)"  datepicker-options="{minMode: 'month'}" datepicker-mode="'month'" close-text="Close" />
+													<span class="color-red" ng-if="is_EendError">End date sholud not be less than Start date</span>
 												</div>
 											</div>
 											<div class="col-sm-4">
 												<div class="form-group">
 													<label>Score</label>
-													<input type="text" class="form-control b-a h-40" name="score" placeholder="Score in %" ng-model="edu.score" required >
+													<input type="text" class="form-control b-a h-40" name="e_score" placeholder="Score in %" ng-model="tempEducation.score" required >
 												</div>
 											</div>
 										</div>
@@ -517,73 +517,76 @@
 											<div class="col-sm-12">
 												<div class="form-group">
 													<label>Description</label>
-													<input type="text" class="form-control  b-a h-40" name="description" placeholder="" ng-model="edu.description">
+													<textarea class="form-control b-a" rows="3" ng-model="tempEducation.description" name="e_description" placeholder="Description"></textarea>
 												</div>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-sm-12 m-t-10 text-right">
-											  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-											  <button class="btn btn-red btn-md text-u-c" ng-click="showTheForm = !showTheForm">Cancel</button>
+											  <button class="btn btn-blue btn-md text-u-c" ng-click="updateEducation(edu)">Save Change</button>
+											  <button class="btn btn-red btn-md text-u-c" ng-click="cancelEduEdit();">Cancel</button>
 											</div>
 										</div>
 									</div>
 								</div>
-								<div class="form-block-wrap"  ng-show="showTheForm1" ng-submit="processForm1()">
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label class="control-label">University</label>
-												<input type="text" name="schoolname" class="form-control b-a h-40" placeholder="University"  required>
+								<div class="form-block-wrap" ng-show="showEduForm">
+									<form name="eduFrm">
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label class="control-label">University</label>
+													<input type="text" name="schoolname" class="form-control b-a h-40" placeholder="University" ng-model="education.university" required>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Degree</label>
+													<input type="text" name="degree" class="form-control b-a h-40" placeholder="Degree" ng-model="education.educationType" required>
+												</div>
 											</div>
 										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Degree</label>
-												<input type="text" name="degree" class="form-control b-a h-40" placeholder="Degree" required>
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="form-group">
+													<label>Major</label>
+													<input type="text" class="form-control b-a h-40" name="major" placeholder="Major" ng-model="education.major">
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="form-group" ng-controller="DatePickerCtrl">
+													<label>Year</label>
+													<input type="text" class="form-control b-a h-40" name="year" placeholder="2017" ng-model="education.year" datepicker-popup="yyyy" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)"  datepicker-options="{minMode: 'month'}" datepicker-mode="'month'" close-text="Close" />
+													<span class="color-red" ng-if="is_EendError">End date sholud not be less than Start date</span>
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="form-group">
+													<label>Score</label>
+													<input type="number" class="form-control b-a h-40" name="score" placeholder="Score in %" ng-model="education.score" required>
+												</div>
 											</div>
 										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-4">
-											<div class="form-group">
-												<label>Major</label>
-												<input type="text" class="form-control b-a h-40" name="major" placeholder="Major" >
+										<div class="row">
+											<div class="col-sm-12">
+												<div class="form-group">
+													<label>Description</label>
+													<textarea class="form-control b-a" rows="3" ng-model="education.description" name="description" placeholder="Description"></textarea>
+												</div>
 											</div>
 										</div>
-										<div class="col-sm-4">
-											<div class="form-group">
-												<label>Year</label>
-												<input type="text" class="form-control b-a h-40" name="year" placeholder="Passing Year" >
+										<div class="row">
+											<div class="col-sm-12 m-t-10 text-right">
+											  <button class="btn btn-blue btn-md text-u-c" ng-click="saveEducation()">Save Change</button>
+											  <button class="btn btn-red btn-md text-u-c" ng-click="showEduForm = !showEduForm">Cancel</button>
 											</div>
 										</div>
-										<div class="col-sm-4">
-											<div class="form-group">
-												<label>Score</label>
-												<input type="text" class="form-control b-a h-40" name="score" placeholder="Score in %" >
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-12">
-											<div class="form-group">
-												<label>Description</label>
-												<input type="text" class="form-control  b-a h-40" name="description" placeholder="">
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-12 m-t-10 text-right">
-										  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-										  <button class="btn btn-red btn-md text-u-c" ng-click="showTheForm = !showTheForm">Cancel</button>
-										</div>
-									</div>
+									</form>
 								</div>
-								<a href="" class="btn btn-success btn-md text-u-c m-t-10" ng-click="showTheForm1 = !showTheForm1"><i class="fa fa-plus"></i> Add New Education Qualification</a>
+								<a href="" class="btn btn-success btn-md text-u-c m-t-10" ng-click="showEduForm = !showEduForm"><i class="fa fa-plus"></i> Add New Education Qualification</a>
 							</div>
 						</div>
 					</div>
-<!--------------------------------------------Awards------------------------------------------------------------------------------------>
+					<!--*********************************Awards Section***************************************-->
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title">
@@ -622,11 +625,16 @@
 											<div class="row">
 												<div class="col-sm-6">
 													<div class="form-group">
-														<label>Upload Logo</label>
 														<div class="fileUpload btn btn-md btn-block btn-white b-a">
-															<span>Upload Logo</span>
-															<input name="image" type="file" file-model fileread="tempaward.image" filename="tempaward.imageName"/>
+															<div class="fileupload-pic">
+																<img ng-if="!tempaward.image" ng-src="{{awards.image}}">
+																<img ng-if="tempaward.image" ng-src="{{tempaward.image}}">
+															</div>
+															<div class="fileupload-pic" ></div>
+															<span class="l-h-50">Upload File</span>
+															<input class="upload l-h-70" name="image" type="file" file-model fileread="tempaward.image" filename="tempaward.imageName"/>
 														</div>
+
 													</div>
 												</div>
 												<div class="col-sm-6">
@@ -675,10 +683,10 @@
 										<div class="row">
 											<div class="col-sm-6">
 												<div class="form-group">
-													<label>Upload Logo</label>
-													<div class="fileUpload btn btn-md btn-block btn-white b-a">
-														<span>Upload Logo</span>
-														<input name="image" type="file" file-model fileread="photo.image" filename="photo.imageName"/>
+													<div class="fileUpload btn btn-md btn-block btn-white b-a m-h-72">
+														<div ng-if="photo.image" class="fileupload-pic"><img src="{{photo.image}}"></div>
+														<span class="l-h-50">Upload File</span>
+														<input class="upload l-h-70" name="image" type="file" file-model fileread="photo.image" filename="photo.imageName"/>
 													</div>
 												</div>
 											</div>
@@ -726,7 +734,7 @@
 							</div>
 						</div>
 					</div>
-<!--------------------------------------------Associations------------------------------------------------------------------------------->
+					<!--*********************************Associations Section**********************************-->
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title">
@@ -827,7 +835,7 @@
 							</div>
 						</div>
 					</div>
-<!--------------------------------------------Publications-------------------------------------------------------------------------------->
+					<!--*********************************Publications Section**********************************-->
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title">
@@ -917,7 +925,7 @@
 							</div>
 						</div>
 					</div>
-<!-----------------------------------------Conferences----------------------------------------------------------------------------------->
+					<!--*********************************Conferences Section***********************************-->
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title">
@@ -1036,7 +1044,133 @@
 							</div>
 						</div>
 					</div>
-<!------------------------------------------------------------------------------------------------------------------------------------>
+					<!--***********************************License Section*************************************-->
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+							  <a ng-click="collapseSignUp('license')"  ng-class="{collapsed:signupCollapse.license}">
+								License
+							  </a>
+							</h4>
+						</div>
+						<div id="collapseSeven" class="panel-collapse collapse" uib-collapse="signupCollapse.license">
+							<div class="panel-body">
+								<div class="m-b-20" ng-repeat="license in profileDetails.license">
+									<div ng-if="editLicense != $index">
+										<div class="tab-custom-icon">
+											<a href="" ng-click="editLicenseOpen($index, license)"><i class="fa fa-edit"></i> </a>
+											<a href="" ng-click="deleteLicenseModal('md',license.id,$index)" ><i class="fa fa-trash"></i></a>
+										</div>
+										<div class="form-block-wrap">
+											<div class="conferences-content">
+												<h3>No: {{license.licenseNumber}}</h3>
+												<p class="p-t-10">Issue On: {{license.issueDate | dateformat1}}</p>
+												<p class="p-t-10">Expired On: {{license.expiryDate | dateformat1}}</p>
+												<p class="p-t-10">Issue By: {{license.organizationName}}</p>
+												<p>{{license.description}}</p>
+											</div>
+										</div>
+									</div>
+									<div class="form-block-wrap" ng-if="editLicense == $index">
+										<form name="licenseEditFrm">
+											<div class="row">
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>License No</label>
+														<input type="text" class="form-control" name="e_lno" placeholder="Liccense Number" ng-model="tempLicense.licenseNumber" required>
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>Issue By</label>
+														<input type="text" class="form-control" name="e_issueby" placeholder="Issued by" ng-model="tempLicense.organizationName" required>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-6">
+													<div class="form-group" ng-controller="DatePickerCtrl">
+														<label>Issue Date</label>
+														<input type="text" class="form-control" name="e_startDate" ng-change="changeSelect('start',tempLicense.issueDate,tempLicense.expiryDate)" placeholder="2017-01-01" ng-model="tempLicense.issueDate" datepicker-popup="yyyy-MM-dd" datepicker-options="dateOptions" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)" close-text="Close"/>
+														<span class="color-red" ng-if="isEstartError">Start date sholud not be more than End date</span>
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="form-group" ng-controller="DatePickerCtrl">
+														<label>Expiry Date</label>
+														<input type="text" class="form-control" name="e_expDate" ng-change="changeSelect('start',tempLicense.issueDate,tempLicense.expiryDate)" placeholder="2017-01-01" ng-model="tempLicense.expiryDate" datepicker-popup="yyyy-MM-dd" datepicker-options="dateOptions" is-open="opened" min-date="minDate" date-disabled="disabled(date, mode)" ng-click="open1($event)" close-text="Close"/>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="form-group">
+														<label>Description</label>
+														<textarea class="form-control b-a" rows="3" placeholder="Description" ng-model="tempLicense.description" name="e_description" required></textarea>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12 m-t-10 text-right">
+												  <button class="btn btn-blue btn-md text-u-c" ng-click="updateLicense(license)">Save Change</button>
+												  <button class="btn btn-red btn-md text-u-c" ng-click="cancelLicenseEdit()">Cancel</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+								<div class="form-block-wrap" ng-show="showLicenseForm">
+									<form name="licenseFrm">
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>License No</label>
+													<input type="text" class="form-control" name="lno" placeholder="License Number" ng-model="license.licenseNumber" required>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label>Issue By</label>
+													<input type="text" class="form-control" name="issueby" placeholder="Issued by" ng-model="license.organizationName" required>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group" ng-controller="DatePickerCtrl">
+													<label>Issue Date</label>
+													<input type="text" class="form-control" name="startDate" ng-change="changeSelect('start',license.issueDate,license.expiryDate)" placeholder="2017-01-01" ng-model="license.issueDate" datepicker-popup="yyyy-MM-dd" datepicker-options="dateOptions" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)" close-text="Close" required/>
+													<span class="color-red" ng-if="isEstartError">Start date sholud not be more than End date</span>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group" ng-controller="DatePickerCtrl">
+													<label>Expiry Date</label>
+													<input type="text" class="form-control" name="expDate" ng-change="changeSelect('start',license.issueDate,license.expiryDate)" placeholder="2017-01-01" ng-model="license.expiryDate" datepicker-popup="yyyy-MM-dd" datepicker-options="dateOptions" is-open="opened" min-date="minDate" date-disabled="disabled(date, mode)" ng-click="open1($event)" close-text="Close" required/>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12">
+												<div class="form-group">
+													<label>Description</label>
+													<textarea class="form-control b-a" rows="3" placeholder="Description" ng-model="license.description" name="description"></textarea>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12 m-t-10 text-right">
+											  <button class="btn btn-blue btn-md text-u-c" ng-click="saveLicense(licenseObj)">Save Change</button>
+											  <button class="btn btn-red btn-md text-u-c" ng-click="showLicenseForm = !showLicenseForm">Cancel</button>
+											</div>
+										</div>
+									</form>
+								</div>
+								<a href="" class="btn btn-success btn-md text-u-c m-t-10" ng-click="showLicenseForm = !showLicenseForm"><i class="fa fa-plus"></i> Add New License</a>
+							</div>
+						</div>
+					</div>
+					<!--***************************************************************************************-->
 				</div>
 			</div>
 		</div>

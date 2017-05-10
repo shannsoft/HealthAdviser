@@ -2593,3 +2593,15 @@ tags-input .tags .tag-item {
     border-radius: 0px!important;
     background: #f1f1f1!important;
 }
+.m-h-72{
+	min-height: 72px;
+}
+.fileupload-pic{
+	float: left;
+}
+.fileupload-pic img{
+    width: 48px;
+    border: 2px solid #eee;
+}
+.l-h-50{line-height:50px;}
+.l-h-70{line-height:70px;}

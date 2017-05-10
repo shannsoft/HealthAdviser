@@ -256,13 +256,17 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
     $scope.tempwork.organizationName = work.organizationName;
     $scope.tempwork.description = work.description;
     $scope.tempwork.designation = work.designation;
-    $scope.tempwork.dateTo = work.dateTo;
+    // $scope.tempwork.dateTo = work.dateTo;
+    $scope.tempwork.dateTo = '2016-12-31T18:30:00.000Z';
     $scope.tempwork.dateFrom = work.dateFrom;
     $scope.workEdit = index;
   };
   $scope.cancelWorkEdit = function () {
     delete $scope.workEdit;
   };
+  /****************************************************************************/
+  /*********************FUNCTION USE TO UPDATE WORK EXP************************/
+  /****************************************************************************/
   $scope.updateWorkExpDoctor = function (work) {
     $rootScope.showPreloader = true;
     DoctorDetailsService.updateWorkExperience($scope.tempwork).then(function (response) {
@@ -283,6 +287,9 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
         Util.alertMessage('danger', 'Error in update !!!');
     });
   };
+  /****************************************************************************/
+  /*********************FUNCTION USE TO ADD WORK EXP***************************/
+  /****************************************************************************/
   $scope.addWorkExpDoctor = function () {
     $rootScope.showPreloader = true;
     DoctorDetailsService.addWorkExperience($scope.workexperience).then(function (response) {
@@ -357,6 +364,8 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
         $scope.profileDetails.award.push(response.data.Data);
         Util.alertMessage('success', 'You have successfully added your information Thank You.'); 
       }
+    },function(error){
+      Util.alertMessage('danger', 'something went wrong! unable to add awards');
     })
   }
   /****************************************************************************/
@@ -410,11 +419,15 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
     $scope.tempaward.description = award.description;
     $scope.tempaward.awardFor = award.awardFor;
     $scope.tempaward.awardDate = award.awardDate;
+    $scope.tempaward.mainimage = award.awardDate.image
     $scope.awardEdit = index;
   };
   $scope.cancelAwardEdit = function () {
     delete $scope.awardEdit;
   };
+  /****************************************************************************/
+  /*********************FUNCTION USE TO UPDATE AWARDS *************************/
+  /****************************************************************************/
   $scope.updateAwards = function (award) {
     $rootScope.showPreloader = true;
     if($scope.tempaward.imageName){
@@ -442,6 +455,207 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
         Util.alertMessage('danger', 'Error in update !!!');
     });
   };
+  /****************************************************************************/
+  /*********************FUNCTION USE TO ADD EDUCATION**************************/
+  /****************************************************************************/
+  $scope.saveEducation = function(){
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.saveEducation($scope.education).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        $scope.profileDetails.education.push(response.data.Data);
+        Util.alertMessage('success', 'You have successfully added your information Thank You.'); 
+        $scope.education = {};
+      }
+      else{
+        Util.alertMessage('danger', 'something went wrong! unable to add Education');  
+      }
+    },function(error){
+      Util.alertMessage('danger', 'something went wrong! unable to add Education');
+    })
+  }
+  /****************************************************************************/
+  /**************FUNCTION IS USED TO OPEN EDUCATION DELETE MODAL***************/
+  /****************************************************************************/
+  $scope.deleteEducationModal = function(size,eduid,index){
+    $scope.deleteIndex = index;
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/educationDeleteModal.html',
+     controller: 'educationModalCtrl',
+     size: size,
+     resolve: {
+       deleteEducation: function () {
+         return $scope.deleteEducation;
+       },
+       eduid:function () {
+         return eduid;
+       }
+     }
+    })
+  }
+  /****************************************************************************/
+  /**************FUNCTION IS USED TO OPEN EDUCATION DELETE MODAL***************/
+  /****************************************************************************/
+  $scope.deleteEducation = function(id){
+    var obj = {};
+    obj.id = id;
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.deleteEducation(obj).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.profileDetails.education.splice($scope.deleteIndex,1);
+        Util.alertMessage('success', 'You have successfully deleted your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in Delete !!!');
+      }
+    }, function (errorResponse) {
+      $rootScope.showPreloader = false;
+        Util.alertMessage('danger', 'Error in Delete !!!');
+    });
+  }
+  /****************************************************************************/
+  /**************FUNCTION IS USED TO OPEN EDUCATION EDIT SECTION***************/
+  /****************************************************************************/
+  $scope.editEducationOpen = function(index,education){
+    $scope.eduEdit = index;
+    $scope.tempEducation = {};
+    $scope.tempEducation.id = education.id;
+    $scope.tempEducation.educationType = education.educationType;
+    $scope.tempEducation.year = education.year;
+    $scope.tempEducation.university = education.university;
+    $scope.tempEducation.major = education.major;
+    $scope.tempEducation.score = education.score;
+    $scope.tempEducation.description = education.description;
+  }
+  $scope.cancelEduEdit = function () {
+    delete $scope.eduEdit;
+  };
+  $scope.updateEducation = function(edu){
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.updateEducation($scope.tempEducation).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        var data = response.data.Data;
+        edu.educationType = data.educationType;
+        edu.year = data.year;
+        edu.university = data.university;
+        edu.major = data.major;
+        edu.score = data.score;
+        edu.description = data.description;
+        Util.alertMessage('success', 'You have successfully updated your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in update !!!'); 
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+       Util.alertMessage('danger', 'Error in update !!!');
+    })  
+  }
+  /****************************************************************************/
+  /**********************FUNCTION USE TO ADD License***************************/
+  /****************************************************************************/
+  $scope.saveLicense = function(obj){
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.saveLicense($scope.license).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        $scope.profileDetails.license.push(response.data.Data);
+        Util.alertMessage('success', 'You have successfully added your information Thank You.'); 
+        $scope.education = {};
+      }
+      else{
+        Util.alertMessage('danger', 'something went wrong! unable to add Education');  
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger', 'something went wrong! unable to add Education');
+    })
+  }
+  /****************************************************************************/
+  /**************FUNCTION IS USED TO OPEN LICENSE DELETE MODAL*****************/
+  /****************************************************************************/
+  $scope.deleteLicenseModal = function(size,lid,index){
+    $scope.deleteIndex = index;
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/LicenseDetailDeleteModal.html',
+     controller: 'LicenseModalCtrl',
+     size: size,
+     resolve: {
+       deleteLicense: function () {
+         return $scope.deleteLicense;
+       },
+       lid:function () {
+         return lid;
+       }
+     }
+    })
+  }
+  /****************************************************************************/
+  /****************FUNCTION IS USED TO OPEN LICENSE DELETE MODAL***************/
+  /****************************************************************************/
+  $scope.deleteLicense = function(id){
+    var obj = {};
+    obj.id = id;
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.deleteLicense(obj).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.profileDetails.license.splice($scope.deleteIndex,1);
+        Util.alertMessage('success', 'You have successfully deleted your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in Delete !!!');
+      }
+    }, function (errorResponse) {
+      $rootScope.showPreloader = false;
+        Util.alertMessage('danger', 'Error in Delete !!!');
+    });
+  }
+  /****************************************************************************/
+  /****************FUNCTION IS USED TO OPEN LICENSE EDIT SECTION***************/
+  /****************************************************************************/
+  $scope.editLicenseOpen = function(index,license){
+    $scope.editLicense = index;
+    $scope.tempLicense = {};
+    $scope.tempLicense.id = license.id;
+    $scope.tempLicense.licenseNumber = license.licenseNumber;
+    $scope.tempLicense.issueDate = license.issueDate;
+    $scope.tempLicense.expiryDate = license.expiryDate;
+    $scope.tempLicense.organizationName = license.organizationName;
+    $scope.tempLicense.description = license.description;
+    console.log($scope.tempLicense);
+  }
+  $scope.cancelLicenseEdit = function () {
+    delete $scope.editLicense;
+  };
+  /****************************************************************************/
+  /**************FUNCTION IS USED TO UPDATE LICENSE EDIT SECTION***************/
+  /****************************************************************************/
+  $scope.updateLicense = function(license){
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.updateLicense($scope.tempLicense).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        var data = response.data.Data;
+        license.licenseNumber = data.licenseNumber;
+        license.issueDate = data.issueDate;
+        license.expiryDate = data.expiryDate;
+        license.organizationName = data.organizationName;
+        license.description = data.description;
+        Util.alertMessage('success', 'You have successfully updated your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in update !!!'); 
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+       Util.alertMessage('danger', 'Error in update !!!');
+    })  
+  }
   /****************************************************************************/
   /************************FUNCTION HIDE EDIT FORM*****************************/
 	/****************************************************************************/
