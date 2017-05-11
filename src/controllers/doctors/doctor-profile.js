@@ -532,6 +532,14 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
   $scope.cancelEduEdit = function () {
     delete $scope.eduEdit;
   };
+  $scope.checkScore = function (score){
+	  if(score > 100){
+		$scope.isScoreError = true;
+	  }
+	  else{
+		$scope.isScoreError = false;  
+	  }
+  }
   $scope.updateEducation = function(edu){
     $rootScope.showPreloader = true;
     DoctorDetailsService.updateEducation($scope.tempEducation).then(function(response){
