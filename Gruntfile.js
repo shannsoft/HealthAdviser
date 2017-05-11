@@ -47,9 +47,8 @@ module.exports = function(grunt) {
               livereload: true,
               hostname:'localhost',
               open:{
-                // target:'http://localhost:3006/clientapp/index.html?pid=<%=appsettings.first_product_id%>', // target url to open
                 target:'http://localhost:3006/healthApp', // target url to open
-                //appName:'Chrome', // name of the app that opens, ie: open, start, xdg-open
+                appName:'Chrome', // name of the app that opens, ie: open, start, xdg-open
                 callback: function() {} // called when the app has opened
               },
               port: 3006
@@ -114,12 +113,12 @@ module.exports = function(grunt) {
                     'css/all.css': [
                         "css/bootstrap.min.css",
                         "css/head-style.css",
+                        "css/style.css",
                         "css/responsive.css",
                         "css/flip.css",
                         "css/font-awesome.min.css",
                         "css/ng-tags-input.min.css"
                     ],
-
                 }
             }
         },
@@ -139,24 +138,11 @@ module.exports = function(grunt) {
               {
                 expand: true,
                 cwd:'',
-                src: ['css/**','fonts/**','images/**','custom.js','ng-libs.js','libs.js'],
+                src: ['css/all.css','fonts/**','images/**','custom.js','ng-libs.js','libs.js'],
                 dest: 'healthApp/'
               }
             ]
-          }   
-        },
-        notify: {
-            task_name: {
-              options: {
-                // Task-specific options go here.
-              }
-            },
-            complete: {
-              options: {
-                title: 'Compiled Successfully!!',  // optional
-                message: 'Refresh your browser', //required
-              }
-            }
+          }
         },
         htmlmin: {                                     // Task
             dist: {                                      // Target
@@ -189,6 +175,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     // Default task(s).
     grunt.registerTask('default', ['clean','concat', 'copy:main','htmlmin:dist','connect','comments:my_target', 'ngAnnotate:appannotate', 'cachebreaker:dev','watch:debug']);
-    grunt.registerTask('built', ['clean','concat','copy:main','comments:my_target','connect','ngAnnotate:appannotate','uglify:my_target','cssmin:combine','cachebreaker:dev', 'watch:built']);
+    grunt.registerTask('built', ['clean','concat','ngAnnotate:appannotate','uglify:my_target','cssmin:combine','copy:main','htmlmin:dist','connect','comments:my_target','cachebreaker:dev', 'watch:built']);
 
 };
