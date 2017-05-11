@@ -28,7 +28,6 @@
 	font-style: normal;
 }
 
-
 html {
   position: relative;
   min-height: 100%;
@@ -2601,3 +2600,37 @@ tags-input .tags .tag-item {
 }
 .l-h-50{line-height:50px;}
 .l-h-70{line-height:70px;}
+.endorsement-content{
+	display:block;
+}
+.endorsement-content h3{
+	font-size:18px;
+	margin:0px;
+	font-weight:bold;
+}
+
+.endorsement-content span{
+	font-size:16px;
+	padding:6px 0px;
+	display:block;
+	color:#999;
+}
+.endorsement-profile-img{
+	display: block;
+    width: 100px;
+    background: #f4f9ff;
+    border: 2px solid #e8edf4;
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    line-height: 98px;
+}
+.endorsement-gray-line {
+    height: 2px;
+    background: #f4f9ff;
+    width: 100%;
+    margin: 30px 0px 30px;
+    display: block;
+}
+

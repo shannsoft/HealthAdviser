@@ -12,129 +12,168 @@
 		<div class="row">
 			<div class="col-sm-12">
 				<div id="collapseOne" class="panel-collapse collapse in">
-						<div class="panel-body padd-0">
-							<div class="bs-example bs-example-tabs">
-								<ul class="nav nav-tabs nav-collapse nav-justified">
-									<li role=presentation class=active><a href="" ng-click="showtab('basic-tab')" id="basic-tab" role="tab" data-toggle=tab aria-controls=basic aria-expanded=true>Personal Details	</a></li>
-									<li role=presentation><a href="" ng-click="showtab('specialization-tab')" role=tab id=specialization-tab data-toggle=tab aria-controls=specialization>Social</a></li>
-									<li role=presentation><a href="" ng-click="showtab('social-tab')" role=tab id=social-tab data-toggle=tab aria-controls=social> Preferences</a></li>
-								</ul>
-								<div class="tab-content">
-								  <div role=tabpanel class="tab-pane fade in active" id="div_basic-tab" aria-labelledby=basic-tab>
+					<div class="panel-body padd-0">
+						<div class="bs-example bs-example-tabs">
+							<ul class="nav nav-tabs nav-collapse nav-justified">
+								<li role=presentation class=active><a href="" ng-click="showtab('basic-tab')" id="basic-tab" role="tab" data-toggle=tab aria-controls=basic aria-expanded=true>Personal Details	</a></li>
+								<li role=presentation><a href="" ng-click="showtab('specialization-tab')" role=tab id=specialization-tab data-toggle=tab aria-controls=specialization>Social</a></li>
+								<li role=presentation><a href="" ng-click="showtab('social-tab')" role=tab id=social-tab data-toggle=tab aria-controls=social> Preferences</a></li>
+							</ul>
+							<div class="tab-content">
+								<div role=tabpanel class="tab-pane fade in active" id="div_basic-tab" aria-labelledby=basic-tab>
 									<div class="row">
-									  <div class="col-sm-3">
-										  <div class="profile-upload">
-											<!-- <h1>SM</h1> -->
-											<img class="img-responsive" src="images/doctor/doctor-1.jpg">
-										  </div>
-											<div class="row">
+									  	<div class="col-sm-3">
+										  	<div class="profile-upload" ng-show="!is_crop_image">
+										  		<img id="imgadd" class="img-responsive" ng-src="{{profile_image}}" ng-if="profile_image">
+												<h1 ng-if="!profileDetails.photo && !profile_image">{{profileDetails.profile.name | getShortName}}</h1>
+												<img ng-if="profileDetails.photo && !profile_image" class="img-responsive" src="{{profileDetails.photo}}">
+										  	</div>
+											<div class="row" ng-show="!is_crop_image">
 												<div class="col-sm-12 m-t-10 text-center">
-												  <button class="btn btn-blue btn-sm">Upload</button>
-												  <button class="btn btn-red btn-sm">Cancel</button>
+												  	<div class="img-fileUpload btn btn-blue">
+														<span>Upload</span>
+														<input id="addImg" type="file" class="upload" />
+													</div>
+													<a class="btn update-cancel-btn" href="" role="button" ng-click="clearimage()">Cancel</a>
 												</div>
 											</div>
-									  </div>
-									  <div class="col-sm-9">
-										<div class="row">
-											<div class="col-sm-6">
+											<div class="prof-position profile-upload" ng-show="imageCropStep == 2">
+				                              	<image-crop
+			                                      	data-height="212"
+			                                      	data-width="212"
+			                                      	data-shape="square"
+			                                      	data-step="imageCropStep"
+			                                      	src="imageSrc"
+			                                      	data-result="result"
+			                                      	data-result-blob="resultBlob"
+			                                      	crop="initCrop"
+			                                      	padding="40"
+			                                      	max-size="1024">
+												</image-crop>
+				                                <button class="btn-block btn-blue btn-md" ng-click="initCrop = true"><i class="glyphicon glyphicon-scissors"></i> &nbsp;&nbsp;&nbsp;& &nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-floppy-save"></i></button>
+				                            </div>
+				                            <div ng-show="imageCropStep == 3" style="display:none;">
+			                                    <img ng-src="{{result}}" id="cropped_img" />
+			                                </div>
+									  	</div>
+									  	<div class="col-sm-9">
+										  	<form name="profileFrm">
+												<div class="row">
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label>First Name</label>
+															<input type="text" class="form-control" name="fname" placeholder="First Name" required ng-model="profileDetails.profile.fName">
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label>Last Name</label>
+															<input type="text" class="form-control" name="lname" placeholder="Last Name" required ng-model="profileDetails.profile.lName">
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label>Email</label>
+															<input readonly type="text" class="form-control" name="email" placeholder="email" required ng-model="profileDetails.emailId">
+														</div>
+													</div>
+													<div class="col-sm-6" ng-init="loadLanguagesList()">
+														<div class="form-group">
+															<label>Language Preference</label>
+															<select class="form-control" ng-model="profileDetails.language">
+																<option value="">Select Language</option>
+															  	<option value="{{lang.name}}" ng-repeat="lang in languages">{{lang.name}}</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-sm-5">
+														<div class="form-group">
+															<label>Number</label>
+															<input type="text" class="form-control" ui-mask="999-999-9999" placeholder="xxx-xxx-xxxx" ng-model="mobile.number">
+														</div>
+													</div>
+													<div class="col-sm-5">
+														<div class="form-group">
+															<label>Type</label>
+															<input type="text" class="form-control" id="" placeholder="Number Type" ng-model="mobile.type">
+														</div>
+													</div>
+													<div class="col-sm-2">
+														<button ng-disabled="!mobile.number || !mobile.type" class="btn btn-primary btn-md m-t-28" ng-click="addMobile()">Add</button>
+													</div>
+													<div class="col-sm-12">
+														<table class="table table-striped">
+															<tbody ng-repeat="phone in profileDetails.phone">
+																<tr>
+																	<td style="width:40%; vertical-align:middle;">+91 {{phone.number | phonenumber}}</td>
+																	<td style="width:30%; vertical-align:middle;">{{phone.type}}</td>
+																	<td style="width:30%; vertical-align:middle;">
+																		<div class="">
+																			<div class="radio radio-primary">
+																				<input id="isPrefered_{{$index}}" ng-model="phone.isPreffered" name="prefered" type="radio" ng-change='changeOnPreffered($index)' ng-value="true">
+																				<label style="margin-bottom:0" for="isPrefered_{{$index}}">Preffered</label>
+																			</div>
+																		</div>
+																	</td>
+																	<td align="right" style="padding: 14px 22px;">
+																		<button class="btn btn-danger btn-sm" ng-click="removeMobile($index)"><i class="fa fa-close"></i></button>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-sm-12">
+														<div class="form-group">
+															<label>Street</label>
+															<input type="text" id="street" class="form-control" placeholder="Street Address" required ng-model="profileDetails.address.streetAddress">
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label>City</label>
+															<input type="text" class="form-control" id="" placeholder="City" required ng-model="profileDetails.address.city">
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label>State</label>
+															<input type="text" class="form-control" id="" placeholder="State" required ng-model="profileDetails.address.state">
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label>Country</label>
+															<input type="text" class="form-control" id="" placeholder="Country" required ng-model="profileDetails.address.country">
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<label>Zip</label>
+															<input type="text" class="form-control" id="" placeholder="Zip Code" required ng-model="profileDetails.address.postalCode">
+														</div>
+													</div>
+												</div>
 												<div class="form-group">
-													<label>First Name</label>
-													<input type="text" class="form-control" id="" placeholder="First Name" required ng-model="profileDetails.profile.fName">
+													<label>About Me</label>
+													<textarea ng-model="profileDetails.profile.about" class="form-control" rows="4" placeholder="Write something about you......"></textarea>
 												</div>
-											</div>
-											<div class="col-sm-6">
-												<div class="form-group">
-													<label>Last Name</label>
-													<input type="text" class="form-control" id="" placeholder="Last Name" required ng-model="profileDetails.profile.lName">
+												<div class="row">
+													<div class="col-sm-12 m-t-10 text-right">
+													  <button class="btn btn-blue btn-md text-u-c" ng-disabled="profileFrm.$invalid" ng-click="updatePersonalProfile()">Save Change</button>
+													  <button class="btn btn-red btn-md text-u-c">Cancel</button>
+													</div>
 												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-sm-6">
-												<div class="form-group">
-													<label>Email</label>
-													<input readonly type="text" class="form-control" id="" placeholder="email" required ng-model="profileDetails.emailId">
-												</div>
-											</div>
-											<div class="col-sm-6">
-												<div class="form-group">
-													<label>Work Phone</label>
-													<input type="text" class="form-control" id="" placeholder="">
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-sm-6">
-												<div class="form-group">
-													<label>Mobile Phone</label>
-													<input type="text" class="form-control" id="" placeholder="">
-												</div>
-											</div>
-											<div class="col-sm-6">
-												<div class="form-group">
-													<label>Preferred Contact Method</label>
-													<select class="form-control">
-													  <option value="">Email</option>
-													  <option value="">Work</option>
-													  <option value="">Mobile</option>
-													</select>
-												</div>
-											</div>
-										</div>
-										<div class="form-group">
-											<label>Language Preference</label>
-											<select class="form-control">
-											  <option value="">English</option>
-											  <option value="">Hindi</option>
-											  <option value="">Odiya</option>
-											</select>
-										</div>
-										<div class="row">
-											<div class="col-sm-12">
-												<div class="form-group">
-													<label>Street</label>
-													<input type="text" id="street" class="form-control" placeholder="Street Address" required ng-model="profileDetails.address.streetAddress">
-												</div>
-											</div>
-											<div class="col-sm-6">
-												<div class="form-group">
-													<label>City</label>
-													<input type="text" class="form-control" id="" placeholder="City" required ng-model="profileDetails.address.city">
-												</div>
-											</div>
-											<div class="col-sm-6">
-												<div class="form-group">
-													<label>State</label>
-													<input type="text" class="form-control" id="" placeholder="State" required ng-model="profileDetails.address.state">
-												</div>
-											</div>
-											<div class="col-sm-6">
-												<div class="form-group">
-													<label>Country</label>
-													<input type="text" class="form-control" id="" placeholder="Country" required ng-model="profileDetails.address.country">
-												</div>
-											</div>
-											<div class="col-sm-6">
-												<div class="form-group">
-													<label>Zip</label>
-													<input type="text" class="form-control" id="" placeholder="Zip Code" required ng-model="profileDetails.address.postalCode">
-												</div>
-											</div>
-										</div>
-										<div class="form-group">
-											<label>About Me</label>
-											<textarea class="form-control" rows="4" placeholder="About me...."></textarea>
-										</div>
-										<div class="row">
-											<div class="col-sm-12 m-t-10 text-right">
-											  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-											  <button class="btn btn-red btn-md text-u-c">Cancel</button>
-											</div>
-										</div>
-									  </div>
+											</form>
+									  	</div>
 									</div>
-								  </div>
-								  <div role=tabpanel class="tab-pane fade" id="div_specialization-tab" aria-labelledby=specialization-tab>
+								</div>
+								<div role=tabpanel class="tab-pane fade" id="div_specialization-tab" aria-labelledby=specialization-tab>
 									<div class="row">
 										<div class="col-sm-5">
 											<h3 class="m-t-0">Social Link</h3>
@@ -159,9 +198,7 @@
 												<button class="btn btn-blue social-link-btn m-t-30" role="button" ng-click="updateSocialMediaURL()" ng-disabled="aboutMeForm.social.$invalid" disabled="disabled"><i class="fa fa-check"></i></button>
 												<button class="btn btn-danger social-link-btn m-t-30" role="button" ng-click="clearSocialMedia()"><i class="fa fa-times"></i></button>
 											</div>
-											
 										</div>
-										
 									</div>
 									<div class="row m-t-10">
 										<div class="col-sm-12 m-t-10">
@@ -169,16 +206,15 @@
 										  <button class="btn btn-red btn-md text-u-c">Cancel</button>
 										</div>
 									</div>
-									
-								  </div>
-								  <div role=tabpanel class="tab-pane fade" id="div_social-tab" aria-labelledby=social-tab>
-									<div class="txt-btn-wrap">
+								</div>
+								<div role=tabpanel class="tab-pane fade" id="div_social-tab" aria-labelledby=social-tab>
+									<div class="txt-btn-wrap" ng-init="getSettings()">
 										<div class="row m-t-10">
 											<label class="control-label col-md-5 col-sm-6 m-b-10">Notification for blogs</label>
 											<div class="col-sm-5"> 
 												<div class="btn-group btn-group-sm" role="group" aria-label="Small button group"> 
-													<button type="button" class="btn btn-gray switch-button text-u-c">Yes </button>
-													<button type="button" class="btn btn-blue switch-button text-u-c">No</button> 
+													<button type="button" ng-class="{'btn-blue':settings.notifyBlog,'btn-gray':!settings.notifyBlog}" class="btn switch-button text-u-c" ng-click="settings.notifyBlog = true">Yes </button>
+													<button type="button" ng-class="{'btn-blue':!settings.notifyBlog,'btn-gray':settings.notifyBlog}" class="btn btn-blue switch-button text-u-c" ng-click="settings.notifyBlog = false">No</button>
 												</div>
 											</div>
 										</div>
@@ -186,8 +222,8 @@
 											<label class="control-label col-md-5 col-sm-6">myhelthadviser.com Contributor</label>
 											<div class="col-sm-5"> 
 												<div class="btn-group btn-group-sm" role="group" aria-label="Small button group"> 
-													<button type="button" class="btn btn-gray switch-button text-u-c">Yes </button>
-													<button type="button" class="btn btn-blue switch-button text-u-c">No</button> 
+													<button type="button" ng-class="{'btn-blue':settings.notifyContribution,'btn-gray':!settings.notifyContribution}" class="btn switch-button text-u-c" ng-click="settings.notifyContribution = true">Yes </button>
+													<button type="button" ng-class="{'btn-blue':!settings.notifyContribution,'btn-gray':settings.notifyContribution}" class="btn btn-blue switch-button text-u-c" ng-click="settings.notifyContribution = false">No</button> 
 												</div>							
 											</div>							
 										</div>
@@ -195,8 +231,8 @@
 											<label class="control-label col-md-5 m-b-10 col-sm-6">Notification for feedback </label>
 											<div class="col-sm-5"> 
 												<div class="btn-group btn-group-sm" role="group" aria-label="Small button group"> 
-													<button type="button" class="btn btn-gray switch-button text-u-c">Yes </button>
-													<button type="button" class="btn btn-blue switch-button text-u-c">No</button> 
+													<button type="button" ng-class="{'btn-blue':settings.notifyFeedback,'btn-gray':!settings.notifyFeedback}" class="btn switch-button text-u-c" ng-click="settings.notifyFeedback = true">Yes </button>
+													<button type="button" ng-class="{'btn-blue':!settings.notifyFeedback,'btn-gray':settings.notifyFeedback}" class="btn btn-blue switch-button text-u-c" ng-click="settings.notifyFeedback = false">No</button> 
 												</div>
 											</div>
 										</div>
@@ -204,28 +240,22 @@
 											<label class="control-label col-md-5 m-b-10 col-sm-6">Notification for announcements </label>
 											<div class="col-sm-5"> 
 												<div class="btn-group btn-group-sm" role="group" aria-label="Small button group"> 
-													<button type="button" class="btn btn-gray switch-button text-u-c">Yes </button>
-													<button type="button" class="btn btn-blue switch-button text-u-c">No</button> 
+													<button type="button" ng-class="{'btn-blue':settings.notifyAnnouncement,'btn-gray':!settings.notifyAnnouncement}" class="btn switch-button text-u-c" ng-click="settings.notifyAnnouncement = true">Yes </button>
+													<button type="button" ng-class="{'btn-blue':!settings.notifyAnnouncement,'btn-gray':settings.notifyAnnouncement}" class="btn btn-blue switch-button text-u-c" ng-click="settings.notifyAnnouncement = false">No</button>
 												</div>
 											</div>
 										</div>
 										<div class="row m-t-30">
 											<div class="col-sm-12 m-t-10">
-											  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-											  <button class="btn btn-red btn-md text-u-c">Cancel</button>
+											  <button class="btn btn-blue btn-md text-u-c" ng-click="updateSettings()">Save Change</button>
 											</div>
 										</div>
-										
-									
 									</div>
-							
-								  </div>
-							
 								</div>
-							  
 							</div>
 						</div>
-					  </div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

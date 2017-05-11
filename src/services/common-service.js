@@ -5,6 +5,16 @@ app.factory("CommonService", function ($http,$q,CONFIG,HealthAuth) {
       var response = $http.get(params);
       return response;
     },
+    converYoutube : function(youtube_url){
+      var coll = youtube_url.split("=",2);
+      if(coll != null) {
+          var videoId = coll[1];
+          return_url = 'https://www.youtube.com/embed/' + videoId;
+      } else {
+          return youtube_url;
+      }
+      return return_url;  
+    },
     sendEnquiry : function(obj){
       var response = $http({
           method: 'POST',
@@ -46,18 +56,44 @@ app.factory("CommonService", function ($http,$q,CONFIG,HealthAuth) {
       });
       return response;
     },
+    updatePersonalProfile : function(dataDetails){
+        var response = $http({
+            method: 'PUT',
+            url: CONFIG.API_PATH+'_User',
+            data: dataDetails,
+            headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+        });
+        return response;    
+    },
     setReviewDetails : function(obj){
       reviewDetails = obj;
     },
     getReviewDetails : function(){
       return reviewDetails;
     },
+    getSettings : function(){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.API_PATH+'_Profile_Notification',
+          headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
+      });
+      return response;
+    },
+    updateSettings : function(obj){
+      var response = $http({
+          method: 'PUT',
+          url: CONFIG.API_PATH+'_Profile_Notification',
+          data: obj,
+          headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+      });
+      return response;
+    },
     reviewDoctor : function(obj){
       var response = $http({
           method: 'POST',
           url: CONFIG.API_PATH+'_Profile_Review',
           data: obj,
-          headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
+          headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
       });
       return response;
     },

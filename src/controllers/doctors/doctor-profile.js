@@ -1,4 +1,4 @@
-app.controller("DoctorProfileController",function($scope, $rootScope,CommonService,$timeout,DoctorDetailsService,Util,$filter, $uibModal){
+app.controller("DoctorProfileController",function($scope, $rootScope,CommonService,$timeout,DoctorDetailsService,Util,$filter, $uibModal,$sce){
 		google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
 	  $scope.signupCollapse = {
@@ -48,13 +48,20 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
   		$rootScope.showPreloader = true;
   		CommonService.userDetails().then(function(response){
   			$rootScope.showPreloader = false;
-  			if(response.data.StatusCode == 200)
+  			if(response.data.StatusCode == 200){
   				$scope.profileDetails = response.data.Data.result;
 					$scope.specialize.languageTags = [];
           angular.forEach($scope.profileDetails.profile.language,function(item){
             $scope.specialize.languageTags.push(item.language);
           })
+          if($scope.profileDetails.socialLink && $scope.profileDetails.socialLink.YOUTUBE != null) {
+            youtube_url = CommonService.converYoutube($scope.profileDetails.socialLink.YOUTUBE);
+            $scope.youtubeURL = $sce.trustAsResourceUrl(youtube_url);
+          }else {
+            $scope.youtubeURL = null;
+          }  
   				$scope.initMapLocation();
+        }
   		},function(error){
   			$rootScope.showPreloader = false;
   		})
@@ -664,6 +671,146 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
        Util.alertMessage('danger', 'Error in update !!!');
     })  
   }
+  /****************************************************************************/
+  /************************FUNCTION HIDE EDIT FORM*****************************/
+  /****************************************************************************/
+  $scope.updateWebsiteUrl = function(){
+    var doctor = {};
+    if ($scope.profileDetails.website.match('^http://') || $scope.profileDetails.website.match('^https://')){
+      var wesite = $scope.profileDetails.website.split('://');
+      doctor.website = wesite[1];
+    }
+    else{
+      doctor.website = $scope.profileDetails.website
+    }
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.updatePersonalProfile(doctor).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        Util.alertMessage('success', 'your information successfully updated. Thank you.');
+      }
+      else{
+        Util.alertMessage('danger', 'Somthing went wrong ! unable to update your information.');
+      }
+    }, function (errorResponse) {
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger','Somthing went wrong ! unable to update your information.');
+    });
+  }
+  $scope.clearWebsiteUrl = function () {
+    $scope.profileDetails.website = "";
+    $scope.updateWebsiteUrl();
+  };
+  /****************************************************************************/
+  /****************************To Change the socila media link*****************/
+  /****************************************************************************/
+  $scope.selectSocialMedia = function(socialmedia) {
+      $scope.boxShow = true;
+      $scope.socialmedia = {};
+      $scope.updateWeblinkURL(socialmedia);
+      $scope.platform = socialmedia;
+  };
+  $scope.updateWeblinkURL = function(platform) {
+      var social;
+      $scope.socialmedia.webLink = '';
+      if($scope.profileDetails.socialLink) {
+        social = $scope.profileDetails.socialLink;
+      }
+      else{
+        social = $scope.profileDetails.socialLink = {};
+      }
+      switch(platform){
+        case "fb":
+          $scope.placeholder = "Your facebook link";
+          if(social.FACEBOOK != null){
+              $scope.socialmedia.webLink = social.FACEBOOK;
+          }
+          break;
+        case "tw":
+          $scope.placeholder = "Your twitter link";
+          if(social.TWITTER != null){
+              $scope.socialmedia.webLink = social.TWITTER;
+          }
+          break;
+        case "gp":
+          $scope.placeholder = "Your google plus link";
+          if(social.GPLUS != null){
+              $scope.socialmedia.webLink = social.GPLUS;
+          }
+          break;
+        case "ln":
+          $scope.placeholder = "Your linkedin link";
+          if(social.LINKEDIN != null){
+              $scope.socialmedia.webLink = social.LINKEDIN;
+          }
+          break;  
+        case "yt":
+          $scope.placeholder = "Your youtube link";
+          if(social.YOUTUBE != null){
+              $scope.socialmedia.webLink = social.YOUTUBE;
+          }
+          break;
+        case "pi":
+          $scope.placeholder = "Your Pinterest link";
+          if(social.PINTEREST != null){
+              $scope.socialmedia.webLink = social.PINTEREST;
+          }
+          break;
+      }
+    }  
+  /****************************************************************************/
+  /****************************To Update the social media link*****************/
+  /****************************************************************************/
+  $scope.updateSocialMediaURL = function(){
+    if(!$scope.profileDetails.socialLink)
+      $scope.profileDetails.socialLink = {};
+    var doctor = {};
+    switch($scope.platform){
+      case "fb":
+        $scope.profileDetails.socialLink.FACEBOOK = $scope.socialmedia.webLink;
+        break;
+      case "tw":
+        $scope.profileDetails.socialLink.TWITTER = $scope.socialmedia.webLink;
+        break;
+      case "gp":
+        $scope.profileDetails.socialLink.GPLUS = $scope.socialmedia.webLink;
+        break;
+      case "ln":
+        $scope.profileDetails.socialLink.LINKEDIN = $scope.socialmedia.webLink;
+        break;
+      case "yt":
+        $scope.profileDetails.socialLink.YOUTUBE = $scope.socialmedia.webLink;
+        var is_youtube = true;
+        break;
+      case "pi":
+        $scope.profileDetails.socialLink.PINTEREST = $scope.socialmedia.webLink;
+        break;
+    }
+    doctor.socialLink = $scope.profileDetails.socialLink;
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.updatePersonalProfile(doctor).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        if(is_youtube){
+          if($scope.is_remove){
+            $scope.youtubeURL = '';
+          }
+          else{
+            var you_tube_url = CommonService.converYoutube($scope.socialmedia.webLink);
+            $scope.youtubeURL = $sce.trustAsResourceUrl(you_tube_url);
+          }
+        }
+        $scope.is_remove = false;
+        Util.alertMessage('success', 'your information successfully updated. Thank you.');
+      }
+      else{
+        Util.alertMessage('danger', 'Somthing went wrong ! unable to update your information.');
+      }
+    }, function (errorResponse) {
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger','Somthing went wrong ! unable to update your information.');
+    });
+  };
   /****************************************************************************/
   /************************FUNCTION HIDE EDIT FORM*****************************/
 	/****************************************************************************/

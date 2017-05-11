@@ -99,7 +99,7 @@ module.exports = function(grunt) {
                 }
             },
             built: {
-                files: ['src/*.js', 'src/**/*.js','*.html','**/*.html','!**/healthApp/**'],
+                files: ['css/**','src/*.js', 'src/**/*.js','*.html','**/*.html','!**/healthApp/**'],
                 tasks: ['concat', 'comments:my_target', 'ngAnnotate:appannotate', 'uglify:my_target', "cssmin:combine",'copy:main','htmlmin:dist'],
                 options: {
                     livereload: true

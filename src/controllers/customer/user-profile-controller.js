@@ -1,4 +1,4 @@
-app.controller('UserProfileController', function($scope, $rootScope, $state, CommonService){
+app.controller('UserProfileController', function($scope, $rootScope, $state, CommonService,Util){
     google = typeof google === 'undefined' ? "" : google;
     var googleTime;
 	/****************************************************************************/
@@ -27,6 +27,7 @@ app.controller('UserProfileController', function($scope, $rootScope, $state, Com
             $rootScope.showPreloader = false;
             if(response.data.StatusCode == 200){
                 $scope.profileDetails = response.data.Data.result;
+                $scope.profileDetails.language = ($scope.profileDetails.profile.language.length > 0) ? $scope.profileDetails.profile.language[0].language : "";
                 $scope.initMapLocation();
                 if($scope.profileDetails.isDoctor){
                     $state.go('home');
@@ -37,15 +38,16 @@ app.controller('UserProfileController', function($scope, $rootScope, $state, Com
     /****************************************************************************/
     /**************FUNCTION USE FOR LOAD THE LANGUAGE LIST***********************/
     /****************************************************************************/
-    $scope.loadLanguages = function(){
+    $scope.loadLanguagesList = function(){
         CommonService.languages().then(function(response){
             if(response.data.StatusCode == 200){
-                $scope.languages = [];
-                angular.forEach(response.data.Data,function(item){
-                    $scope.languages.push(item.name);
-                });
+                $scope.languages = response.data.Data;
+                // angular.forEach(response.data.Data,function(item){
+                //     $scope.languages.push(item.name);
+                // });
             }
         },function(error){
+
         })
     }
     /****************************************************************************/
@@ -87,5 +89,96 @@ app.controller('UserProfileController', function($scope, $rootScope, $state, Com
                 $scope.profileDetails.address.country = address_components[i].long_name;
             }
         }
+    }
+    /****************************************************************************/
+    /**************************Read the image file*******************************/
+    /****************************************************************************/
+    function readAddImage(input) {
+        if (input.files && input.files[0]) {
+          var fileReader = new FileReader();
+          fileReader.onload = function(e) {
+            $scope.imageSrc = e.target.result;
+            $scope.imagename= input.files[0].name;
+            $scope.is_crop_image = true;
+            $scope.$apply();
+          };
+          fileReader.readAsDataURL(input.files[0]);
+        }
+    }
+    $("#addImg").change(function() {
+        readAddImage(this);
+    });
+    /****************************************************************************/
+    /**************************loads the croped image****************************/
+    /****************************************************************************/
+    $("#cropped_img").load(function() {
+          $scope.is_crop_image = false;
+          $scope.profile_image = $('#cropped_img').attr( "src");
+          $scope.imageCropStep = 1;
+          $scope.$apply();
+      });
+      $scope.clearimage = function(){
+        $scope.profile_image = '';
+    }
+    $scope.addMobile = function(){
+        $scope.profileDetails.phone.push($scope.mobile);
+        $scope.mobile = {};
+    }
+    $scope.removeMobile = function(index){
+        $scope.profileDetails.phone.splice(index,1);
+    }
+    /****************************************************************************/
+    /******************************To update the basic info**********************/
+    /****************************************************************************/
+    $scope.updatePersonalProfile = function () {
+        $rootScope.showPreloader = true;
+        var personalDetails = {};
+        personalDetails.profile = $scope.profileDetails.profile;
+        personalDetails.address = $scope.profileDetails.address;
+        personalDetails.phone = $scope.profileDetails.phone;
+        var obj = {};
+            obj.language = $scope.profileDetails.language;
+        personalDetails.profile.language[0] = obj;
+        if($scope.profile_image){
+          personalDetails.fileData = {
+            "fileName" : $scope.imagename,
+            "inputStream" : $scope.profile_image.split(";base64,")[1]
+          };
+        }
+        CommonService.updatePersonalProfile(personalDetails).then(function (response) {
+          $rootScope.showPreloader = false;
+          if(response.data.StatusCode == 200){
+            Util.alertMessage('success', 'your information successfully updated. Thank you.');
+            $scope.$emit('login-success');
+          }
+          else{
+            Util.alertMessage('danger', 'Somthing went wrong ! unable to update your information.');
+          }
+        }, function (errorResponse) {
+          $rootScope.showPreloader = false;
+          Util.alertMessage('danger','Somthing went wrong ! unable to update your information.');
+        });
+    };
+    $scope.getSettings = function(){
+      CommonService.getSettings().then(function(response){
+        if (response.data.StatusCode == 200) {
+            $scope.settings = response.data.Data;
+        }
+      })  
+    }
+    $scope.updateSettings = function(){
+        $rootScope.showPreloader = true;
+        CommonService.updateSettings($scope.settings).then(function(response){
+            $rootScope.showPreloader = false;
+            if (response.data.StatusCode == 200) {
+                Util.alertMessage('success', 'your information successfully updated. Thank you.');
+            }
+            else{
+                Util.alertMessage('danger', 'Somthing went wrong ! unable to update your information.'); 
+            }
+        },function(error){
+            $rootScope.showPreloader = false;
+            Util.alertMessage('danger','Somthing went wrong ! unable to update your information.');
+        })  
     }
 })
