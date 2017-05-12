@@ -93,7 +93,7 @@ module.exports = function(grunt) {
             },
             debug: {
                 files: ['src/*.js', 'src/**/*.js','*.html','**/*.html','!**/healthApp/**'],
-                tasks: ['concat', 'comments:my_target', 'ngAnnotate:appannotate','copy:main','htmlmin:dist'],
+                tasks: ['concat', 'comments:my_target', 'ngAnnotate:appannotate',"cssmin:combine",'copy:main','htmlmin:dist'],
                 options: {
                     livereload: true
                 }
@@ -174,7 +174,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-notify');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     // Default task(s).
-    grunt.registerTask('default', ['clean','concat', 'copy:main','htmlmin:dist','connect','comments:my_target', 'ngAnnotate:appannotate', 'cachebreaker:dev','watch:debug']);
+    grunt.registerTask('default', ['clean','concat','ngAnnotate:appannotate','cssmin:combine','copy:main','htmlmin:dist','connect','comments:my_target','cachebreaker:dev','watch:debug']);
     grunt.registerTask('built', ['clean','concat','ngAnnotate:appannotate','uglify:my_target','cssmin:combine','copy:main','htmlmin:dist','connect','comments:my_target','cachebreaker:dev', 'watch:built']);
 
 };
