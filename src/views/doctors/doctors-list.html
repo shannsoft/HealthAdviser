@@ -94,6 +94,7 @@
 										<li ng-if="!doctor.consulation.is_free_consultation"><span class="font-bold">Fees</span> - INR  {{doctor.consulation.fees}} /-</li>
 										<li ng-if="doctor.consulation.is_free_consultation"><span class="font-bold">Free Consulation</span></li>
 										<li><span class="font-bold">Distance :</span>{{doctor.distance}}</li>
+										<li><a class="text-yellow" ui-sref="review-doctor({profileName:doctor.profile.profileName})"><i class="fa fa-star"></i>Write Review</a></li>
 									</ul>
 								</div>
 								<a href="book-appointment.html" class="btn btn-blue btn-sm text-u-c">Book Appointment</a>
@@ -104,7 +105,6 @@
 								<li ng-if="doctor.phone.length > 0"><a href="tel:{{doctor.phone[0].number}}"><i class="fa fa-phone"></i> +91 {{doctor.phone[0].number | phonenumber}}</a></li>
 								<li ng-if="doctor.website"><a href="//{{doctor.website}}" target="_blank"><i class="fa fa-globe"></i> Website</a></li>
 								<li><a href="" ng-click="goToDirection(doctor)"><i class="fa fa-map-marker"></i> Direction</a></li>
-								<li><a ui-sref="review-doctor({profileName:doctor.profile.profileName})"><i class="fa fa-star"></i>Write Review</a></li>
 								<li><a href="" ng-click="downloadVCard(doctor)"><i class="fa fa-id-card" aria-hidden="true"></i>VCard</a></li>
 							</ul>
 						</div>
