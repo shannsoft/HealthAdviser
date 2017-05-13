@@ -151,6 +151,11 @@ app.config(["$stateProvider", "$urlRouterProvider", "$provide", function($stateP
       loggedout: confirmLogin
     }
   })
+  .state('review-list', {
+    templateUrl: 'src/views/doctors/review/review-list.html',
+    url: '/review-list/:profileName',
+    controller:"ReviewController"
+  })
   .state('endorse-doctor', {
     templateUrl: 'src/views/doctors/endorsement/endorse-doctor.html',
     url: '/endorse-doctor/:profileName',
@@ -1958,6 +1963,28 @@ app.controller('PublicationModalCtrl', ["$scope", "$uibModalInstance", "deletePu
 			}
 		})
   }
+  $scope.loadReviewList = function(){
+    $rootScope.showPreloader = true;
+    CommonService.getReviewList($stateParams.profileName).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        $scope.reviewList = response.data.Data;
+      }
+    }, function(error){
+      $rootScope.showPreloader = false;
+    })
+  }
+  $scope.loadEndorsement = function(){
+    $rootScope.showPreloader = true;
+    CommonService.getEndorseList($stateParams.profileName).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        $scope.endorseList = response.data.Data;
+      }
+    }, function(error){
+      $rootScope.showPreloader = false;
+    })
+  }
 }])
 ;app.controller('DoctorsController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorModel", "$state", "orderByFilter", function($scope,$rootScope,DoctorService,$stateParams,DoctorModel,$state,orderByFilter){
 	$scope.compareDoctorArr = [{}, {}, {}, {}];
@@ -2879,6 +2906,22 @@ app.factory("HealthAuth",["HEALTH_ADVISER", function(HEALTH_ADVISER){
           url: CONFIG.API_PATH+'_Profile_Endrosement',
           data: obj,
           headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+      });
+      return response;
+    },
+    getReviewList : function(profileName){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.API_PATH+'_Profile_ReviewDoctor/'+profileName,
+          headers: {'Server': CONFIG.SERVER_PATH}
+      });
+      return response;
+    },
+    getEndorseList : function(profileName){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.API_PATH+'_Profile_EndrosementDoctor/'+profileName,
+          headers: {'Server': CONFIG.SERVER_PATH}
       });
       return response;
     },

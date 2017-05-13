@@ -97,4 +97,32 @@ app.controller('ReviewController',function($scope, $rootScope, $stateParams, Doc
 			}
 		})
   }
+  /****************************************************************************/
+  /********************UNCTION USE FOR GET REVIEW LIST*************************/
+  /****************************************************************************/
+  $scope.loadReviewList = function(){
+    $rootScope.showPreloader = true;
+    CommonService.getReviewList($stateParams.profileName).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        $scope.reviewList = response.data.Data;
+      }
+    }, function(error){
+      $rootScope.showPreloader = false;
+    })
+  }
+  /****************************************************************************/
+  /********************UNCTION USE FOR GET REVIEW LIST*************************/
+  /****************************************************************************/
+  $scope.loadEndorsement = function(){
+    $rootScope.showPreloader = true;
+    CommonService.getEndorseList($stateParams.profileName).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        $scope.endorseList = response.data.Data;
+      }
+    }, function(error){
+      $rootScope.showPreloader = false;
+    })
+  }
 })

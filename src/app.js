@@ -148,6 +148,11 @@ app.config(function($stateProvider, $urlRouterProvider,$provide) {
       loggedout: confirmLogin
     }
   })
+  .state('review-list', {
+    templateUrl: 'src/views/doctors/review/review-list.html',
+    url: '/review-list/:profileName',
+    controller:"ReviewController"
+  })
   .state('endorse-doctor', {
     templateUrl: 'src/views/doctors/endorsement/endorse-doctor.html',
     url: '/endorse-doctor/:profileName',

@@ -1,9 +1,8 @@
 <section class="inner-banner-section" ng-init="loadReviewList()">
 	<div class="container">
 		<div class="row">
-			<div class="col-md-12 text-center">
-				<img class="m-b-20" src="images/success-btn.png" />
-				<h2>Submission Successful</h2>
+			<div class="col-md-12">
+				<h2>Review List</h2>
 			</div>
 		</div>
 	</div>
@@ -15,7 +14,7 @@
 				<div class="col-md-2">
 					<div class="comment-review">
 					  <img ng-if="review.userPhoto" src="{{review.userPhoto}}">
-					  <span ng-if="!review.userPhoto">SM</span>
+					  <span ng-if="!review.userPhoto">{{review.userName | getShortName}}</span>
 					</div>
 				</div>
 				<div class="col-md-10 commeted-review">

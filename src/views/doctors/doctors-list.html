@@ -77,6 +77,7 @@
 							</div>
 							<div class="col-sm-6 m-t-10">
 								<a ui-sref="doctor-details({profileName:doctor.profile.profileName})"><h3>{{doctor.profile.name}}</h3></a>
+								<p><a ui-sref="review-list({profileName:doctor.profile.profileName})">{{doctor.totalReview}} reviews</a></p>
 								<div class="clearfix">
 									<strong>Specialties :</strong>
 									<span class="text-gray">{{doctor.specializationArray}}</span>
@@ -100,10 +101,10 @@
 						</div>
 						<div class="col-sm-12 m-t-10">
 							<ul>
-								<li ng-if="doctor.phone.length > 0"><i class="fa fa-phone"></i> +91 {{doctor.phone[0].number}}</li>
-								<li ng-if="doctor.website"><a href="{{doctor.website}}"><i class="fa fa-globe"></i> Website</a></li>
+								<li ng-if="doctor.phone.length > 0"><a href="tel:{{doctor.phone[0].number}}"><i class="fa fa-phone"></i> +91 {{doctor.phone[0].number | phonenumber}}</a></li>
+								<li ng-if="doctor.website"><a href="//{{doctor.website}}"><i class="fa fa-globe"></i> Website</a></li>
 								<li><a href="" ng-click="goToDirection(doctor)"><i class="fa fa-map-marker"></i> Direction</a></li>
-								<li><a href=""><i class="fa fa-star"></i>Write Review</a></li>
+								<li><a ui-sref="review-doctor({profileName:doctor.profile.profileName})"><i class="fa fa-star"></i>Write Review</a></li>
 								<li><a href="" ng-click="downloadVCard(doctor)"><i class="fa fa-id-card" aria-hidden="true"></i>VCard</a></li>
 							</ul>
 						</div>

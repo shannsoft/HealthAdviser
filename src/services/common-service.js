@@ -106,6 +106,22 @@ app.factory("CommonService", function ($http,$q,CONFIG,HealthAuth) {
       });
       return response;
     },
+    getReviewList : function(profileName){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.API_PATH+'_Profile_ReviewDoctor/'+profileName,
+          headers: {'Server': CONFIG.SERVER_PATH}
+      });
+      return response;
+    },
+    getEndorseList : function(profileName){
+      var response = $http({
+          method: 'GET',
+          url: CONFIG.API_PATH+'_Profile_EndrosementDoctor/'+profileName,
+          headers: {'Server': CONFIG.SERVER_PATH}
+      });
+      return response;
+    },
   }
 });
 app.factory('Util', function( $rootScope, $timeout){
