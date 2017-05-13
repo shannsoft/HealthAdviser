@@ -40,8 +40,8 @@
 				<div class="row m-b-10" ng-if="doctorList.result.length > 0">
 					<div class="col-md-9">
 						<paging
-						    page="paging.currentPage" 
-						    page-size="paging.showResult" 
+						    page="paging.currentPage"
+						    page-size="paging.showResult"
 						    total="paging.totalPage"
 						    show-prev-next="true"
 							show-first-last="true"
@@ -102,7 +102,7 @@
 						<div class="col-sm-12 m-t-10">
 							<ul>
 								<li ng-if="doctor.phone.length > 0"><a href="tel:{{doctor.phone[0].number}}"><i class="fa fa-phone"></i> +91 {{doctor.phone[0].number | phonenumber}}</a></li>
-								<li ng-if="doctor.website"><a href="//{{doctor.website}}"><i class="fa fa-globe"></i> Website</a></li>
+								<li ng-if="doctor.website"><a href="//{{doctor.website}}" target="_blank"><i class="fa fa-globe"></i> Website</a></li>
 								<li><a href="" ng-click="goToDirection(doctor)"><i class="fa fa-map-marker"></i> Direction</a></li>
 								<li><a ui-sref="review-doctor({profileName:doctor.profile.profileName})"><i class="fa fa-star"></i>Write Review</a></li>
 								<li><a href="" ng-click="downloadVCard(doctor)"><i class="fa fa-id-card" aria-hidden="true"></i>VCard</a></li>
@@ -114,8 +114,8 @@
 					<div class="col-sm-12">
 						<nav class="ld-padd-20" ng-if="doctorList.result.length > 0">
 				            <paging
-							    page="paging.currentPage" 
-							    page-size="paging.showResult" 
+							    page="paging.currentPage"
+							    page-size="paging.showResult"
 							    total="paging.totalPage"
 							    show-prev-next="true"
 								show-first-last="true"
@@ -172,11 +172,11 @@
 							</div>
 						</div>
 					</div>
-					
+
 					<div class="clearfix m-t-10">
 						<div id="googleMap"></div>
 					</div>
-					
+
 				</div>
 			</div>
 		</div>
@@ -185,11 +185,11 @@
 				<div class="compare-popup-box">
 					<ul>
 						<li ng-repeat="comDoc in compareDoctorArr">
-							<a class="buttonCloseIcon" href="" ng-if="comDoc.userCode" ng-click="closeDoctorCompare($index)"><i class="fa fa-close"></i></a> 
+							<a class="buttonCloseIcon" href="" ng-if="comDoc.userCode" ng-click="closeDoctorCompare($index)"><i class="fa fa-close"></i></a>
 							<a href="">
 								<img class="img-responsive" ng-if="comDoc.photo" src="{{comDoc.photo}}">
 								<span class="doctor-alfa" ng-if="!comDoc.photo">{{comDoc.profile.name | getShortName}}</span>
-							</a> 
+							</a>
 							<span class="text-ellipsis">{{comDoc.profile.name}}</span>
 						</li>
 					</ul>

@@ -1,7 +1,7 @@
-<section class="inner-banner-section m-h-500" ng-init="loadEndorsement()">
+<section class="inner-banner-section" ng-init="loadEndorsement()">
 	<div class="container">
 		<div class="row">
-			<div class="col-md-12 text-center m-t-50">
+			<div class="col-md-12 text-center">
 				<img class="m-b-20" src="images/success-btn.png" />
 				<h2>Submission Successful</h2>
 			</div>
@@ -10,23 +10,23 @@
 </section>
 <section class="page-section padd-v-60">
 	<div class="container">
-		<div class="clearfix" ng-repeat="review in reviewList">
+		<div class="clearfix" ng-repeat="endorse in endorseList">
 			<div class="row">
 				<div class="col-md-2">
 					<div class="comment-review">
-					  <img ng-if="review.userPhoto" src="{{review.userPhoto}}">
-					  <span ng-if="!review.userPhoto">SM</span>
+					  <img ng-if="endorse.userPhoto" src="{{endorse.userPhoto}}">
+					  <span ng-if="!endorse.userPhoto">{{endorse.userName | getShortName}}</span>
 					</div>
 				</div>
 				<div class="col-md-10 commeted-review">
-					<h3>{{review.userName}}</h3>
+					<h3>{{endorse.userName}}</h3>
 					<div class="star-vote">
-						<ul ng-init="reviewRatings(review)">
+						<!-- <ul ng-init="reviewRatings(review)">
 							<li ng-repeat="star in review.ratingArr track by $index"><i class="{{star}}"></i></li>
-						</ul>
-						<small>{{review.date | dateformat2}}</small>
+						</ul> -->
+						<small>{{endorse.date | dateformat2}}</small>
 					</div>
-					<p>{{review.review}}</p>
+					<p>{{endorse.description}}</p>
 				</div>
 			</div>
 			<hr/>

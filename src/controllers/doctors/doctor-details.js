@@ -1,7 +1,7 @@
 app.controller('DoctorDetailsController',function($scope,$rootScope,DoctorService,$stateParams,DoctorDetailsService){
-  
-  $scope.signed_lawyer = $stateParams.profileName;
-  
+
+  $scope.signed_doctor = $stateParams.profileName;
+
 	$scope.loadDoctorDetails = function(){
 		$rootScope.showPreloader = true;
 		if($stateParams.profileName){

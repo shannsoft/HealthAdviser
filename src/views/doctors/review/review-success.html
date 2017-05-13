@@ -15,7 +15,7 @@
 				<div class="col-md-2">
 					<div class="comment-review">
 					  <img ng-if="review.userPhoto" src="{{review.userPhoto}}">
-					  <span ng-if="!review.userPhoto">SM</span>
+					  <span ng-if="!review.userPhoto">{{review.userName | getShortName}}</span>
 					</div>
 				</div>
 				<div class="col-md-10 commeted-review">

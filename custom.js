@@ -853,9 +853,9 @@ app.controller('PublicationModalCtrl', ["$scope", "$uibModalInstance", "deletePu
 	}
 
 }]);app.controller('DoctorDetailsController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorDetailsService", function($scope,$rootScope,DoctorService,$stateParams,DoctorDetailsService){
-  
-  $scope.signed_lawyer = $stateParams.profileName;
-  
+
+  $scope.signed_doctor = $stateParams.profileName;
+
 	$scope.loadDoctorDetails = function(){
 		$rootScope.showPreloader = true;
 		if($stateParams.profileName){
@@ -891,7 +891,8 @@ app.controller('PublicationModalCtrl', ["$scope", "$uibModalInstance", "deletePu
       }
     }
   }
-}]);app.controller("DoctorProfileController",["$scope", "$rootScope", "CommonService", "$timeout", "DoctorDetailsService", "Util", "$filter", "$uibModal", "$sce", function($scope, $rootScope,CommonService,$timeout,DoctorDetailsService,Util,$filter, $uibModal,$sce){
+}])
+;app.controller("DoctorProfileController",["$scope", "$rootScope", "CommonService", "$timeout", "DoctorDetailsService", "Util", "$filter", "$uibModal", "$sce", function($scope, $rootScope,CommonService,$timeout,DoctorDetailsService,Util,$filter, $uibModal,$sce){
 		google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
 	  $scope.signupCollapse = {
