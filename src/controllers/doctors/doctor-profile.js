@@ -672,6 +672,301 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
     })  
   }
   /****************************************************************************/
+  /*********************FUNCTION USE TO ADD ASSOCIATION************************/
+  /****************************************************************************/
+  $scope.saveAssociation = function(){
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.saveAssociation($scope.association).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        $scope.profileDetails.association.push(response.data.Data);
+        Util.alertMessage('success', 'You have successfully added your information Thank You.'); 
+        // $scope.association = {};
+      }
+      else{
+        Util.alertMessage('danger', 'something went wrong! unable to add Education');  
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger', 'something went wrong! unable to add Education');
+    })
+  }
+  /****************************************************************************/
+  /************FUNCTION IS USED TO OPEN ASSOCIATION DELETE MODAL***************/
+  /****************************************************************************/
+  $scope.deleteAssociationModal = function(size,assoID,index){
+    $scope.deleteIndex = index;
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/AssociationDetDeleteModal.html',
+     controller: 'AssociationModalCtrl',
+     size: size,
+     resolve: {
+       deleteAssociation: function () {
+         return $scope.deleteAssociation;
+       },
+       assoID:function () {
+         return assoID;
+       }
+     }
+    })
+  }
+  /****************************************************************************/
+  /********************FUNCTION IS USED TO DELETE ASSOCIATION******************/
+  /****************************************************************************/
+  $scope.deleteAssociation = function(id){
+    var obj = {};
+    obj.id = id;
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.deleteAssociation(obj).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.profileDetails.association.splice($scope.deleteIndex,1);
+        Util.alertMessage('success', 'You have successfully deleted your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in Delete !!!');
+      }
+    }, function (errorResponse) {
+      $rootScope.showPreloader = false;
+        Util.alertMessage('danger', 'Error in Delete !!!');
+    });
+  }
+  /****************************************************************************/
+  /************FUNCTION IS USED TO OPEN ASSOCIATION EDIT SECTION***************/
+  /****************************************************************************/
+  $scope.editAssociationOpen = function(index,obj){
+    $scope.editassociation = index;
+    $scope.tempAssociation = {};
+    $scope.tempAssociation.id = obj.id;
+    $scope.tempAssociation.associationName = obj.associationName;
+    $scope.tempAssociation.position = obj.position;
+    $scope.tempAssociation.startDate = obj.startDate;
+    $scope.tempAssociation.endDate = obj.endDate;
+  }
+  $scope.cancelAssociationEdit = function () {
+    delete $scope.editassociation;
+  };
+  /****************************************************************************/
+  /**************FUNCTION IS USED TO UPDATE LICENSE EDIT SECTION***************/
+  /****************************************************************************/
+  $scope.updateAssociation = function(association){
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.updateAssociation($scope.tempAssociation).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        association.associationName = $scope.tempAssociation.associationName;
+        association.position = $scope.tempAssociation.position;
+        association.startDate = $scope.tempAssociation.startDate;
+        association.endDate = $scope.tempAssociation.endDate;
+        Util.alertMessage('success', 'You have successfully updated your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in update !!!'); 
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger', 'Error in update !!!');
+    })  
+  }
+  /****************************************************************************/
+  /*********************FUNCTION USE TO ADD CONFERENCE*************************/
+  /****************************************************************************/
+  $scope.saveConference = function(){
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.saveConference($scope.conference).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        $scope.profileDetails.conference.push(response.data.Data);
+        Util.alertMessage('success', 'You have successfully added your information Thank You.'); 
+        // $scope.association = {};
+      }
+      else{
+        Util.alertMessage('danger', 'something went wrong! unable to add Education');  
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger', 'something went wrong! unable to add Education');
+    })
+  }
+  /****************************************************************************/
+  /************FUNCTION IS USED TO OPEN CONFERENCE DELETE MODAL****************/
+  /****************************************************************************/
+  $scope.deleteConferenceModal = function(size,confeID,index){
+    $scope.deleteIndex = index;
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/ConferenceDetDeleteModal.html',
+     controller: 'ConferenceModalCtrl',
+     size: size,
+     resolve: {
+       deleteConference: function () {
+         return $scope.deleteConference;
+       },
+       confeID:function () {
+         return confeID;
+       }
+     }
+    })
+  }
+  /****************************************************************************/
+  /********************FUNCTION IS USED TO DELETE ASSOCIATION******************/
+  /****************************************************************************/
+  $scope.deleteConference = function(id){
+    var obj = {};
+    obj.id = id;
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.deleteConference(obj).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.profileDetails.conference.splice($scope.deleteIndex,1);
+        Util.alertMessage('success', 'You have successfully deleted your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in Delete !!!');
+      }
+    }, function (errorResponse) {
+      $rootScope.showPreloader = false;
+        Util.alertMessage('danger', 'Error in Delete !!!');
+    });
+  }
+  /****************************************************************************/
+  /************FUNCTION IS USED TO OPEN ASSOCIATION EDIT SECTION***************/
+  /****************************************************************************/
+  $scope.editConferenceOpen = function(index,obj){
+    $scope.editConference = index;
+    $scope.tempConference = {};
+    $scope.tempConference.id = obj.id;
+    $scope.tempConference.conferenceName = obj.conferenceName;
+    $scope.tempConference.location = obj.location;
+    $scope.tempConference.startDate = obj.startDate;
+    $scope.tempConference.endDate = obj.endDate;
+    $scope.tempConference.topic = obj.topic;
+  }
+  $scope.cancelConferenceEdit = function () {
+    delete $scope.editConference;
+  };
+  /****************************************************************************/
+  /**************FUNCTION IS USED TO UPDATE LICENSE EDIT SECTION***************/
+  /****************************************************************************/
+  $scope.updateConference = function(conference){
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.updateConference($scope.tempConference).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        conference.conferenceName = $scope.tempConference.conferenceName;
+        conference.location = $scope.tempConference.location;
+        conference.startDate = $scope.tempConference.startDate;
+        conference.endDate = $scope.tempConference.endDate;
+        conference.topic = $scope.tempConference.topic;
+        Util.alertMessage('success', 'You have successfully updated your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in update !!!'); 
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger', 'Error in update !!!');
+    })  
+  }
+  /****************************************************************************/
+  /*********************FUNCTION USE TO ADD PUBLICAION*************************/
+  /****************************************************************************/
+  $scope.savePublication = function(){
+    $rootScope.showPreloader = true;
+    $scope.publication.date = moment($scope.publication.date).format('YYYY-MM-DD');
+    DoctorDetailsService.savePublication($scope.publication).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        $scope.profileDetails.publication.push(response.data.Data);
+        Util.alertMessage('success', 'You have successfully added your information Thank You.'); 
+        // $scope.association = {};
+      }
+      else{
+        Util.alertMessage('danger', 'something went wrong! unable to add Education');  
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger', 'something went wrong! unable to add Education');
+    })
+  }
+  /****************************************************************************/
+  /********************FUNCTION IS USED TO DELETE PUBLICATION******************/
+  /****************************************************************************/
+  $scope.deletePublication = function(id){
+    var obj = {};
+    obj.id = id;
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.deletePublication(obj).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.profileDetails.publication.splice($scope.deleteIndex,1);
+        Util.alertMessage('success', 'You have successfully deleted your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in Delete !!!');
+      }
+    }, function (errorResponse) {
+      $rootScope.showPreloader = false;
+        Util.alertMessage('danger', 'Error in Delete !!!');
+    });
+  }
+  /****************************************************************************/
+  /************FUNCTION IS USED TO OPEN PUBLICATION DELETE MODAL***************/
+  /****************************************************************************/
+  $scope.deletePublicationModal = function(size,publicId,index){
+    $scope.deleteIndex = index;
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/PublicationDetDeleteModal.html',
+     controller: 'PublicationModalCtrl',
+     size: size,
+     resolve: {
+       deletePublication: function () {
+         return $scope.deletePublication;
+       },
+       publicId:function () {
+         return publicId;
+       }
+     }
+    })
+  }
+  /****************************************************************************/
+  /************FUNCTION IS USED TO OPEN PUBLICATION EDIT SECTION***************/
+  /****************************************************************************/
+  $scope.editPublicationOpen = function(index,obj){
+    $scope.editpublication = index;
+    $scope.tempPublication = {};
+    $scope.tempPublication.id = obj.id;
+    $scope.tempPublication.publicationName = obj.publicationName;
+    $scope.tempPublication.date = obj.date;
+    $scope.tempPublication.description = obj.description;
+  }
+  $scope.cancelPublicationEdit = function () {
+    delete $scope.editpublication;
+  };
+  /****************************************************************************/
+  /**************FUNCTION IS USED TO UPDATE LICENSE EDIT SECTION***************/
+  /****************************************************************************/
+  $scope.updatePublication = function(publication){
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.updatePublication($scope.tempPublication).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        publication.publicationName = $scope.tempPublication.publicationName;
+        publication.date = $scope.tempPublication.date;
+        publication.description = $scope.tempPublication.description;
+        Util.alertMessage('success', 'You have successfully updated your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in update !!!'); 
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger', 'Error in update !!!');
+    })  
+  }
+  /****************************************************************************/
   /************************FUNCTION HIDE EDIT FORM*****************************/
   /****************************************************************************/
   $scope.updateWebsiteUrl = function(){
@@ -810,6 +1105,14 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
       $rootScope.showPreloader = false;
       Util.alertMessage('danger','Somthing went wrong ! unable to update your information.');
     });
+  };
+  /****************************************************************************/
+  /****************************To delete the social media link*****************/
+  /****************************************************************************/
+  $scope.clearSocialMedia = function () {
+    $scope.socialmedia.webLink = null;
+    $scope.is_remove = true;
+    $scope.updateSocialMediaURL();
   };
   /****************************************************************************/
   /************************FUNCTION HIDE EDIT FORM*****************************/

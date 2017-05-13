@@ -181,4 +181,101 @@ app.controller('UserProfileController', function($scope, $rootScope, $state, Com
             Util.alertMessage('danger','Somthing went wrong ! unable to update your information.');
         })  
     }
+    /****************************************************************************/
+    /****************************To Change the socila media link*****************/
+    /****************************************************************************/
+    $scope.selectSocialMedia = function(socialmedia) {
+        $scope.boxShow = true;
+        $scope.socialmedia = {};
+        $scope.updateWeblinkURL(socialmedia);
+        $scope.platform = socialmedia;
+    };
+    $scope.updateWeblinkURL = function(platform) {
+      var social;
+      $scope.socialmedia.webLink = '';
+      if($scope.profileDetails.socialLink) {
+        social = $scope.profileDetails.socialLink;
+      }
+      else{
+        social = $scope.profileDetails.socialLink = {};
+      }
+      switch(platform){
+        case "fb":
+          $scope.placeholder = "Your facebook link";
+          if(social.FACEBOOK != null){
+              $scope.socialmedia.webLink = social.FACEBOOK;
+          }
+          break;
+        case "tw":
+          $scope.placeholder = "Your twitter link";
+          if(social.TWITTER != null){
+              $scope.socialmedia.webLink = social.TWITTER;
+          }
+          break;
+        case "gp":
+          $scope.placeholder = "Your google plus link";
+          if(social.GPLUS != null){
+              $scope.socialmedia.webLink = social.GPLUS;
+          }
+          break;
+        case "ln":
+          $scope.placeholder = "Your linkedin link";
+          if(social.LINKEDIN != null){
+              $scope.socialmedia.webLink = social.LINKEDIN;
+          }
+          break;  
+        case "pi":
+          $scope.placeholder = "Your Pinterest link";
+          if(social.PINTEREST != null){
+              $scope.socialmedia.webLink = social.PINTEREST;
+          }
+          break;
+      }
+    }
+    /****************************************************************************/
+    /****************************To Update the social media link*****************/
+    /****************************************************************************/
+    $scope.updateSocialMediaURL = function(){
+        if(!$scope.profileDetails.socialLink)
+          $scope.profileDetails.socialLink = {};
+        var user = {};
+        switch($scope.platform){
+          case "fb":
+            $scope.profileDetails.socialLink.FACEBOOK = $scope.socialmedia.webLink;
+            break;
+          case "tw":
+            $scope.profileDetails.socialLink.TWITTER = $scope.socialmedia.webLink;
+            break;
+          case "gp":
+            $scope.profileDetails.socialLink.GPLUS = $scope.socialmedia.webLink;
+            break;
+          case "ln":
+            $scope.profileDetails.socialLink.LINKEDIN = $scope.socialmedia.webLink;
+            break;
+          case "pi":
+            $scope.profileDetails.socialLink.PINTEREST = $scope.socialmedia.webLink;
+            break;
+        }
+        user.socialLink = $scope.profileDetails.socialLink;
+        $rootScope.showPreloader = true;
+        CommonService.updatePersonalProfile(user).then(function (response) {
+          $rootScope.showPreloader = false;
+          if(response.data.StatusCode == 200){
+            Util.alertMessage('success', 'your information successfully updated. Thank you.');
+          }
+          else{
+            Util.alertMessage('danger', 'Somthing went wrong ! unable to update your information.');
+          }
+        }, function (errorResponse) {
+          $rootScope.showPreloader = false;
+          Util.alertMessage('danger','Somthing went wrong ! unable to update your information.');
+        });
+    };
+    /****************************************************************************/
+    /****************************To delete the social media link*****************/
+    /****************************************************************************/
+    $scope.clearSocialMedia = function () {
+      $scope.socialmedia.webLink = null;
+      $scope.updateSocialMediaURL();
+    };   
 })

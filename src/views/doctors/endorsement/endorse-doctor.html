@@ -1,0 +1,63 @@
+<section class="inner-banner-section" ng-init="loadCurrentReview()">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Endorse Your Doctor</h2>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="page-section padd-v-60" ng-if="doctorDetails">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-3">
+				<div class="doctor-profile-pic">
+					<img ng-if="doctorDetails.photo" class="img-responsive" ng-src="{{doctorDetails.photo}}">
+					<span ng-if="!doctorDetails.photo">{{doctorDetails.profile.name | getShortName}}</span>
+				</div>
+				
+				<div class="rating-card m-t-10">
+					<h3 class="ng-binding">{{doctorDetails.avgRating}}</h3>
+					<ul ng-init="getRatings(doctorDetails)">
+						<li ng-repeat="star in doctorDetails.ratingArr track by $index"><i class="{{star}}"></i></li>
+					</ul>
+					<p>{{doctorDetails.totalReview}} Review(s)</p>
+				</div>
+					
+			</div>
+			<div class="col-sm-9">
+				<form name="reviewFrm">
+					<div class="clearfix">
+						<h2>{{doctorDetails.profile.name}}</h2>
+						<address class="ng-binding">
+							<i class="fa fa-map-marker"></i> {{doctorDetails.address.streetAddress}}</br>
+							{{doctorDetails.address.city}},  {{doctorDetails.address.state}} {{doctorDetails.address.postalCode}} </br>{{doctorDetails.address.country}}</br>
+							<div ng-if="doctorDetails.phone.length > 0">
+								<abbr title="Phone">P:</abbr>
+								<a href="tel:{{doctorDetails.phone[0].number}}">+91 {{doctorDetails.phone[0].number | phonenumber}}</a>
+							</div>
+						</address>
+					</div>
+					<div class="form-group">
+						<label>How do you know ?</label>
+						<select class="form-control b-a h-40" id="sel1" ng-model="review.howYouKnow">
+		                  <option value="Colleague in same profession">Colleague in same profession</option>
+		                  <option value="Friend">Friend</option>
+		                  <option value="Others">Others</option>
+		                </select>		
+					</div>		
+					<div class="form-group">
+						<label>Your Comments</label>
+						<textarea class="form-control" name="comment" rows="4" placeholder="Type your comments..." ng-model="review.description" required></textarea>
+					</div>	
+					<div class="row">
+						<div class="col-sm-12 text-right">
+							<button ng-disabled="reviewFrm.$invalid" ng-click="endorsePreview()" class="btn btn-blue btn-md text-u-c">Preview</button>	
+						</div>				
+					</div>
+				</form>			
+			</div>
+			
+		</div>
+	</div>
+</section>

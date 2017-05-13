@@ -33,5 +33,31 @@ app.controller('LicenseModalCtrl', function ($scope, $uibModalInstance,deleteLic
     $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');
     };
-    
+});
+app.controller('AssociationModalCtrl', function ($scope, $uibModalInstance,deleteAssociation,assoID) {
+    $scope.ok = function () {
+        deleteAssociation(assoID);
+        $uibModalInstance.close();
+    };
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+});
+app.controller('ConferenceModalCtrl', function ($scope, $uibModalInstance,deleteConference,confeID) {
+    $scope.ok = function () {
+        deleteConference(confeID);
+        $uibModalInstance.close();
+    };
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+});
+app.controller('PublicationModalCtrl', function ($scope, $uibModalInstance,deletePublication,publicId) {
+    $scope.ok = function () {
+        deletePublication(publicId);
+        $uibModalInstance.close();
+    };
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
 });

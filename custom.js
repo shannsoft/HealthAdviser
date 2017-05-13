@@ -151,6 +151,30 @@ app.config(["$stateProvider", "$urlRouterProvider", "$provide", function($stateP
       loggedout: confirmLogin
     }
   })
+  .state('endorse-doctor', {
+    templateUrl: 'src/views/doctors/endorsement/endorse-doctor.html',
+    url: '/endorse-doctor/:profileName',
+    controller:"ReviewController",
+    resolve: {
+      loggedout: confirmLogin
+    }
+  })
+  .state('endorse-preview', {
+    templateUrl: 'src/views/doctors/endorsement/endorse-preview.html',
+    url: '/endorse-preview/:profileName',
+    controller:"ReviewController",
+    resolve: {
+      loggedout: confirmLogin
+    }
+  })
+  .state('endorse-success', {
+    templateUrl: 'src/views/doctors/endorsement/endorse-success.html',
+    url: '/endorse-success/:profileName',
+    controller:"ReviewController",
+    resolve: {
+      loggedout: confirmLogin
+    }
+  })
 
 
   function checkLoggedout($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
@@ -276,7 +300,7 @@ app.constant("HEALTH_ADVISER",function(){
   }
 	$scope.register = function(){
 		var userData = {
-			"actType": "I",
+		"actType": "I",
       	"address": {
         	"city": $scope.user.city,
         	"lat":$scope.user.latLng
@@ -292,33 +316,33 @@ app.constant("HEALTH_ADVISER",function(){
       	"password": $scope.user.password,
       	"userName": $scope.user.email,
       	"hearAboutUs":$scope.user.hear_about
-    };
-    $rootScope.showPreloader = true;
-    AuthorizeService.register(userData).then(function (response) {
-    	$rootScope.showPreloader = false;
-    	if(response.data.StatusCode == 200){
-    	var obj = {
-				"userId": $scope.user.email,
-				"password": $scope.user.password
-   		}
-          AuthorizeService.login(obj).then(function (response) {
-          		$rootScope.$emit('login-success');
-          		if($scope.user.isDoctor == true){
-				    		$state.go('doctor-verify');
-          		}
-          		else{
-          			$state.go('updateUserProfile');
-          		}
-          	},function(error){
-							$rootScope.showPreloader = false;
-							Util.alertMessage('danger',"Something went wrong! unable to register");
-          	})
-        	}
-        else{
-					Util.alertMessage('danger',"Something went wrong! unable to register");
-        }
-    	}, function (errorResponse) {
+    	};
+	    $rootScope.showPreloader = true;
+	    AuthorizeService.register(userData).then(function (response) {
+	    	$rootScope.showPreloader = false;
+	    	if(response.data.StatusCode == 200){
+		    	var obj = {
+					"userId": $scope.user.email,
+					"password": $scope.user.password
+		   		}
+		      	AuthorizeService.login(obj).then(function (response) {
+		      		$rootScope.$emit('login-success');
+		      		if($scope.user.isDoctor == true){
+					    $state.go('doctor-verify');
+		      		}
+		      		else{
+		      			$state.go('updateUserProfile');
+		      		}
+		      	},function(error){
 					$rootScope.showPreloader = false;
+					Util.alertMessage('danger',"Something went wrong! unable to register");
+		      	})
+	        }
+	        else{
+				Util.alertMessage('danger',"Something went wrong! unable to register");
+	        }
+    	}, function (errorResponse) {
+			$rootScope.showPreloader = false;
         	Util.alertMessage('danger',"Something went wrong! unable to register");
     	});
 	}
@@ -328,10 +352,10 @@ app.constant("HEALTH_ADVISER",function(){
 			"password": $scope.user.password
 		}
 		$rootScope.showPreloader = true;
-  	AuthorizeService.login(obj).then(function (response) {
-  		$rootScope.showPreloader = false;
+  		AuthorizeService.login(obj).then(function (response) {
+  			$rootScope.showPreloader = false;
 			$rootScope.$emit('login-success');
-  		if(response.data.StatusCode == 200){
+  			if(response.data.StatusCode == 200){
 				if($scope.user.remember){
 					$localStorage.user = {
 						"uname" : $scope.user.email,
@@ -341,14 +365,17 @@ app.constant("HEALTH_ADVISER",function(){
 				if($rootScope.isReload){
 					$location.path($rootScope.reloadState);
 				}
-				else{
+				else if(response.data.Data.isDoctor){
 					$state.go('signedDoctor');
 				}
-  		}
+				else{
+					$state.go('signedUser');
+				}
+  			}
 			else{
 				Util.alertMessage('danger',"Something went wrong! unable to login");
 			}
-  	},function(error){
+  		},function(error){
 			$rootScope.showPreloader = false;
 			Util.alertMessage('danger',"Authentication faild");
 		})
@@ -435,7 +462,33 @@ app.controller('LicenseModalCtrl', ["$scope", "$uibModalInstance", "deleteLicens
     $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');
     };
-    
+}]);
+app.controller('AssociationModalCtrl', ["$scope", "$uibModalInstance", "deleteAssociation", "assoID", function ($scope, $uibModalInstance,deleteAssociation,assoID) {
+    $scope.ok = function () {
+        deleteAssociation(assoID);
+        $uibModalInstance.close();
+    };
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+}]);
+app.controller('ConferenceModalCtrl', ["$scope", "$uibModalInstance", "deleteConference", "confeID", function ($scope, $uibModalInstance,deleteConference,confeID) {
+    $scope.ok = function () {
+        deleteConference(confeID);
+        $uibModalInstance.close();
+    };
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+}]);
+app.controller('PublicationModalCtrl', ["$scope", "$uibModalInstance", "deletePublication", "publicId", function ($scope, $uibModalInstance,deletePublication,publicId) {
+    $scope.ok = function () {
+        deletePublication(publicId);
+        $uibModalInstance.close();
+    };
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
 }]);
 ;app.controller("SpecializationController", ["$scope", "$rootScope", "CommonService", "$localStorage", "$state", function($scope,$rootScope,CommonService,$localStorage,$state){
 	$scope.getSpecializationList = function(){
@@ -662,6 +715,94 @@ app.controller('LicenseModalCtrl', ["$scope", "$uibModalInstance", "deleteLicens
             Util.alertMessage('danger','Somthing went wrong ! unable to update your information.');
         })  
     }
+    $scope.selectSocialMedia = function(socialmedia) {
+        $scope.boxShow = true;
+        $scope.socialmedia = {};
+        $scope.updateWeblinkURL(socialmedia);
+        $scope.platform = socialmedia;
+    };
+    $scope.updateWeblinkURL = function(platform) {
+      var social;
+      $scope.socialmedia.webLink = '';
+      if($scope.profileDetails.socialLink) {
+        social = $scope.profileDetails.socialLink;
+      }
+      else{
+        social = $scope.profileDetails.socialLink = {};
+      }
+      switch(platform){
+        case "fb":
+          $scope.placeholder = "Your facebook link";
+          if(social.FACEBOOK != null){
+              $scope.socialmedia.webLink = social.FACEBOOK;
+          }
+          break;
+        case "tw":
+          $scope.placeholder = "Your twitter link";
+          if(social.TWITTER != null){
+              $scope.socialmedia.webLink = social.TWITTER;
+          }
+          break;
+        case "gp":
+          $scope.placeholder = "Your google plus link";
+          if(social.GPLUS != null){
+              $scope.socialmedia.webLink = social.GPLUS;
+          }
+          break;
+        case "ln":
+          $scope.placeholder = "Your linkedin link";
+          if(social.LINKEDIN != null){
+              $scope.socialmedia.webLink = social.LINKEDIN;
+          }
+          break;  
+        case "pi":
+          $scope.placeholder = "Your Pinterest link";
+          if(social.PINTEREST != null){
+              $scope.socialmedia.webLink = social.PINTEREST;
+          }
+          break;
+      }
+    }
+    $scope.updateSocialMediaURL = function(){
+        if(!$scope.profileDetails.socialLink)
+          $scope.profileDetails.socialLink = {};
+        var user = {};
+        switch($scope.platform){
+          case "fb":
+            $scope.profileDetails.socialLink.FACEBOOK = $scope.socialmedia.webLink;
+            break;
+          case "tw":
+            $scope.profileDetails.socialLink.TWITTER = $scope.socialmedia.webLink;
+            break;
+          case "gp":
+            $scope.profileDetails.socialLink.GPLUS = $scope.socialmedia.webLink;
+            break;
+          case "ln":
+            $scope.profileDetails.socialLink.LINKEDIN = $scope.socialmedia.webLink;
+            break;
+          case "pi":
+            $scope.profileDetails.socialLink.PINTEREST = $scope.socialmedia.webLink;
+            break;
+        }
+        user.socialLink = $scope.profileDetails.socialLink;
+        $rootScope.showPreloader = true;
+        CommonService.updatePersonalProfile(user).then(function (response) {
+          $rootScope.showPreloader = false;
+          if(response.data.StatusCode == 200){
+            Util.alertMessage('success', 'your information successfully updated. Thank you.');
+          }
+          else{
+            Util.alertMessage('danger', 'Somthing went wrong ! unable to update your information.');
+          }
+        }, function (errorResponse) {
+          $rootScope.showPreloader = false;
+          Util.alertMessage('danger','Somthing went wrong ! unable to update your information.');
+        });
+    };
+    $scope.clearSocialMedia = function () {
+      $scope.socialmedia.webLink = null;
+      $scope.updateSocialMediaURL();
+    };   
 }]);app.controller('DirectoryController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorModel", "$state", "$timeout", function($scope,$rootScope,DoctorService,$stateParams,DoctorModel,$state,$timeout){
 	$scope.getStateList = function(){
 		$rootScope.showPreloader = true;
@@ -1326,6 +1467,253 @@ app.controller('LicenseModalCtrl', ["$scope", "$uibModalInstance", "deleteLicens
        Util.alertMessage('danger', 'Error in update !!!');
     })  
   }
+  $scope.saveAssociation = function(){
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.saveAssociation($scope.association).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        $scope.profileDetails.association.push(response.data.Data);
+        Util.alertMessage('success', 'You have successfully added your information Thank You.'); 
+      }
+      else{
+        Util.alertMessage('danger', 'something went wrong! unable to add Education');  
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger', 'something went wrong! unable to add Education');
+    })
+  }
+  $scope.deleteAssociationModal = function(size,assoID,index){
+    $scope.deleteIndex = index;
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/AssociationDetDeleteModal.html',
+     controller: 'AssociationModalCtrl',
+     size: size,
+     resolve: {
+       deleteAssociation: function () {
+         return $scope.deleteAssociation;
+       },
+       assoID:function () {
+         return assoID;
+       }
+     }
+    })
+  }
+  $scope.deleteAssociation = function(id){
+    var obj = {};
+    obj.id = id;
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.deleteAssociation(obj).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.profileDetails.association.splice($scope.deleteIndex,1);
+        Util.alertMessage('success', 'You have successfully deleted your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in Delete !!!');
+      }
+    }, function (errorResponse) {
+      $rootScope.showPreloader = false;
+        Util.alertMessage('danger', 'Error in Delete !!!');
+    });
+  }
+  $scope.editAssociationOpen = function(index,obj){
+    $scope.editassociation = index;
+    $scope.tempAssociation = {};
+    $scope.tempAssociation.id = obj.id;
+    $scope.tempAssociation.associationName = obj.associationName;
+    $scope.tempAssociation.position = obj.position;
+    $scope.tempAssociation.startDate = obj.startDate;
+    $scope.tempAssociation.endDate = obj.endDate;
+  }
+  $scope.cancelAssociationEdit = function () {
+    delete $scope.editassociation;
+  };
+  $scope.updateAssociation = function(association){
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.updateAssociation($scope.tempAssociation).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        association.associationName = $scope.tempAssociation.associationName;
+        association.position = $scope.tempAssociation.position;
+        association.startDate = $scope.tempAssociation.startDate;
+        association.endDate = $scope.tempAssociation.endDate;
+        Util.alertMessage('success', 'You have successfully updated your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in update !!!'); 
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger', 'Error in update !!!');
+    })  
+  }
+  $scope.saveConference = function(){
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.saveConference($scope.conference).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        $scope.profileDetails.conference.push(response.data.Data);
+        Util.alertMessage('success', 'You have successfully added your information Thank You.'); 
+      }
+      else{
+        Util.alertMessage('danger', 'something went wrong! unable to add Education');  
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger', 'something went wrong! unable to add Education');
+    })
+  }
+  $scope.deleteConferenceModal = function(size,confeID,index){
+    $scope.deleteIndex = index;
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/ConferenceDetDeleteModal.html',
+     controller: 'ConferenceModalCtrl',
+     size: size,
+     resolve: {
+       deleteConference: function () {
+         return $scope.deleteConference;
+       },
+       confeID:function () {
+         return confeID;
+       }
+     }
+    })
+  }
+  $scope.deleteConference = function(id){
+    var obj = {};
+    obj.id = id;
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.deleteConference(obj).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.profileDetails.conference.splice($scope.deleteIndex,1);
+        Util.alertMessage('success', 'You have successfully deleted your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in Delete !!!');
+      }
+    }, function (errorResponse) {
+      $rootScope.showPreloader = false;
+        Util.alertMessage('danger', 'Error in Delete !!!');
+    });
+  }
+  $scope.editConferenceOpen = function(index,obj){
+    $scope.editConference = index;
+    $scope.tempConference = {};
+    $scope.tempConference.id = obj.id;
+    $scope.tempConference.conferenceName = obj.conferenceName;
+    $scope.tempConference.location = obj.location;
+    $scope.tempConference.startDate = obj.startDate;
+    $scope.tempConference.endDate = obj.endDate;
+    $scope.tempConference.topic = obj.topic;
+  }
+  $scope.cancelConferenceEdit = function () {
+    delete $scope.editConference;
+  };
+  $scope.updateConference = function(conference){
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.updateConference($scope.tempConference).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        conference.conferenceName = $scope.tempConference.conferenceName;
+        conference.location = $scope.tempConference.location;
+        conference.startDate = $scope.tempConference.startDate;
+        conference.endDate = $scope.tempConference.endDate;
+        conference.topic = $scope.tempConference.topic;
+        Util.alertMessage('success', 'You have successfully updated your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in update !!!'); 
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger', 'Error in update !!!');
+    })  
+  }
+  $scope.savePublication = function(){
+    $rootScope.showPreloader = true;
+    $scope.publication.date = moment($scope.publication.date).format('YYYY-MM-DD');
+    DoctorDetailsService.savePublication($scope.publication).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        $scope.profileDetails.publication.push(response.data.Data);
+        Util.alertMessage('success', 'You have successfully added your information Thank You.'); 
+      }
+      else{
+        Util.alertMessage('danger', 'something went wrong! unable to add Education');  
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger', 'something went wrong! unable to add Education');
+    })
+  }
+  $scope.deletePublication = function(id){
+    var obj = {};
+    obj.id = id;
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.deletePublication(obj).then(function (response) {
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.profileDetails.publication.splice($scope.deleteIndex,1);
+        Util.alertMessage('success', 'You have successfully deleted your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in Delete !!!');
+      }
+    }, function (errorResponse) {
+      $rootScope.showPreloader = false;
+        Util.alertMessage('danger', 'Error in Delete !!!');
+    });
+  }
+  $scope.deletePublicationModal = function(size,publicId,index){
+    $scope.deleteIndex = index;
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/PublicationDetDeleteModal.html',
+     controller: 'PublicationModalCtrl',
+     size: size,
+     resolve: {
+       deletePublication: function () {
+         return $scope.deletePublication;
+       },
+       publicId:function () {
+         return publicId;
+       }
+     }
+    })
+  }
+  $scope.editPublicationOpen = function(index,obj){
+    $scope.editpublication = index;
+    $scope.tempPublication = {};
+    $scope.tempPublication.id = obj.id;
+    $scope.tempPublication.publicationName = obj.publicationName;
+    $scope.tempPublication.date = obj.date;
+    $scope.tempPublication.description = obj.description;
+  }
+  $scope.cancelPublicationEdit = function () {
+    delete $scope.editpublication;
+  };
+  $scope.updatePublication = function(publication){
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.updatePublication($scope.tempPublication).then(function(response){
+      $rootScope.showPreloader = false;
+      if (response.data.StatusCode == 200) {
+        publication.publicationName = $scope.tempPublication.publicationName;
+        publication.date = $scope.tempPublication.date;
+        publication.description = $scope.tempPublication.description;
+        Util.alertMessage('success', 'You have successfully updated your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in update !!!'); 
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger', 'Error in update !!!');
+    })  
+  }
   $scope.updateWebsiteUrl = function(){
     var doctor = {};
     if ($scope.profileDetails.website.match('^http://') || $scope.profileDetails.website.match('^https://')){
@@ -1457,6 +1845,11 @@ app.controller('LicenseModalCtrl', ["$scope", "$uibModalInstance", "deleteLicens
       Util.alertMessage('danger','Somthing went wrong ! unable to update your information.');
     });
   };
+  $scope.clearSocialMedia = function () {
+    $scope.socialmedia.webLink = null;
+    $scope.is_remove = true;
+    $scope.updateSocialMediaURL();
+  };
 	$scope.processForm = function() {
 		$scope.showTheForm = false;
 	}
@@ -1491,13 +1884,13 @@ app.controller('LicenseModalCtrl', ["$scope", "$uibModalInstance", "deleteLicens
 ;app.controller('ReviewController',["$scope", "$rootScope", "$stateParams", "DoctorService", "CommonService", "$state", function($scope, $rootScope, $stateParams, DoctorService,CommonService,$state){
 	$rootScope.isReload = false;
   	$scope.loadCurrentReview = function(){
-	var tempReview = CommonService.getReviewDetails();
-	    $scope.doctorDetails = tempReview.doctorDetails;
-	    $scope.review = tempReview.review;
-	    if(!$scope.doctorDetails){
-	    	$scope.getDoctorDetails();
-	    }
-	}
+    	var tempReview = CommonService.getReviewDetails();
+      $scope.doctorDetails = tempReview.doctorDetails;
+      $scope.review = tempReview.review;
+      if(!$scope.doctorDetails){
+      	$scope.getDoctorDetails();
+      }
+  	}
   	$scope.getDoctorDetails = function(){
   		$scope.review = {};
   		$scope.review.isAnonymous = false;
@@ -1511,42 +1904,60 @@ app.controller('LicenseModalCtrl', ["$scope", "$uibModalInstance", "deleteLicens
 			})
 		}
   	}
-  	$scope.gotoPreview = function(){
-  		var review = {
-  			"review" : $scope.review,
-  			"doctorDetails" : $scope.doctorDetails
-  		}
-	    CommonService.setReviewDetails(review);
-	    $state.go('review-preview',{profileName: $stateParams.profileName});
+  $scope.gotoPreview = function(){
+    var review = {
+      "review" : $scope.review,
+      "doctorDetails" : $scope.doctorDetails
+    }
+    CommonService.setReviewDetails(review);
+    $state.go('review-preview',{profileName: $stateParams.profileName});
+  }
+	$scope.endorsePreview = function(){
+		var review = {
+			"review" : $scope.review,
+			"doctorDetails" : $scope.doctorDetails
+		}
+    CommonService.setReviewDetails(review);
+    $state.go('endorse-preview',{profileName: $stateParams.profileName});
+  }
+	$scope.currentRatings = function(review) {
+    rating = review.rating.toString().split(".");
+    ratingArr = [];
+    halfStar = false;
+    var isFloat = false;
+    for (var i = 0; i < 5; i++) {
+      if (i < parseInt(rating[0])) {
+        ratingArr.push("color-yellow fa fa-star");
+      } else if (parseInt(rating[1]) && !halfStar) {
+        ratingArr.push("color-yellow fa fa-star-half-o");
+        halfStar = true;
+      } else {
+        ratingArr.push("color-yellow fa fa-star-o");
+      }
+    }
+	  $scope.currentRating = ratingArr;
 	}
-  	$scope.currentRatings = function(review) {
-	    rating = review.rating.toString().split(".");
-	    ratingArr = [];
-	    halfStar = false;
-	    var isFloat = false;
-	    for (var i = 0; i < 5; i++) {
-	      if (i < parseInt(rating[0])) {
-	        ratingArr.push("color-yellow fa fa-star");
-	      } else if (parseInt(rating[1]) && !halfStar) {
-	        ratingArr.push("color-yellow fa fa-star-half-o");
-	        halfStar = true;
-	      } else {
-	        ratingArr.push("color-yellow fa fa-star-o");
-	      }
-	    }
-	    $scope.currentRating = ratingArr;
-	}
-  	$scope.submitReview = function(){
-  		$scope.review.doctorId = $scope.doctorDetails.userCode
-  		console.log($scope.review);
-  		$rootScope.showPreloader = true;
-  		CommonService.reviewDoctor($scope.review).then(function(response){
-  			$rootScope.showPreloader = false;
-  			if(response.data.StatusCode == 200){
-  				$state.go('review-success',{profileName: $stateParams.profileName});
-  			}
-  		})
-  	}
+  $scope.submitReview = function(){
+    $scope.review.doctorId = $scope.doctorDetails.userCode
+    console.log($scope.review);
+    $rootScope.showPreloader = true;
+    CommonService.reviewDoctor($scope.review).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $state.go('review-success',{profileName: $stateParams.profileName});
+      }
+    })
+  }
+	$scope.submitEndorsement = function(){
+		$scope.review.docCode = $scope.doctorDetails.userCode
+		$rootScope.showPreloader = true;
+		CommonService.endorseDoctor($scope.review).then(function(response){
+			$rootScope.showPreloader = false;
+			if(response.data.StatusCode == 200){
+				$state.go('endorse-success',{profileName: $stateParams.profileName});
+			}
+		})
+  }
 }])
 ;app.controller('DoctorsController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorModel", "$state", "orderByFilter", function($scope,$rootScope,DoctorService,$stateParams,DoctorModel,$state,orderByFilter){
 	$scope.compareDoctorArr = [{}, {}, {}, {}];
@@ -2462,6 +2873,15 @@ app.factory("HealthAuth",["HEALTH_ADVISER", function(HEALTH_ADVISER){
       });
       return response;
     },
+    endorseDoctor : function(obj){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.API_PATH+'_Profile_Endrosement',
+          data: obj,
+          headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+      });
+      return response;
+    },
   }
 }]);
 app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){
@@ -2606,6 +3026,87 @@ app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){
 			var response = $http({
 			    method: 'PUT',
 			    url: CONFIG.API_PATH+'_Profile_License',
+			    data: obj,
+			    headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		saveAssociation : function (obj) {
+			var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_Profile_Association',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		deleteAssociation : function (obj) {
+			var response = $http({
+		        method: 'DELETE',
+		        url: CONFIG.API_PATH+'_Profile_Association',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		updateAssociation : function (obj) {
+			var response = $http({
+			    method: 'PUT',
+			    url: CONFIG.API_PATH+'_Profile_Association',
+			    data: obj,
+			    headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		saveConference : function (obj) {
+			var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_Profile_Conference',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		deleteConference : function (obj) {
+			var response = $http({
+		        method: 'DELETE',
+		        url: CONFIG.API_PATH+'_Profile_Conference',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		updateConference : function (obj) {
+			var response = $http({
+			    method: 'PUT',
+			    url: CONFIG.API_PATH+'_Profile_Conference',
+			    data: obj,
+			    headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		savePublication : function (obj) {
+			var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_Profile_Publication',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		deletePublication : function (obj) {
+			var response = $http({
+		        method: 'DELETE',
+		        url: CONFIG.API_PATH+'_Profile_Publication',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		updatePublication : function (obj) {
+			var response = $http({
+			    method: 'PUT',
+			    url: CONFIG.API_PATH+'_Profile_Publication',
 			    data: obj,
 			    headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
 		    });

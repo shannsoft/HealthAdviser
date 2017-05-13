@@ -176,34 +176,29 @@
 								<div role=tabpanel class="tab-pane fade" id="div_specialization-tab" aria-labelledby=specialization-tab>
 									<div class="row">
 										<div class="col-sm-5">
-											<h3 class="m-t-0">Social Link</h3>
-											<div class="social-line"></div>
-											<small>Click on Social Icon to add personal social media information.</small>
-											<ul class="social-media">
-												<li><a href=""><span class="facebook-bg-default"><i class="fa fa-facebook"></i></span></a></li>
-												<li><a href=""><span class="twitter-bg-default"><i class="fa fa-twitter"></i></span></a></li>
-												<li><a href=""><span class="gplus-bg-default"><i class="fa fa-google-plus"></i></span></a></li>
-												<li><a href=""><span class="instagram-bg-default"><i class="fa fa-instagram"></i></span></a></li>
-												<li><a href=""><span class="youtube-bg-default"><i class="fa fa-youtube"></i></span></a></li>
-												<li><a href=""><span class="pinterest-bg-default"><i class="fa fa-pinterest-square"></i></span></a></li>
-											</ul>
-											<div class="row">
-												<div class="col-sm-8">
-													<div class="form-group m-b-20">
-													  <label class="control-label">Social Link</label>
-													  <input type="url" name="social" class="form-control b-a h-40" placeholder="" required="">
-													  <span style="color:red;font-size: 10px">URL shold be like http://www.example.com</span>
+											<form name="socialfrm">
+												<h3 class="m-t-0">Social Link</h3>
+												<div class="social-line"></div>
+												<small>Click on Social Icon to add personal social media information.</small>
+												<ul class="social-media">
+													<li><a href="" ng-click="selectSocialMedia('fb')"><span class="facebook-bg-default"><i class="fa fa-facebook"></i></span></a></li>
+													<li><a href="" ng-click="selectSocialMedia('tw')"><span class="twitter-bg-default"><i class="fa fa-twitter"></i></span></a></li>
+													<li><a href="" ng-click="selectSocialMedia('gp')"><span class="gplus-bg-default"><i class="fa fa-google-plus"></i></span></a></li>
+													<li><a href="" ng-click="selectSocialMedia('ln')"><span class="instagram-bg-default"><i class="fa fa-linkedin"></i></span></a></li>
+													<li><a href="" ng-click="selectSocialMedia('pi')"><span class="pinterest-bg-default"><i class="fa fa-pinterest-square"></i></span></a></li>
+												</ul>
+												<div class="row" ng-show="boxShow">
+													<div class="col-sm-8">
+														<div class="form-group m-b-20">
+														  <label class="control-label">Social Link</label>
+														  <input type="url" name="social" class="form-control b-a h-40" placeholder="{{placeholder}}" ng-model="socialmedia.webLink" required/>
+														  <span style="color:red;font-size: 10px" ng-show="socialfrm.social.$error.url">URL shold be like http://www.example.com</span>
+														</div>
 													</div>
+													<button class="btn btn-blue social-link-btn m-t-30" role="button" ng-click="updateSocialMediaURL()" ng-disabled="aboutMeForm.social.$invalid" disabled="disabled"><i class="fa fa-check"></i></button>
+													<button class="btn btn-danger social-link-btn m-t-30" role="button" ng-click="clearSocialMedia()"><i class="fa fa-times"></i></button>
 												</div>
-												<button class="btn btn-blue social-link-btn m-t-30" role="button" ng-click="updateSocialMediaURL()" ng-disabled="aboutMeForm.social.$invalid" disabled="disabled"><i class="fa fa-check"></i></button>
-												<button class="btn btn-danger social-link-btn m-t-30" role="button" ng-click="clearSocialMedia()"><i class="fa fa-times"></i></button>
-											</div>
-										</div>
-									</div>
-									<div class="row m-t-10">
-										<div class="col-sm-12 m-t-10">
-										  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-										  <button class="btn btn-red btn-md text-u-c">Cancel</button>
+											</form>	
 										</div>
 									</div>
 								</div>

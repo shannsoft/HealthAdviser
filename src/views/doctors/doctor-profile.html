@@ -763,92 +763,100 @@
 						<div id="collapseFive" class="panel-collapse collapse" uib-collapse="signupCollapse.associations">
 							<div class="panel-body">
 								<div class="m-b-20" ng-repeat="associate in profileDetails.association">
-									<div>
+									<div ng-if="editassociation != $index">
 										<div class="tab-custom-icon">
-											<a href="" ng-click="showTheForm = !showTheForm"><i class="fa fa-edit"></i> </a>
-											<a href="" ng-click="deleteAwards('md',work.id)" ><i class="fa fa-trash"></i></a>
+											<a href="" ng-click="editAssociationOpen($index,associate)"><i class="fa fa-edit"></i> </a>
+											<a href="" ng-click="deleteAssociationModal('md',associate.id,$index)" ><i class="fa fa-trash"></i></a>
 										</div>
 										<div class="form-block-wrap">
 											<div class="associate-content">
 												<h3>{{associate.associationName}}</h3>
-												<p class="p-t-10">{{associate.position}} ({{associate.startDate | dateformat1}}   {{associate.endDate | dateformat1}})</p>
+												<p class="p-t-10">{{associate.position}} ({{associate.startDate | dateformat1}} to {{associate.endDate | dateformat1}})</p>
 											</div>
 										</div>
 									</div>
-									<div class="form-block-wrap" ng-show="showTheForm" ng-submit="processForm()">
-										<div class="row">
+									<div class="form-block-wrap" ng-if="editassociation == $index">
+										<form name="e_asso_frm">
+											<div class="row">
 											<div class="col-sm-6">
 												<div class="form-group">
 													<label>Association Name</label>
-													<input type="text" class="form-control" id="" placeholder="" ng-modal="associate.associationName">
+													<input type="text" class="form-control" name="e_asso_name" placeholder="Association Name" ng-model="tempAssociation.associationName" required>
+													<span class="color-red" ng-show="e_asso_frm.e_asso_name.$touched && e_asso_frm.e_asso_name.$error.required">Please enter Association Name</span>
 												</div>
 											</div>
 											<div class="col-sm-6">
 												<div class="form-group">
 													<label>Position</label>
-													<input type="text" class="form-control" id="" placeholder="" ng-modal="associate.position">
+													<input type="text" class="form-control" name="e_position" placeholder="Position" ng-model="tempAssociation.position" required>
+													<span class="color-red" ng-show="e_asso_frm.e_position.$touched && e_asso_frm.e_position.$error.required">Please enter your position</span>
 												</div>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-sm-6">
-												<div class="form-group">
+												<div class="form-group" ng-controller="DatePickerCtrl">
 													<label>Start Date</label>
-													<input type="text" class="form-control" id="" placeholder="" ng-modal="associate.startDate">
+													<input type="text" class="form-control" name="e_startDate" ng-change="changeSelect('start',tempAssociation.startDate,tempAssociation.endDate)" placeholder="2017-01-01" ng-model="tempAssociation.startDate" datepicker-popup="yyyy-MM-dd" datepicker-options="dateOptions"  is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)" close-text="Close"/>
 												</div>
 											</div>
 											<div class="col-sm-6">
-												<div class="form-group">
+												<div class="form-group" ng-controller="DatePickerCtrl">
 													<label>End Date</label>
-													<input type="text" class="form-control" id="" placeholder="" ng-modal="associate.endDate">
+													<input type="text" class="form-control" name="e_endDate" ng-change="changeSelect('end',tempAssociation.startDate,tempAssociation.endDate)" placeholder="2017-01-01" ng-model="tempAssociation.endDate" datepicker-popup="yyyy-MM-dd" datepicker-options="dateOptions" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)" close-text="Close"/>
 												</div>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-sm-12 m-t-10 text-right">
-											  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-											  <button class="btn btn-red btn-md text-u-c">Cancel</button>
+											  <button class="btn btn-blue btn-md text-u-c" ng-disabled="e_asso_frm.$invalid" ng-click="updateAssociation(associate)">Save Change</button>
+											  <button class="btn btn-red btn-md text-u-c" ng-click="cancelAssociationEdit()">Cancel</button>
 											</div>
 										</div>
+										</form>
 									</div>
 								</div>
-								<div class="form-block-wrap" ng-show="showTheForm1" ng-submit="processForm1()">
-									<div class="row">
+								<div class="form-block-wrap" ng-show="showAssociationAdd">
+									<form name="associationfrm">
+										<div class="row">
 											<div class="col-sm-6">
 												<div class="form-group">
 													<label>Association Name</label>
-													<input type="text" class="form-control" id="" placeholder="Association Name">
+													<input type="text" class="form-control" name="asso_name" placeholder="Association Name" ng-model="association.associationName" required>
+													<span class="color-red" ng-show="associationfrm.asso_name.$touched && associationfrm.asso_name.$error.required">Please enter Association Name</span>
 												</div>
 											</div>
 											<div class="col-sm-6">
 												<div class="form-group">
 													<label>Position</label>
-													<input type="text" class="form-control" id="" placeholder="Position">
+													<input type="text" class="form-control" name="position" placeholder="Position" ng-model="association.position" required>
+													<span class="color-red" ng-show="associationfrm.position.$touched && associationfrm.position.$error.required">Please enter your position</span>
 												</div>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-sm-6">
-												<div class="form-group">
+												<div class="form-group" ng-controller="DatePickerCtrl">
 													<label>Start Date</label>
-													<input type="text" class="form-control" id="" placeholder="Start Date">
+													<input type="text" class="form-control" name="startDate" ng-change="changeSelect('start',association.startDate,association.endDate)" placeholder="2017-01-01" ng-model="association.startDate" datepicker-popup="yyyy-MM-dd" datepicker-options="dateOptions"  is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)" close-text="Close"/>
 												</div>
 											</div>
 											<div class="col-sm-6">
-												<div class="form-group">
+												<div class="form-group" ng-controller="DatePickerCtrl">
 													<label>End Date</label>
-													<input type="text" class="form-control" id="" placeholder="End Date">
+													<input type="text" class="form-control" name="endDate" ng-change="changeSelect('end',association.startDate,association.endDate)" placeholder="2017-01-01" ng-model="association.endDate" datepicker-popup="yyyy-MM-dd" datepicker-options="dateOptions" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)" close-text="Close"/>
 												</div>
 											</div>
 										</div>
-									<div class="row">
-										<div class="col-sm-12 m-t-10 text-right">
-										  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-										  <button class="btn btn-red btn-md text-u-c">Cancel</button>
+										<div class="row">
+											<div class="col-sm-12 m-t-10 text-right">
+											  <button class="btn btn-blue btn-md text-u-c" ng-disabled="associationfrm.$invalid" ng-click="saveAssociation()">Save Change</button>
+											  <button class="btn btn-red btn-md text-u-c" ng-click="showAssociationAdd = !showAssociationAdd">Cancel</button>
+											</div>
 										</div>
-									</div>
+									</form>
 								</div>
-								<a href="" class="btn btn-success btn-md text-u-c m-t-10" ng-click="showTheForm1 = !showTheForm1"><i class="fa fa-plus"></i> Add New Awards</a>
+								<a href="" class="btn btn-success btn-md text-u-c m-t-10" ng-click="showAssociationAdd = !showAssociationAdd"><i class="fa fa-plus"></i> Add New Associations</a>
 							</div>
 						</div>
 					</div>
@@ -864,31 +872,67 @@
 						<div id="collapseSix" class="panel-collapse collapse" uib-collapse="signupCollapse.publications">
 							<div class="panel-body">
 								<div class="m-b-20" ng-repeat="publications in profileDetails.publication">
-									<div>
+									<div ng-show="editpublication != $index">
 										<div class="tab-custom-icon">
-											<a href="" ng-click="showTheForm = !showTheForm"><i class="fa fa-edit"></i> </a>
-											<a href="" ng-click="deleteAwards('md',work.id)" ><i class="fa fa-trash"></i></a>
+											<a href="" ng-click="editPublicationOpen($index,publications)"><i class="fa fa-edit"></i> </a>
+											<a href="" ng-click="deletePublicationModal('md',publications.id,$index)" ><i class="fa fa-trash"></i></a>
 										</div>
 										<div class="form-block-wrap">
 											<div class="publications-content">
-												<h3>{{publications.publicaitonName}}</h3>
+												<h3>{{publications.publicationName}}</h3>
 												<p class="p-t-10">{{publications.date | dateformat1}}</p>
 												<p>{{publications.description}}</p>
 											</div>
 										</div>
 									</div>
-									<div class="form-block-wrap" ng-show="showTheForm" ng-submit="processForm()">
+									<div class="form-block-wrap" ng-show="editpublication == $index">
+										<form name="e_publicationFrm">
+											<div class="row">
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>Publication Name</label>
+														<input type="text" class="form-control" name="e_pub_name" placeholder="Publication Name" ng-model="tempPublication.publicationName" required>
+														<span class="color-red" ng-show="e_publicationFrm.e_pub_name.$touched && e_publicationFrm.e_pub_name.$error.required">Please enter Publication Name</span>
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="form-group" ng-controller="DatePickerCtrl">
+														<label>Publication Date</label>
+														<input type="text" class="form-control" name="e_pub_date" placeholder="2017-01-01" ng-model="tempPublication.date" datepicker-popup="yyyy-MM-dd" datepicker-options="dateOptions"  is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)" close-text="Close"/>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="form-group">
+														<label>Description</label>
+														<textarea class="form-control" rows="3" ng-model="tempPublication.description" name="e_description" placeholder="Description....."></textarea>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12 m-t-10 text-right">
+												  <button class="btn btn-blue btn-md text-u-c" ng-disabled="e_publicationFrm.$invalid" ng-click="updatePublication(publications)">Save Change</button>
+												  <button class="btn btn-red btn-md text-u-c" ng-click="cancelPublicationEdit()">Cancel</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+								<div class="form-block-wrap" ng-show="showPublication">
+									<form name="publicationFrm">
 										<div class="row">
 											<div class="col-sm-6">
 												<div class="form-group">
-													<label>publications Name</label>
-													<input type="text" class="form-control" id="" placeholder="" ng-modal="publications.publicaitonName">
+													<label>Publication Name</label>
+													<input type="text" class="form-control" name="pub_name" placeholder="Publication Name" ng-model="publication.publicationName" required>
+													<span class="color-red" ng-show="publicationFrm.pub_name.$touched && publicationFrm.pub_name.$error.required">Please enter Publication Name</span>
 												</div>
 											</div>
 											<div class="col-sm-6">
-												<div class="form-group">
-													<label>Date</label>
-													<input type="text" class="form-control" id="" placeholder="" ng-modal="publications.date">
+												<div class="form-group" ng-controller="DatePickerCtrl">
+													<label>Publication Date</label>
+													<input type="text" class="form-control" name="pub_date" placeholder="2017-01-01" ng-model="publication.date" datepicker-popup="yyyy-MM-dd" datepicker-options="dateOptions"  is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)" close-text="Close"/>
 												</div>
 											</div>
 										</div>
@@ -896,49 +940,19 @@
 											<div class="col-sm-12">
 												<div class="form-group">
 													<label>Description</label>
-													<input type="text" class="form-control" id="" placeholder="" ng-modal="publications.description">
+													<textarea class="form-control" rows="3" ng-model="publication.description" name="description" placeholder="Description....."></textarea>
 												</div>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-sm-12 m-t-10 text-right">
-											  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-											  <button class="btn btn-red btn-md text-u-c">Cancel</button>
+											  <button class="btn btn-blue btn-md text-u-c" ng-disabled="publicationFrm.$invalid" ng-click="savePublication()">Save Change</button>
+											  <button class="btn btn-red btn-md text-u-c" ng-click="showPublication = !showPublication">Cancel</button>
 											</div>
 										</div>
-									</div>
+									</form>
 								</div>
-								<div class="form-block-wrap" ng-show="showTheForm1" ng-submit="processForm1()">
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Publication Name</label>
-												<input type="text" class="form-control" id="" placeholder="Association Name">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Publication Date</label>
-												<input type="text" class="form-control" id="" placeholder="Date">
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-12">
-											<div class="form-group">
-												<label>Description</label>
-												<input type="text" class="form-control" id="" placeholder="Description">
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-12 m-t-10 text-right">
-										  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-										  <button class="btn btn-red btn-md text-u-c">Cancel</button>
-										</div>
-									</div>
-								</div>
-								<a href="" class="btn btn-success btn-md text-u-c m-t-10" ng-click="showTheForm1 = !showTheForm1"><i class="fa fa-plus"></i> Add New Awards</a>
+								<a href="" class="btn btn-success btn-md text-u-c m-t-10" ng-click="showPublication = !showPublication"><i class="fa fa-plus"></i> Add New Publications</a>
 							</div>
 						</div>
 					</div>
@@ -954,46 +968,99 @@
 						<div id="collapseSeven" class="panel-collapse collapse" uib-collapse="signupCollapse.conference">
 							<div class="panel-body">
 								<div class="m-b-20" ng-repeat="conferences in profileDetails.conference">
-									<div>
+									<div ng-if="editConference != $index">
 										<div class="tab-custom-icon">
-											<a href="" ng-click="showTheForm = !showTheForm"><i class="fa fa-edit"></i> </a>
-											<a href="" ng-click="deleteAwards('md',work.id)" ><i class="fa fa-trash"></i></a>
+											<a href="" ng-click="editConferenceOpen($index,conferences)"><i class="fa fa-edit"></i> </a>
+											<a href="" ng-click="deleteConferenceModal('md',conferences.id,$index)" ><i class="fa fa-trash"></i></a>
 										</div>
 										<div class="form-block-wrap">
 											<div class="conferences-content">
 												<h3>{{conferences.conferenceName}}</h3>
-												<p class="p-t-10">{{conferences.startDate | dateformat1}} - {{conferences.endDate | dateformat1}}</p>
+												<p class="p-t-10">{{conferences.startDate | dateformat1}} to {{conferences.endDate | dateformat1}}</p>
 												<p>{{conferences.location}}</p>
 												<p>{{conferences.topic}}</p>
 											</div>
 										</div>
 									</div>
-									<div class="form-block-wrap" ng-show="showTheForm" ng-submit="processForm()">
+									<div class="form-block-wrap" ng-if="editConference == $index">
+										<form name="e_conference_frm">
+											<div class="row">
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>Conference Name</label>
+														<input type="text" class="form-control" name="e_con_name" placeholder="Conference Name" ng-model="tempConference.conferenceName" required>
+														<span class="color-red" ng-show="e_conference_frm.e_con_name.$touched && e_conference_frm.e_con_name.$error.required">Please enter Conference Name</span>
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>Location</label>
+														<input type="text" class="form-control" name="e_location" placeholder="Location" ng-model="tempConference.location" required>
+														<span class="color-red" ng-show="e_conference_frm.e_location.$touched && e_conference_frm.e_location.$error.required">Please enter conference location</span>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-6">
+													<div class="form-group" ng-controller="DatePickerCtrl">
+														<label>Start Date</label>
+														<input type="text" class="form-control" name="e_startDate" ng-change="changeSelect('start',tempConference.startDate,tempConference.endDate)" placeholder="2017-01-01" ng-model="tempConference.startDate" datepicker-popup="yyyy-MM-dd" datepicker-options="dateOptions"  is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)" close-text="Close"/>
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="form-group" ng-controller="DatePickerCtrl">
+														<label>End Date</label>
+														<input type="text" class="form-control" name="e_endDate" ng-change="changeSelect('end',tempConference.startDate,tempConference.endDate)" placeholder="2017-01-01" ng-model="tempConference.endDate" datepicker-popup="yyyy-MM-dd" datepicker-options="dateOptions" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)" close-text="Close"/>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="form-group">
+														<label>Topic</label>
+														<textarea class="form-control" rows="3" placeholder="Topic" ng-model="tempConference.topic" name="e_topic" required></textarea>
+														<span class="color-red" ng-show="e_conference_frm.e_topic.$touched && e_conference_frm.e_topic.$error.required">Please enter your topic</span>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12 m-t-10 text-right">
+												  <button class="btn btn-blue btn-md text-u-c" ng-disabled="e_conference_frm.$invalid" ng-click="updateConference(conferences)">Save Change</button>
+												  <button class="btn btn-red btn-md text-u-c" ng-click="cancelConferenceEdit()">Cancel</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+								<div class="form-block-wrap" ng-show="showConferenceAdd">
+									<form name="conference_frm">
 										<div class="row">
 											<div class="col-sm-6">
 												<div class="form-group">
 													<label>Conference Name</label>
-													<input type="text" class="form-control" id="" placeholder="" ng-modal="conferences.conferenceName">
+													<input type="text" class="form-control" name="con_name" placeholder="Conference Name" ng-model="conference.conferenceName" required>
+													<span class="color-red" ng-show="conference_frm.con_name.$touched && conference_frm.con_name.$error.required">Please enter Conference Name</span>
 												</div>
 											</div>
 											<div class="col-sm-6">
 												<div class="form-group">
 													<label>Location</label>
-													<input type="text" class="form-control" id="" placeholder="" ng-modal="conferences.location">
+													<input type="text" class="form-control" name="location" placeholder="Location" ng-model="conference.location" required>
+													<span class="color-red" ng-show="conference_frm.location.$touched && conference_frm.location.$error.required">Please enter conference location</span>
 												</div>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-sm-6">
-												<div class="form-group">
+												<div class="form-group" ng-controller="DatePickerCtrl">
 													<label>Start Date</label>
-													<input type="text" class="form-control" id="" placeholder="" ng-modal="conferences.startDate">
+													<input type="text" class="form-control" name="startDate" ng-change="changeSelect('start',conference.startDate,conference.endDate)" placeholder="2017-01-01" ng-model="conference.startDate" datepicker-popup="yyyy-MM-dd" datepicker-options="dateOptions"  is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)" close-text="Close"/>
 												</div>
 											</div>
 											<div class="col-sm-6">
-												<div class="form-group">
+												<div class="form-group" ng-controller="DatePickerCtrl">
 													<label>End Date</label>
-													<input type="text" class="form-control" id="" placeholder="" ng-modal="conferences.endDate">
+													<input type="text" class="form-control" name="endDate" ng-change="changeSelect('end',conference.startDate,conference.endDate)" placeholder="2017-01-01" ng-model="conference.endDate" datepicker-popup="yyyy-MM-dd" datepicker-options="dateOptions" is-open="opened" min-date="minDate" max-date="dt" date-disabled="disabled(date, mode)" ng-click="open1($event)" close-text="Close"/>
 												</div>
 											</div>
 										</div>
@@ -1001,63 +1068,20 @@
 											<div class="col-sm-12">
 												<div class="form-group">
 													<label>Topic</label>
-													<input type="text" class="form-control" id="" placeholder="" ng-modal="conferences.topic">
+													<textarea class="form-control" rows="3" placeholder="Topic" ng-model="conference.topic" name="topic" required></textarea>
+													<span class="color-red" ng-show="conference_frm.topic.$touched && conference_frm.topic.$error.required">Please enter your topic</span>
 												</div>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-sm-12 m-t-10 text-right">
-											  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-											  <button class="btn btn-red btn-md text-u-c">Cancel</button>
+											  <button class="btn btn-blue btn-md text-u-c" ng-click="saveConference()">Save Change</button>
+											  <button class="btn btn-red btn-md text-u-c" ng-click="showConferenceAdd = !showConferenceAdd">Cancel</button>
 											</div>
 										</div>
-									</div>
+									</form>
 								</div>
-								<div class="form-block-wrap" ng-show="showTheForm1" ng-submit="processForm1()">
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Conference Name</label>
-												<input type="text" class="form-control" id="" placeholder="">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Location</label>
-												<input type="text" class="form-control" id="" placeholder="">
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Start Date</label>
-												<input type="text" class="form-control" id="" placeholder="">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>End Date</label>
-												<input type="text" class="form-control" id="" placeholder="">
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-12">
-											<div class="form-group">
-												<label>Topic</label>
-												<input type="text" class="form-control" id="" placeholder="">
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-12 m-t-10 text-right">
-										  <button class="btn btn-blue btn-md text-u-c">Save Change</button>
-										  <button class="btn btn-red btn-md text-u-c">Cancel</button>
-										</div>
-									</div>
-								</div>
-								<a href="" class="btn btn-success btn-md text-u-c m-t-10" ng-click="showTheForm1 = !showTheForm1"><i class="fa fa-plus"></i> Add New Awards</a>
+								<a href="" class="btn btn-success btn-md text-u-c m-t-10" ng-click="showConferenceAdd = !showConferenceAdd"><i class="fa fa-plus"></i> Add New Conference</a>
 							</div>
 						</div>
 					</div>

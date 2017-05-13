@@ -148,6 +148,30 @@ app.config(function($stateProvider, $urlRouterProvider,$provide) {
       loggedout: confirmLogin
     }
   })
+  .state('endorse-doctor', {
+    templateUrl: 'src/views/doctors/endorsement/endorse-doctor.html',
+    url: '/endorse-doctor/:profileName',
+    controller:"ReviewController",
+    resolve: {
+      loggedout: confirmLogin
+    }
+  })
+  .state('endorse-preview', {
+    templateUrl: 'src/views/doctors/endorsement/endorse-preview.html',
+    url: '/endorse-preview/:profileName',
+    controller:"ReviewController",
+    resolve: {
+      loggedout: confirmLogin
+    }
+  })
+  .state('endorse-success', {
+    templateUrl: 'src/views/doctors/endorsement/endorse-success.html',
+    url: '/endorse-success/:profileName',
+    controller:"ReviewController",
+    resolve: {
+      loggedout: confirmLogin
+    }
+  })
 
 
   function checkLoggedout($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {

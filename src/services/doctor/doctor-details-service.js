@@ -132,6 +132,87 @@ app.factory('DoctorDetailsService',function($http,HealthAuth,CONFIG){
 			    headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
 		    });
 		    return response;
+		},
+		saveAssociation : function (obj) {
+			var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_Profile_Association',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		deleteAssociation : function (obj) {
+			var response = $http({
+		        method: 'DELETE',
+		        url: CONFIG.API_PATH+'_Profile_Association',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		updateAssociation : function (obj) {
+			var response = $http({
+			    method: 'PUT',
+			    url: CONFIG.API_PATH+'_Profile_Association',
+			    data: obj,
+			    headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		saveConference : function (obj) {
+			var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_Profile_Conference',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		deleteConference : function (obj) {
+			var response = $http({
+		        method: 'DELETE',
+		        url: CONFIG.API_PATH+'_Profile_Conference',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		updateConference : function (obj) {
+			var response = $http({
+			    method: 'PUT',
+			    url: CONFIG.API_PATH+'_Profile_Conference',
+			    data: obj,
+			    headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		savePublication : function (obj) {
+			var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_Profile_Publication',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		deletePublication : function (obj) {
+			var response = $http({
+		        method: 'DELETE',
+		        url: CONFIG.API_PATH+'_Profile_Publication',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		updatePublication : function (obj) {
+			var response = $http({
+			    method: 'PUT',
+			    url: CONFIG.API_PATH+'_Profile_Publication',
+			    data: obj,
+			    headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
 		}
 	}
 })

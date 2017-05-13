@@ -97,6 +97,15 @@ app.factory("CommonService", function ($http,$q,CONFIG,HealthAuth) {
       });
       return response;
     },
+    endorseDoctor : function(obj){
+      var response = $http({
+          method: 'POST',
+          url: CONFIG.API_PATH+'_Profile_Endrosement',
+          data: obj,
+          headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+      });
+      return response;
+    },
   }
 });
 app.factory('Util', function( $rootScope, $timeout){
