@@ -187,6 +187,11 @@ app.config(function($stateProvider, $urlRouterProvider,$provide) {
     url: '/claim-search-list/:profileName',
     controller:"ClaimController"
   })
+  .state('claim-profile', {
+    templateUrl: 'src/views/doctors/claim/doctor-claim.html',
+    url: '/claim-profile/:profileName',
+    controller:"ClaimController"
+  })
 
 
   function checkLoggedout($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {

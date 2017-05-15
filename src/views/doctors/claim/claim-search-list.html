@@ -12,31 +12,43 @@
 		<div class="row">
         <div class="col-sm-8">
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-6" ng-repeat="doctor in claimList.result">
               <div class="result-list-box">
                 <div class="content">
                   <div class="img-box">
-                    <!-- <span class="lawyer-alfa">edgd</span> -->
-                    <img class="img-responsive" src="images/doctor/doctor-1.jpg" alt="" />
+                    <span ng-if="!doctor.photo"class="lawyer-alfa">{{doctor.profile.name | getShortName}}</span>
+                    <img ng-if="doctor.photo" class="img-responsive" src="{{doctor.photo}}" alt="" />
                   </div>
                   <div class="content-box">
-                    <h3>Dr. Priyambada Sahu</h3>
-                    <small>Dermatology, Procedural Dermatology,</small>
+                    <h3>{{doctor.profile.name}}</h3>
+                    <!-- <small>Dermatology, Procedural Dermatology,</small> -->
                     <address class="m-t-10">
-                     Brookline Derm LLC 1208B Vfw Parkway, Suite 200, West Roxbury, MA 02132 (Map)<br>
-                      <span>
+                      {{doctor.address.formatted}}<br>
+                      <span ng-if="doctor.phone.length > 0">
                         <strong class="inline-block">Phone: </strong>
-                        <a href="tel:{{list.phone.mobile}}">+91 5216889852</a>
+                        <a href="tel:{{list.phone.mobile}}">+91 {{doctor.phone[0].number}}</a>
                       </span>
                     </address>
                   </div>
                 </div>
                 <div class="footer text-right">
-                  <a class="btn btn-yellow btn-md" href="">Claim Profile</a>
-                  <a class="btn btn-blue btn-md" href="">Sign in</a>
-                  <p class="message">This profile has already been claimed.</p>
+                  <a class="btn btn-yellow btn-md" ui-sref="claim-profile({profileName:doctor.profile.profileName})" ng-if="!doctor.isClaimed">Claim Profile</a>
+                  <a class="btn btn-blue btn-md" ui-sref="login" ng-if="doctor.isClaimed">Sign in</a>
+                  <p class="message" ng-if="doctor.isClaimed">This profile has already been claimed.</p>
                 </div>
               </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <paging
+                  page="paging.currentPage"
+                  page-size="paging.showResult"
+                  total="paging.totalPage"
+                  show-prev-next="true"
+                  show-first-last="true"
+                  paging-action="filterChanged(page)">
+              </paging>
             </div>
           </div>
         </div>

@@ -190,6 +190,11 @@ app.config(["$stateProvider", "$urlRouterProvider", "$provide", function($stateP
     url: '/claim-search-list/:profileName',
     controller:"ClaimController"
   })
+  .state('claim-profile', {
+    templateUrl: 'src/views/doctors/claim/doctor-claim.html',
+    url: '/claim-profile/:profileName',
+    controller:"ClaimController"
+  })
 
 
   function checkLoggedout($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
@@ -876,13 +881,40 @@ app.controller('TimingModalCtrl', ["$scope", "$uibModalInstance", "deleteTiming"
 	}
 
 }]);app.controller('ClaimController',["$scope", "$rootScope", "$stateParams", "DoctorService", function($scope,$rootScope,$stateParams,DoctorService){
+	$scope.paging = {currentPage:1,totalPage:0,showResult:0};
 	$scope.getClaimSearchList = function(){
 		var obj = {
 			"name":$stateParams.profileName,
-			"page":1
+			"page":$scope.paging.currentPage
 		}
+		$rootScope.showPreloader = true;
 		DoctorService.claimSearch(obj).then(function(response){
-			console.log(response);
+			$rootScope.showPreloader = false;
+			if(response.data.StatusCode == 200){
+				$scope.claimList = response.data.Data;
+				$scope.paging.showResult = $scope.claimList.result.length;
+		    $scope.paging.totalPage = $scope.claimList.totalResultCount;
+			}
+		},function(error){
+			$rootScope.showPreloader = false;
+		})
+	}
+	$scope.filterChanged = function(page){
+		$scope.paging.currentPage = page;
+		$scope.getClaimSearchList();
+	}
+	$scope.getDoctorProfile = function(){
+		$rootScope.showPreloader = true;
+		DoctorService.doctorDetails($stateParams.profileName).then(function(response){
+			$rootScope.showPreloader = false;
+			if(response.data.StatusCode == 200)
+				$scope.doctorDetails = response.data.Data.result;
+				$scope.doctorDetails.specializationArray = [];
+				angular.forEach($scope.doctorDetails.specialization,function(item){
+					$scope.doctorDetails.specializationArray.push(item.specializationOn);
+				})
+		},function(error){
+			$rootScope.showPreloader = false;
 		})
 	}
 }])
