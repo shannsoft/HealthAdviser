@@ -26,27 +26,27 @@
 					</div>
 					<div class="col-sm-5">
 						<ul>
-							<li>
-							<div class="radio radio-black">
-								<div class="clearfix">
-									<input type="radio" value="one" name="optionyes" id="one">
-									<label for="one"><i class="fa fa-phone"></i> (875) 243-4567</label>
+							<li ng-if="doctorDetails.phone.length > 0">
+								<div class="radio radio-black">
+									<div class="clearfix">
+										<input type="radio" value="Mobile" name="optionyes" id="one" ng-model="claim.type">
+										<label for="one"><i class="fa fa-phone"></i> {{doctorDetails.phone[0].number}}</label>
+									</div>
 								</div>
-							</div>
 							</li>
 							<li>
-							<div class="radio radio-black pull-left  m-a">
-								<div class="clearfix">
-									<input type="radio" checked="checked" value="two" name="optionyes" id="two">
-									<label for="two"><i class="fa fa-envelope-o"></i> Priyambadasahu@gmail.com</label>
+								<div class="radio radio-black pull-left  m-a">
+									<div class="clearfix">
+										<input type="radio" value="email" name="optionyes" id="two" ng-model="claim.type">
+										<label for="two"><i class="fa fa-envelope-o"></i>{{doctorDetails.emailId}}</label>
+									</div>
 								</div>
-							</div>
 							</li>
 						<ul>
-					</ul></ul></div>
-					<div class="col-sm-12">
-						<div class="alert alert-info" role="alert"> <strong>myhealthadviser</strong> automated Email or phone system will call the number we have on file for you:</div>
 					</div>
+					<!-- <div class="col-sm-12">
+						<div class="alert alert-info" role="alert"> <strong>myhealthadviser</strong> automated Email or phone system will call the number we have on file for you:</div>
+					</div> -->
 					<div class="col-sm-12">
 						<div class="line"></div>
 					</div>
@@ -54,12 +54,12 @@
 						<div class="row">
 							<div class="col-md-9">
 								<div class="checkbox check-black">
-									<input type="checkbox" value="1" id="checkbox5">
-									<label for="checkbox5">I confirm that I am Priyambada Sahu and I accept Lawsuit Terms of Use and Privacy Policy</label>
+									<input type="checkbox" value="true" id="checkbox5">
+									<label for="checkbox5">I am {{doctorDetails.profile.name}} and I accept Health Adviser Terms of Use and Privacy Policy</label>
 								</div>
 							</div>
 							<div class="col-md-3 text-right m-t-10">
-								<a class="btn-yellow m-r-5" href="#" data-toggle="modal" data-target=".bs-example-modal-lg">Claim</a>
+								<a class="btn-yellow m-r-5" href="" ng-click="applyToken()">Claim</a>
 								<a class="btn-red" href="#">Cancel</a>
 							</div>
 						</div>

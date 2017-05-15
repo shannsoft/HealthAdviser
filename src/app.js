@@ -192,6 +192,11 @@ app.config(function($stateProvider, $urlRouterProvider,$provide) {
     url: '/claim-profile/:profileName',
     controller:"ClaimController"
   })
+  .state('claim-update', {
+    templateUrl: 'src/views/doctors/claim/set-password.html',
+    url: '/claim-update',
+    controller:"ClaimController"
+  })
 
 
   function checkLoggedout($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {

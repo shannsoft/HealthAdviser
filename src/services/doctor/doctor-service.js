@@ -43,7 +43,25 @@ app.factory("DoctorService",function($http,CONFIG){
 		    var response = $http({
 		        method: 'POST',
 		        url: CONFIG.API_PATH+'_PublicDoctorClaimSearch',
-						data:obj,
+				data:obj,
+		        headers: {'Server': CONFIG.SERVER_PATH}
+		    });
+		    return response;
+		},
+		applyToken : function(obj){
+		    var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_PublicClaim',
+				data:obj,
+		        headers: {'Server': CONFIG.SERVER_PATH}
+		    });
+		    return response;
+		},
+		setNewPassword : function(obj){
+			var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_PublicClaim',
+				data:obj,
 		        headers: {'Server': CONFIG.SERVER_PATH}
 		    });
 		    return response;
