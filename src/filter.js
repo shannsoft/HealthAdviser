@@ -57,6 +57,13 @@ app.filter('dateformat4', function(){
     }
   }
 })
+app.filter('timeFormat', function(){
+  return function(time){
+    if(time){
+      return moment(time,"HH:mm:ss").format("hh:mm:A");
+    }
+  }
+})
 app.filter('phonenumber', function() {
   return function (number) {
     if (!number) { return ''; }

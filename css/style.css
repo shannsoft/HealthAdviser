@@ -591,6 +591,11 @@ a:hover{ color:#000;}
 	margin:0px 0px 20px;
 	text-transform: uppercase;
 }
+.footer-section .ftr-block-list p{
+	color:#cecece;
+	font-size:14px;
+	display: block;
+}
 .footer-section .ftr-block-list ul {
 	margin:0px;
 	padding:0px;
@@ -711,6 +716,10 @@ a:hover{ color:#000;}
 	font-weight:bold;
 	margin:0px;
 	padding:0px;
+	color:#333;
+}
+.doctor-list-box h3:hover{
+	text-decoration: none;
 }
 
 .doctor-list-box strong{
@@ -2735,7 +2744,7 @@ tags-input .tags .tag-item {
 .commeted-review .star-vote ul li{
     display: inline-block;
     color: #fff;
-    BORDER: none;
+    border: none;
     background: transparent;
 
 }

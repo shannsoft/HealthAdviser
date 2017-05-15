@@ -967,6 +967,72 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
     })  
   }
   /****************************************************************************/
+  /**************FUNCTION IS USED TO UPDATE TIMING INFORMATION*****************/
+  /****************************************************************************/
+  $scope.addTiming = function(){
+    var obj = {
+      'day' : $scope.timing.day,
+      'from' : moment($scope.timing.from).format('HH:mm:ss'),
+      'to' : moment($scope.timing.to).format('HH:mm:ss')
+    }
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.saveTiming(obj).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.profileDetails.timing.push(response.data.Data);
+        Util.alertMessage('success', 'You have successfully updated your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in update !!!'); 
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger', 'Error in update !!!'); 
+    })
+  }
+  /****************************************************************************/
+  /************FUNCTION IS USED TO OPEN TIMING DELETE MODAL***************/
+  /****************************************************************************/
+  $scope.deleteTimingModal = function(size,timeId,index){
+    $scope.deleteIndex = index;
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/timingDetDeleteModal.html',
+     controller: 'TimingModalCtrl',
+     size: size,
+     resolve: {
+       deleteTiming: function () {
+         return $scope.deleteTiming;
+       },
+       timeId:function () {
+         return timeId;
+       }
+     }
+    })
+  }
+  /****************************************************************************/
+  /**************FUNCTION IS USED TO DELETE TIMING INFORMATION*****************/
+  /****************************************************************************/
+  $scope.deleteTiming = function(id){
+    var obj = {
+      'id' : id
+    }
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.deleteTiming(obj).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.profileDetails.timing.splice($scope.deleteIndex,1);
+        Util.alertMessage('success', 'You have successfully Deleted your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'something went wrong! unable to delete your information'); 
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger', 'something went wrong! unable to delete your information');
+    })
+  }
+  /****************************************************************************/
   /************************FUNCTION HIDE EDIT FORM*****************************/
   /****************************************************************************/
   $scope.updateWebsiteUrl = function(){

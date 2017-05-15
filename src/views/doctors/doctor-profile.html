@@ -330,14 +330,14 @@
 													<div class="form-group">
 														<label>Day</label>
 														<div class="form-group">
-															<select class="form-control">
-															  <option value="">Sunday</option>
-															  <option value="">Monday</option>
-															  <option value="">Tuesday</option>
-															  <option value="">Wednesday</option>
-															  <option value="">Thursday</option>
-															  <option value="">Friday</option>
-															  <option value="">Saturday</option>
+															<select class="form-control" ng-model="timing.day">
+															  <option value="Sunday">Sunday</option>
+															  <option value="Monday">Monday</option>
+															  <option value="Tuesday">Tuesday</option>
+															  <option value="Wednesday">Wednesday</option>
+															  <option value="Thursday">Thursday</option>
+															  <option value="Friday">Friday</option>
+															  <option value="Saturday">Saturday</option>
 															</select>
 														</div>
 													</div>
@@ -345,29 +345,23 @@
 												<div class="col-sm-6">
 													<div class="form-group">
 														<label class="block">Time Duration</label>
-														<input type="text" class="form-control time-picker-input" id="" placeholder="2.30"> <span class="bold">to</span>
-														<input type="text" class="form-control time-picker-input" id="" placeholder="2.30">
+														<input type="time" class="form-control time-picker-input" id="" placeholder="HH:mm:ss" required ng-model="timing.from"> <span class="bold">to</span>
+														<input type="time" class="form-control time-picker-input" id="" placeholder="HH:mm:ss" required ng-model="timing.to">
 													</div>
 												</div>
 												<div class="col-sm-3">
-													<button class="btn btn-blue btn-md text-u-c m-t-28">Add</button>
+													<button class="btn btn-blue btn-md text-u-c m-t-28" ng-click="addTiming()">Add</button>
 												</div>
 												<div class="col-sm-11">
 													<table class="table table-striped">
-														<tbody ng-repeat="spe in profileDetails.specialization">
+														<tbody ng-repeat="time in profileDetails.timing">
 															<tr>
-																<td style="width:30%; vertical-align:middle;">Monday</td>
-																<td style="width:50%; vertical-align:middle;">10.00 am - 12.00 pm, 4.00pm - 8.00pm</td>
-																<td align="right" style="padding: 8px 22px;"><button class="btn btn-danger spec-danger-btn"><i class="fa fa-close"></i></button></td>
+																<td style="width:30%; vertical-align:middle;">{{time.day}}</td>
+																<td style="width:50%; vertical-align:middle;">{{time.from | timeFormat}} - {{time.to | timeFormat}}</td>
+																<td align="right" style="padding: 8px 22px;"><button class="btn btn-danger spec-danger-btn" ng-click="deleteTimingModal('md',time.id,$index)"><i class="fa fa-close"></i></button></td>
 															</tr>
 														</tbody>
 													</table>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-sm-12 m-t-10 text-right">
-													<button class="btn btn-blue btn-md text-u-c">Save Change</button> 
-													<button class="btn btn-red btn-md text-u-c">Cancel</button>
 												</div>
 											</div>
 								  	</div>

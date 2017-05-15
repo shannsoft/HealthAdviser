@@ -213,6 +213,25 @@ app.factory('DoctorDetailsService',function($http,HealthAuth,CONFIG){
 			    headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
 		    });
 		    return response;
-		}
+		},
+		saveTiming : function (obj) {
+			var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_Profile_Timing',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		deleteTiming : function (obj) {
+			var response = $http({
+		        method: 'DELETE',
+		        url: CONFIG.API_PATH+'_Profile_Timing',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+
 	}
 })

@@ -61,3 +61,12 @@ app.controller('PublicationModalCtrl', function ($scope, $uibModalInstance,delet
         $uibModalInstance.dismiss('cancel');
     };
 });
+app.controller('TimingModalCtrl', function ($scope, $uibModalInstance,deleteTiming,timeId) {
+    $scope.ok = function () {
+        deleteTiming(timeId);
+        $uibModalInstance.close();
+    };
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+});

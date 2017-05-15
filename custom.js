@@ -495,6 +495,15 @@ app.controller('PublicationModalCtrl', ["$scope", "$uibModalInstance", "deletePu
         $uibModalInstance.dismiss('cancel');
     };
 }]);
+app.controller('TimingModalCtrl', ["$scope", "$uibModalInstance", "deleteTiming", "timeId", function ($scope, $uibModalInstance,deleteTiming,timeId) {
+    $scope.ok = function () {
+        deleteTiming(timeId);
+        $uibModalInstance.close();
+    };
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+}]);
 ;app.controller("SpecializationController", ["$scope", "$rootScope", "CommonService", "$localStorage", "$state", function($scope,$rootScope,CommonService,$localStorage,$state){
 	$scope.getSpecializationList = function(){
 		$scope.specialization = [];
@@ -1724,6 +1733,63 @@ app.controller('PublicationModalCtrl', ["$scope", "$uibModalInstance", "deletePu
       Util.alertMessage('danger', 'Error in update !!!');
     })  
   }
+  $scope.addTiming = function(){
+    var obj = {
+      'day' : $scope.timing.day,
+      'from' : moment($scope.timing.from).format('HH:mm:ss'),
+      'to' : moment($scope.timing.to).format('HH:mm:ss')
+    }
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.saveTiming(obj).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.profileDetails.timing.push(response.data.Data);
+        Util.alertMessage('success', 'You have successfully updated your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'Error in update !!!'); 
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger', 'Error in update !!!'); 
+    })
+  }
+  $scope.deleteTimingModal = function(size,timeId,index){
+    $scope.deleteIndex = index;
+    var modalInstance = $uibModal.open({
+     animation: true,
+     templateUrl: 'src/views/modals/timingDetDeleteModal.html',
+     controller: 'TimingModalCtrl',
+     size: size,
+     resolve: {
+       deleteTiming: function () {
+         return $scope.deleteTiming;
+       },
+       timeId:function () {
+         return timeId;
+       }
+     }
+    })
+  }
+  $scope.deleteTiming = function(id){
+    var obj = {
+      'id' : id
+    }
+    $rootScope.showPreloader = true;
+    DoctorDetailsService.deleteTiming(obj).then(function(response){
+      $rootScope.showPreloader = false;
+      if(response.data.StatusCode == 200){
+        $scope.profileDetails.timing.splice($scope.deleteIndex,1);
+        Util.alertMessage('success', 'You have successfully Deleted your information Thank You.');
+      }
+      else{
+        Util.alertMessage('danger', 'something went wrong! unable to delete your information'); 
+      }
+    },function(error){
+      $rootScope.showPreloader = false;
+      Util.alertMessage('danger', 'something went wrong! unable to delete your information');
+    })
+  }
   $scope.updateWebsiteUrl = function(){
     var doctor = {};
     if ($scope.profileDetails.website.match('^http://') || $scope.profileDetails.website.match('^https://')){
@@ -2604,6 +2670,13 @@ app.filter('dateformat4', function(){
     }
   }
 })
+app.filter('timeFormat', function(){
+  return function(time){
+    if(time){
+      return moment(time,"HH:mm:ss").format("hh:mm:A");
+    }
+  }
+})
 app.filter('phonenumber', function() {
   return function (number) {
     if (!number) { return ''; }
@@ -3163,7 +3236,26 @@ app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){
 			    headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
 		    });
 		    return response;
-		}
+		},
+		saveTiming : function (obj) {
+			var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_Profile_Timing',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+		deleteTiming : function (obj) {
+			var response = $http({
+		        method: 'DELETE',
+		        url: CONFIG.API_PATH+'_Profile_Timing',
+		        data: obj,
+		        headers: {'Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken,'content-type':'application/json'}
+		    });
+		    return response;
+		},
+
 	}
 }]);app.factory("DoctorService",["$http", "CONFIG", function($http,CONFIG){
 	var searchData = {};
