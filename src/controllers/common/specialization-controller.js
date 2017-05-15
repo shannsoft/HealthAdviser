@@ -15,15 +15,19 @@ app.controller("SpecializationController", function($scope,$rootScope,CommonServ
 		})
 	}
 	$scope.initSpecialization = function(isSearched){
-		$scope.home.doctorName = localStorage.getItem("specialization");
+		$scope.home.doctorName = sessionStorage.getItem("specialization");
 	    $scope.isSearched = (isSearched) ? isSearched : false;
 	    CommonService.specializationDetails($scope.home.doctorName).then(function(response){
 	    	console.log(response);
 	    	$scope.specializationDetails = response.data.Data[0]
 	    })
 	}
+	$rootScope.$on('DOCTOR_LIST_SPECIALIZATION',function(){
+		$scope.initSpecialization(true);
+	})
 	$scope.gotoSpecializationDetails = function(name){
-		localStorage.setItem('specialization',name);
+		sessionStorage.setItem('specialization', name);
+		// localStorage.setItem('specialization',name);
 		$state.go('specialization-details');
 	}
 })

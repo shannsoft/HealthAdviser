@@ -13,7 +13,7 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
 		    animation: true,
 		    templateUrl: 'src/views/modals/sessionExpiryModal.html',
 		    controller: 'modalController',
-		    backdrop: 'static', 
+		    backdrop: 'static',
 		    keyboard: false,
 		    size: 'sm',
 		    resolve : {
@@ -140,7 +140,7 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
 	    } else {
 	      document.getElementById('main_loc').placeholder = 'Enter a city';
 	    }
-	};	
+	};
 	$scope.clearInputs = function(type){
 	    if(type == 'loc'){
 	      	$scope.home.location = '';
@@ -220,9 +220,13 @@ app.controller('MainController',function($scope,$rootScope,CommonService,Config,
 	          break;
 	        case "home":
 	          $state.go("doctors-list",{searchParams:{latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place}});
-	          break; 
+	          break;
 	        case "find-doctors":
 	          $state.go("doctors-list",{searchParams:{latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place}});
+	          break;
+					case "specialization-details" :
+						sessionStorage.setItem('specialization', $scope.home.doctorName);
+						$scope.$emit('DOCTOR_LIST_SPECIALIZATION');
 	          break;
 	      }
 	    },function(err) {

@@ -512,15 +512,18 @@ app.controller('PublicationModalCtrl', ["$scope", "$uibModalInstance", "deletePu
 		})
 	}
 	$scope.initSpecialization = function(isSearched){
-		$scope.home.doctorName = localStorage.getItem("specialization");
+		$scope.home.doctorName = sessionStorage.getItem("specialization");
 	    $scope.isSearched = (isSearched) ? isSearched : false;
 	    CommonService.specializationDetails($scope.home.doctorName).then(function(response){
 	    	console.log(response);
 	    	$scope.specializationDetails = response.data.Data[0]
 	    })
 	}
+	$rootScope.$on('DOCTOR_LIST_SPECIALIZATION',function(){
+		$scope.initSpecialization(true);
+	})
 	$scope.gotoSpecializationDetails = function(name){
-		localStorage.setItem('specialization',name);
+		sessionStorage.setItem('specialization', name);
 		$state.go('specialization-details');
 	}
 }])
@@ -561,7 +564,8 @@ app.controller('PublicationModalCtrl', ["$scope", "$uibModalInstance", "deletePu
         $scope.format1 = $scope.formats[5];
 
     }
-    ]);;app.controller('UserProfileController', ["$scope", "$rootScope", "$state", "CommonService", "Util", function($scope, $rootScope, $state, CommonService,Util){
+    ]);
+;app.controller('UserProfileController', ["$scope", "$rootScope", "$state", "CommonService", "Util", function($scope, $rootScope, $state, CommonService,Util){
     google = typeof google === 'undefined' ? "" : google;
     var googleTime;
     $scope.showtab = function(obj) {
@@ -2254,7 +2258,7 @@ app.controller('PublicationModalCtrl', ["$scope", "$uibModalInstance", "deletePu
 		    animation: true,
 		    templateUrl: 'src/views/modals/sessionExpiryModal.html',
 		    controller: 'modalController',
-		    backdrop: 'static', 
+		    backdrop: 'static',
 		    keyboard: false,
 		    size: 'sm',
 		    resolve : {
@@ -2359,7 +2363,7 @@ app.controller('PublicationModalCtrl', ["$scope", "$uibModalInstance", "deletePu
 	    } else {
 	      document.getElementById('main_loc').placeholder = 'Enter a city';
 	    }
-	};	
+	};
 	$scope.clearInputs = function(type){
 	    if(type == 'loc'){
 	      	$scope.home.location = '';
@@ -2428,9 +2432,13 @@ app.controller('PublicationModalCtrl', ["$scope", "$uibModalInstance", "deletePu
 	          break;
 	        case "home":
 	          $state.go("doctors-list",{searchParams:{latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place}});
-	          break; 
+	          break;
 	        case "find-doctors":
 	          $state.go("doctors-list",{searchParams:{latLong:$scope.latLong,searchText:$scope.home.doctorName,place:$scope.place}});
+	          break;
+					case "specialization-details" :
+						sessionStorage.setItem('specialization', $scope.home.doctorName);
+						$scope.$emit('DOCTOR_LIST_SPECIALIZATION');
 	          break;
 	      }
 	    },function(err) {
