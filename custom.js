@@ -180,6 +180,11 @@ app.config(["$stateProvider", "$urlRouterProvider", "$provide", function($stateP
       loggedout: confirmLogin
     }
   })
+  .state('claim-search', {
+    templateUrl: 'src/views/doctors/claim/claim-search.html',
+    url: '/claim-search',
+    controller:"ClaimController"
+  })
 
 
   function checkLoggedout($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
@@ -865,6 +870,8 @@ app.controller('TimingModalCtrl', ["$scope", "$uibModalInstance", "deleteTiming"
 		$scope.doctorsList();
 	}
 
+}]);app.controller('ClaimController',["$scope", "$rootScope", function($scope,$rootScope){
+	
 }]);app.controller('DoctorDetailsController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorDetailsService", function($scope,$rootScope,DoctorService,$stateParams,DoctorDetailsService){
 
   $scope.signed_doctor = $stateParams.profileName;

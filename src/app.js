@@ -177,6 +177,11 @@ app.config(function($stateProvider, $urlRouterProvider,$provide) {
       loggedout: confirmLogin
     }
   })
+  .state('claim-search', {
+    templateUrl: 'src/views/doctors/claim/claim-search.html',
+    url: '/claim-search',
+    controller:"ClaimController"
+  })
 
 
   function checkLoggedout($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
