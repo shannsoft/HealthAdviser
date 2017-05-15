@@ -1,5 +1,6 @@
-app.controller('ClaimController',function($scope,$rootScope,$stateParams,DoctorService,Util,$sessionStorage,AuthorizeService){
+app.controller('ClaimController',function($scope,$rootScope,$stateParams,DoctorService,Util,$sessionStorage,AuthorizeService,$state){
 	$scope.paging = {currentPage:1,totalPage:0,showResult:0};
+	$scope.claim = {};
 	/****************************************************************************/
 	/*******************fUNCTION USE FOR GET CLAIM SEARCH LIST*******************/
 	/****************************************************************************/
@@ -49,19 +50,23 @@ app.controller('ClaimController',function($scope,$rootScope,$stateParams,DoctorS
 	/*****************fUNCTION USE FOR GET THE TOKEN DETAIL CHANGE***************/
 	/****************************************************************************/
 	$scope.applyToken = function(){
-		if(!$scope.claim){
+		if(!$scope.claim.type){
 			Util.alertMessage('danger',"Please select email or mobile to get the token");
 		}
 		else{
 			var obj = {
 				"userId": $scope.doctorDetails.userCode,
 			}
-			if($scope.claim.type == "Mobile") obj.mobile = $scope.doctorDetails.phone[0].number;
-			if($scope.claim.type == "email") obj.email = $scope.doctorDetails.emailId;
+			if($scope.claim.type == "Mobile") {
+				obj.mobile = $scope.doctorDetails.phone[0].number;
+			}
+			else if($scope.claim.type == "email") {
+				obj.email = $scope.doctorDetails.emailId;
+			}
+			$rootScope.showPreloader = true;
 			DoctorService.applyToken(obj).then(function(response){
 				$rootScope.showPreloader = false;
 				if(response.data.StatusCode == 200){
-					console.log(response);
 					$sessionStorage.claimUser = $scope.doctorDetails;
 					$state.go('claim-update');
 				}

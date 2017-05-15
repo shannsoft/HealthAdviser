@@ -885,8 +885,9 @@ app.controller('TimingModalCtrl', ["$scope", "$uibModalInstance", "deleteTiming"
 		$scope.doctorsList();
 	}
 
-}]);app.controller('ClaimController',["$scope", "$rootScope", "$stateParams", "DoctorService", "Util", "$sessionStorage", "AuthorizeService", function($scope,$rootScope,$stateParams,DoctorService,Util,$sessionStorage,AuthorizeService){
+}]);app.controller('ClaimController',["$scope", "$rootScope", "$stateParams", "DoctorService", "Util", "$sessionStorage", "AuthorizeService", "$state", function($scope,$rootScope,$stateParams,DoctorService,Util,$sessionStorage,AuthorizeService,$state){
 	$scope.paging = {currentPage:1,totalPage:0,showResult:0};
+	$scope.claim = {};
 	$scope.getClaimSearchList = function(){
 		var obj = {
 			"name":$stateParams.profileName,
@@ -924,19 +925,23 @@ app.controller('TimingModalCtrl', ["$scope", "$uibModalInstance", "deleteTiming"
 		})
 	}
 	$scope.applyToken = function(){
-		if(!$scope.claim){
+		if(!$scope.claim.type){
 			Util.alertMessage('danger',"Please select email or mobile to get the token");
 		}
 		else{
 			var obj = {
 				"userId": $scope.doctorDetails.userCode,
 			}
-			if($scope.claim.type == "Mobile") obj.mobile = $scope.doctorDetails.phone[0].number;
-			if($scope.claim.type == "email") obj.email = $scope.doctorDetails.emailId;
+			if($scope.claim.type == "Mobile") {
+				obj.mobile = $scope.doctorDetails.phone[0].number;
+			}
+			else if($scope.claim.type == "email") {
+				obj.email = $scope.doctorDetails.emailId;
+			}
+			$rootScope.showPreloader = true;
 			DoctorService.applyToken(obj).then(function(response){
 				$rootScope.showPreloader = false;
 				if(response.data.StatusCode == 200){
-					console.log(response);
 					$sessionStorage.claimUser = $scope.doctorDetails;
 					$state.go('claim-update');
 				}
@@ -3435,16 +3440,16 @@ app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){
 		    var response = $http({
 		        method: 'POST',
 		        url: CONFIG.API_PATH+'_PublicClaim',
-				data:obj,
+						data:obj,
 		        headers: {'Server': CONFIG.SERVER_PATH}
 		    });
 		    return response;
 		},
 		setNewPassword : function(obj){
-			var response = $http({
-		        method: 'POST',
+				var response = $http({
+		        method: 'PUT',
 		        url: CONFIG.API_PATH+'_PublicClaim',
-				data:obj,
+						data:obj,
 		        headers: {'Server': CONFIG.SERVER_PATH}
 		    });
 		    return response;
