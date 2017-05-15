@@ -185,6 +185,11 @@ app.config(["$stateProvider", "$urlRouterProvider", "$provide", function($stateP
     url: '/claim-search',
     controller:"ClaimController"
   })
+  .state('claim-search-list', {
+    templateUrl: 'src/views/doctors/claim/claim-search-list.html',
+    url: '/claim-search-list/:profileName',
+    controller:"ClaimController"
+  })
 
 
   function checkLoggedout($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
@@ -197,7 +202,7 @@ app.config(["$stateProvider", "$urlRouterProvider", "$provide", function($stateP
         deferred.resolve();
         $state.go('login');
       }
-    },100)  
+    },100)
   }
   function checkLoggedin($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
     var deferred = $q.defer();
@@ -209,7 +214,7 @@ app.config(["$stateProvider", "$urlRouterProvider", "$provide", function($stateP
       else{
         deferred.resolve();
       }
-    },100)  
+    },100)
   }
   function confirmLogin($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
     var deferred = $q.defer();
@@ -226,7 +231,7 @@ app.config(["$stateProvider", "$urlRouterProvider", "$provide", function($stateP
       else{
         deferred.resolve();
       }
-    })  
+    })
   }
   $provide.decorator('$state', ["$delegate", "$rootScope", function($delegate, $rootScope) {
     $rootScope.$on('$stateChangeStart', function(event, state, params) {
@@ -245,7 +250,7 @@ app.run(["$http", "$rootScope", "$timeout", "AuthorizeService", function($http,$
 }]);
 app.constant('CONFIG', {
   "API_PATH":"http://healthadvisor.ssmaktak.com/api/",
-  "SERVER_PATH":1 
+  "SERVER_PATH":1
 })
 ;app.factory("Config", ["$rootScope", function($rootScope) {
   var gApi = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
@@ -870,9 +875,18 @@ app.controller('TimingModalCtrl', ["$scope", "$uibModalInstance", "deleteTiming"
 		$scope.doctorsList();
 	}
 
-}]);app.controller('ClaimController',["$scope", "$rootScope", function($scope,$rootScope){
-	
-}]);app.controller('DoctorDetailsController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorDetailsService", function($scope,$rootScope,DoctorService,$stateParams,DoctorDetailsService){
+}]);app.controller('ClaimController',["$scope", "$rootScope", "$stateParams", "DoctorService", function($scope,$rootScope,$stateParams,DoctorService){
+	$scope.getClaimSearchList = function(){
+		var obj = {
+			"name":$stateParams.profileName,
+			"page":1
+		}
+		DoctorService.claimSearch(obj).then(function(response){
+			console.log(response);
+		})
+	}
+}])
+;app.controller('DoctorDetailsController',["$scope", "$rootScope", "DoctorService", "$stateParams", "DoctorDetailsService", function($scope,$rootScope,DoctorService,$stateParams,DoctorDetailsService){
 
   $scope.signed_doctor = $stateParams.profileName;
 
@@ -3287,7 +3301,7 @@ app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){
 		        data : obj,
 		        headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
 		    });
-		    return response;		
+		    return response;
 		},
 		countryDetails : function(value){
 		     var response = $http({
@@ -3295,7 +3309,7 @@ app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){
 				url: CONFIG.API_PATH+'/_CountryCityState/'+value,
 				headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
 			})
-			return response;		
+			return response;
 		},
 		doctorDetails : function(profileName){
 		    var response = $http({
@@ -3303,7 +3317,16 @@ app.factory('Util', ["$rootScope", "$timeout", function( $rootScope, $timeout){
 		        url: CONFIG.API_PATH+'_User/'+profileName,
 		        headers: {'Server': CONFIG.SERVER_PATH}
 		    });
-		    return response;		
+		    return response;
+		},
+		claimSearch : function(obj){
+		    var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_PublicDoctorClaimSearch',
+						data:obj,
+		        headers: {'Server': CONFIG.SERVER_PATH}
+		    });
+		    return response;
 		}
 	}
 }])

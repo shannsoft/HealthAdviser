@@ -21,7 +21,7 @@ app.factory("DoctorService",function($http,CONFIG){
 		        data : obj,
 		        headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
 		    });
-		    return response;		
+		    return response;
 		},
 		countryDetails : function(value){
 		     var response = $http({
@@ -29,7 +29,7 @@ app.factory("DoctorService",function($http,CONFIG){
 				url: CONFIG.API_PATH+'/_CountryCityState/'+value,
 				headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH}
 			})
-			return response;		
+			return response;
 		},
 		doctorDetails : function(profileName){
 		    var response = $http({
@@ -37,7 +37,16 @@ app.factory("DoctorService",function($http,CONFIG){
 		        url: CONFIG.API_PATH+'_User/'+profileName,
 		        headers: {'Server': CONFIG.SERVER_PATH}
 		    });
-		    return response;		
+		    return response;
+		},
+		claimSearch : function(obj){
+		    var response = $http({
+		        method: 'POST',
+		        url: CONFIG.API_PATH+'_PublicDoctorClaimSearch',
+						data:obj,
+		        headers: {'Server': CONFIG.SERVER_PATH}
+		    });
+		    return response;
 		}
 	}
 })

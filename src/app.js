@@ -182,6 +182,11 @@ app.config(function($stateProvider, $urlRouterProvider,$provide) {
     url: '/claim-search',
     controller:"ClaimController"
   })
+  .state('claim-search-list', {
+    templateUrl: 'src/views/doctors/claim/claim-search-list.html',
+    url: '/claim-search-list/:profileName',
+    controller:"ClaimController"
+  })
 
 
   function checkLoggedout($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
@@ -194,7 +199,7 @@ app.config(function($stateProvider, $urlRouterProvider,$provide) {
         deferred.resolve();
         $state.go('login');
       }
-    },100)  
+    },100)
   }
   function checkLoggedin($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
     var deferred = $q.defer();
@@ -206,7 +211,7 @@ app.config(function($stateProvider, $urlRouterProvider,$provide) {
       else{
         deferred.resolve();
       }
-    },100)  
+    },100)
   }
   function confirmLogin($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
     var deferred = $q.defer();
@@ -223,7 +228,7 @@ app.config(function($stateProvider, $urlRouterProvider,$provide) {
       else{
         deferred.resolve();
       }
-    })  
+    })
   }
   $provide.decorator('$state', function($delegate, $rootScope) {
     $rootScope.$on('$stateChangeStart', function(event, state, params) {
@@ -242,5 +247,5 @@ app.run(function($http,$rootScope,$timeout,AuthorizeService){
 });
 app.constant('CONFIG', {
   "API_PATH":"http://healthadvisor.ssmaktak.com/api/",
-  "SERVER_PATH":1 
+  "SERVER_PATH":1
 })
