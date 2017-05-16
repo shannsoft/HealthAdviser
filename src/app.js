@@ -199,6 +199,15 @@ app.config(function($stateProvider, $urlRouterProvider,$provide) {
   })
 
 
+
+  /****************************************************************************/
+  /**************************ROUTING USE FOR STATIC PAGE***********************/
+  /****************************************************************************/
+  .state('privacy-policy', {
+    templateUrl: 'src/views/footer/privacy-policy.html',
+    url: '/privacy-policy',
+  })
+
   function checkLoggedout($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
     var deferred = $q.defer();
     $timeout(function(){

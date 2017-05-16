@@ -101,7 +101,7 @@ app.controller('ClaimController',function($scope,$rootScope,$stateParams,DoctorS
 		var obj = {
 			"userId": $scope.claimUser.userCode,
 			"email":$scope.user.email,
-			"pasword": $scope.user.password,
+			"password": $scope.user.password,
 			"token":$scope.user.otp
 		}
 		$rootScope.showPreloader = true;

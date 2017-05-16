@@ -45,7 +45,7 @@
 					<div class="address-block">
 						<div class="clearfix m-b-10" ng-repeat="time in doctorDetails.timing">
 							<strong class="text-u-c clearfix block">{{time.day}}</strong>
-							<span>{{time.from}} - {{time.to}}</span>
+							<span>{{time.from | timeFormat}} - {{time.to | timeFormat}}</span>
 						</div>
 					</div>
 					<div class="address-line" ng-if="doctorDetails.phone.length > 0"></div>

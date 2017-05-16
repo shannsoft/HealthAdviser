@@ -123,7 +123,7 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
   	var options = {
         componentRestrictions: {country: "IN"}
     };
-  	$scope.initMapLocation = function(){
+  $scope.initMapLocation = function(){
   		if(google == "" || !google.maps || !google.maps.places)
         	googleTime = $timeout($scope.initMapLocation , 3000);
 	    else {
@@ -135,27 +135,27 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
 			    $scope.$apply();
 			});
 		}
-  	};
-  	function populateAddressFields(place) {
+  };
+  function populateAddressFields(place) {
 		var address_components = place.address_components;
 		$scope.profileDetails.address.streetAddress = place.name;
 		$scope.profileDetails.address.formatted = place.formatted_address;
-        if (place.geometry) {
-          $scope.profileDetails.address.lat = place.geometry.location.lat();
-          $scope.profileDetails.address.lng = place.geometry.location.lng();
+    if (place.geometry) {
+      $scope.profileDetails.address.lat = place.geometry.location.lat();
+      $scope.profileDetails.address.lng = place.geometry.location.lng();
+    }
+    for(var i = 0; i < address_components.length; i++) {
+        var types = address_components[i].types;
+        if(types[0] == 'postal_code') {
+            $scope.profileDetails.address.postalCode = address_components[i].long_name;
+        } else if (types[0] == 'administrative_area_level_1' ) {
+            $scope.profileDetails.address.state = address_components[i].long_name;
+        } else if(types[0] == 'locality') {
+            $scope.profileDetails.address.city = address_components[i].long_name;
+        } else if(types[0] == 'country') {
+            $scope.profileDetails.address.country = address_components[i].long_name;
         }
-        for(var i = 0; i < address_components.length; i++) {
-            var types = address_components[i].types;
-            if(types[0] == 'postal_code') {
-                $scope.profileDetails.address.postalCode = address_components[i].long_name;
-            } else if (types[0] == 'administrative_area_level_1' ) {
-                $scope.profileDetails.address.state = address_components[i].long_name;
-            } else if(types[0] == 'locality') {
-                $scope.profileDetails.address.city = address_components[i].long_name;
-            } else if(types[0] == 'country') {
-                $scope.profileDetails.address.country = address_components[i].long_name;
-            }
-        }
+    }
 	}
 
   /****************************************************************************/

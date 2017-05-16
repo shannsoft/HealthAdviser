@@ -60,7 +60,7 @@ app.filter('dateformat4', function(){
 app.filter('timeFormat', function(){
   return function(time){
     if(time){
-      return moment(time,"HH:mm:ss").format("hh:mm:A");
+      return moment(time,"HH:mm:ss").format("hh:mm A");
     }
   }
 })

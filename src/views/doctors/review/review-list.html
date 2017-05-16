@@ -9,7 +9,29 @@
 </section>
 <section class="page-section padd-v-60">
 	<div class="container">
-		<div class="clearfix" ng-repeat="review in reviewList">
+		<div class="row m-t-20" >
+			<div class="col-md-12">
+				<ul class="testimonialsGrid">
+	                <li class="col-sm-4 h-220" ng-repeat="review in reviewList">
+	                  <div>
+	                    <div class="testimonImg">
+	                      	<img ng-if="review.userPhoto" src="{{review.userPhoto}}">
+					  		<span ng-if="!review.userPhoto">{{review.userName | getShortName}}</span>
+	                    </div>
+	                    <div class="testimonMeta">
+	                        {{review.userName}}
+							<small><i class="fa fa-star"></i> 3 star</small>
+							<span>{{review.date | dateformat2}}</span>
+	                    </div>
+	                    <div class="testimonContent">
+	                      <p class="smallText">{{review.review}}</p>
+	                    </div>
+	                  </div>
+	                </li>
+	            </ul>
+			</div>
+		</div>
+		<!-- <div class="clearfix" ng-repeat="review in reviewList">
 			<div class="row">
 				<div class="col-md-2">
 					<div class="comment-review">
@@ -29,7 +51,7 @@
 				</div>
 			</div>
 			<hr/>
-		</div>
+		</div> -->
 		<!-- <div class="row m-t-20" >
 			<div class="col-md-12 text-center">
 			  <a class="loadmore-btn" href="">Load More</a>

@@ -200,7 +200,10 @@ app.config(["$stateProvider", "$urlRouterProvider", "$provide", function($stateP
     url: '/claim-update',
     controller:"ClaimController"
   })
-
+  .state('privacy-policy', {
+    templateUrl: 'src/views/footer/privacy-policy.html',
+    url: '/privacy-policy',
+  })
 
   function checkLoggedout($q, $timeout, $rootScope, $state, $localStorage,HealthAuth) {
     var deferred = $q.defer();
@@ -967,7 +970,7 @@ app.controller('TimingModalCtrl', ["$scope", "$uibModalInstance", "deleteTiming"
 		var obj = {
 			"userId": $scope.claimUser.userCode,
 			"email":$scope.user.email,
-			"pasword": $scope.user.password,
+			"password": $scope.user.password,
 			"token":$scope.user.otp
 		}
 		$rootScope.showPreloader = true;
@@ -1135,7 +1138,7 @@ app.controller('TimingModalCtrl', ["$scope", "$uibModalInstance", "deleteTiming"
   	var options = {
         componentRestrictions: {country: "IN"}
     };
-  	$scope.initMapLocation = function(){
+  $scope.initMapLocation = function(){
   		if(google == "" || !google.maps || !google.maps.places)
         	googleTime = $timeout($scope.initMapLocation , 3000);
 	    else {
@@ -1147,27 +1150,27 @@ app.controller('TimingModalCtrl', ["$scope", "$uibModalInstance", "deleteTiming"
 			    $scope.$apply();
 			});
 		}
-  	};
-  	function populateAddressFields(place) {
+  };
+  function populateAddressFields(place) {
 		var address_components = place.address_components;
 		$scope.profileDetails.address.streetAddress = place.name;
 		$scope.profileDetails.address.formatted = place.formatted_address;
-        if (place.geometry) {
-          $scope.profileDetails.address.lat = place.geometry.location.lat();
-          $scope.profileDetails.address.lng = place.geometry.location.lng();
+    if (place.geometry) {
+      $scope.profileDetails.address.lat = place.geometry.location.lat();
+      $scope.profileDetails.address.lng = place.geometry.location.lng();
+    }
+    for(var i = 0; i < address_components.length; i++) {
+        var types = address_components[i].types;
+        if(types[0] == 'postal_code') {
+            $scope.profileDetails.address.postalCode = address_components[i].long_name;
+        } else if (types[0] == 'administrative_area_level_1' ) {
+            $scope.profileDetails.address.state = address_components[i].long_name;
+        } else if(types[0] == 'locality') {
+            $scope.profileDetails.address.city = address_components[i].long_name;
+        } else if(types[0] == 'country') {
+            $scope.profileDetails.address.country = address_components[i].long_name;
         }
-        for(var i = 0; i < address_components.length; i++) {
-            var types = address_components[i].types;
-            if(types[0] == 'postal_code') {
-                $scope.profileDetails.address.postalCode = address_components[i].long_name;
-            } else if (types[0] == 'administrative_area_level_1' ) {
-                $scope.profileDetails.address.state = address_components[i].long_name;
-            } else if(types[0] == 'locality') {
-                $scope.profileDetails.address.city = address_components[i].long_name;
-            } else if(types[0] == 'country') {
-                $scope.profileDetails.address.country = address_components[i].long_name;
-            }
-        }
+    }
 	}
   function readAddImage(input) {
     if (input.files && input.files[0]) {
@@ -2802,7 +2805,7 @@ app.filter('dateformat4', function(){
 app.filter('timeFormat', function(){
   return function(time){
     if(time){
-      return moment(time,"HH:mm:ss").format("hh:mm:A");
+      return moment(time,"HH:mm:ss").format("hh:mm A");
     }
   }
 })

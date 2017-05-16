@@ -14,7 +14,8 @@
 				<div class="row claim-profile">
 					<div class="col-sm-2">
 						<div class="image">
-							<img class="img-responsive" src="images/doctor/doctor-1.jpg" />
+							<img ng-if="doctorDetails.photo" class="img-responsive" src="images/doctor/doctor-1.jpg" />
+							<span ng-if="!doctorDetails.photo">{{doctorDetails.profile.name | getShortName}}</span>
 						</div>
 					</div>
 					<div class="col-sm-5">
