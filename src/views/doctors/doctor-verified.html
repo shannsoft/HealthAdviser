@@ -2,16 +2,18 @@
   <div class="page-section padd-v-80">
     <div class="container">
       <div class="row">
-        <div class="col-sm-6 col-md-offset-3">
-          <h4> Validate your profile to take advantage in Doctor Listing</h4>
-          <div class="form-group">
-            <input type="text" name="criteria" class="form-control b-a h-40" placeholder="enter the 4 digit number sent to  your mobile" ng-model="claim.token">
+        <form name="verifyFrm">
+          <div class="col-sm-6 col-md-offset-3">
+            <h4> Validate your profile to take advantage in Doctor Listing</h4>
+            <div class="form-group">
+              <input type="text" name="criteria" class="form-control b-a h-40" placeholder="Enter the OTP sent to  your mobile" ng-model="verify.token" required>
+            </div>
+            <div class="clearfix">
+              <button type="submit" class="btn btn-primary btn-md pull-left m-t-10" ui-sref="updateDoctorProfile">Skip</button>
+              <button type="submit" class="btn btn-blue btn-md pull-right m-t-10" ng-click="verifyDoctor()" ng-disabled="verifyFrm.$invalid">Submit</button>
+            </div>
           </div>
-          <div class="clearfix">
-            <button type="submit" class="btn btn-primary btn-md pull-left m-t-10" ui-sref="updateDoctorProfile">Skip</button>
-            <button type="submit" class="btn btn-blue btn-md pull-right m-t-10" ng-click="verifyDoctor()">Submit</button>
-          </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>

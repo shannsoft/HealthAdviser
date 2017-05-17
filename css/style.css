@@ -446,6 +446,7 @@ a:hover{ color:#000;}
 .m-b-30{ margin-bottom:30px;}
 .m-b-40{ margin-bottom:40px;}
 .m-b-50{ margin-bottom:50px;}
+.m-l-5{ margin-left:5px;}
 .m-l-10{ margin-left:10px;}
 .m-l-20{ margin-left:20px;}
 .m-r-5{ margin-right:5px;}
@@ -2820,13 +2821,18 @@ tags-input .tags .tag-item {
   margin-right: 15px;
   margin-bottom: 15px;
 }
-
 .testimonImg,  
 .testimonImg img {
-  display: inline-block;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    vertical-align: top;
+    text-align: center;
+    line-height: 58px;
+    font-weight: bold;
+    font-size: 20px;
 }
 .testimonImg img {
   border:2px solid #eee;

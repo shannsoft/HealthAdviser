@@ -103,6 +103,15 @@ app.factory("AuthorizeService", function($http,CONFIG,$q,HEALTH_ADVISER,$interva
         });
         return deferred.promise;
     };
+    var verifyUser = function(obj){
+        var response = $http({
+            method: 'POST',
+            url: CONFIG.API_PATH+'_UserSignupVerifyMobile',
+            data:obj,
+            headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
+        })
+        return response;
+    }
 
     function clearCredentials() {
     	clearTimeout(timer);
@@ -116,7 +125,8 @@ app.factory("AuthorizeService", function($http,CONFIG,$q,HEALTH_ADVISER,$interva
     	login 				: login,
     	logout				: logout,
 		forgotPassword		: forgotPassword,
-		changePassword		: changePassword
+		changePassword		: changePassword,
+        verifyUser          : verifyUser
 	};
 })
 app.factory("HealthAuth",function(HEALTH_ADVISER){

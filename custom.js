@@ -277,7 +277,7 @@ app.constant('CONFIG', {
 }]);
 app.constant("HEALTH_ADVISER",function(){
 	ACCESS_TOKEN_EXPIRES_IN:300
-});app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "Util", "AuthorizeService", "$state", "DoctorDetailsService", "$state", "$localStorage", "$location", function($scope,$rootScope,$timeout,Util,AuthorizeService,$state,DoctorDetailsService,$state,$localStorage,$location){
+});app.controller('AuthenticationController',["$scope", "$rootScope", "$timeout", "Util", "AuthorizeService", "$state", "DoctorDetailsService", "$state", "$localStorage", "$location", "HealthAuth", function($scope,$rootScope,$timeout,Util,AuthorizeService,$state,DoctorDetailsService,$state,$localStorage,$location,HealthAuth){
 	$scope.user = {};
 	google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
@@ -435,6 +435,17 @@ app.constant("HEALTH_ADVISER",function(){
   		}
 			else{
 				Util.alertMessage('danger',"Something went wrong!");
+			}
+		})
+	}
+	$scope.verifyDoctor = function(){
+		$scope.verify.userId = $rootScope.logedInUser.userCode;
+		console.log($scope.verify);
+		$rootScope.showPreloader = true;
+		AuthorizeService.verifyUser($scope.verify).then(function(response){
+			$rootScope.showPreloader = false;
+			if (response.data.StatusCode == 200) {
+				$state.go('updateDoctorProfile');
 			}
 		})
 	}
@@ -2949,6 +2960,15 @@ app.filter('phonenumber', function() {
         });
         return deferred.promise;
     };
+    var verifyUser = function(obj){
+        var response = $http({
+            method: 'POST',
+            url: CONFIG.API_PATH+'_UserSignupVerifyMobile',
+            data:obj,
+            headers: {'Content-Type':'application/json','Server': CONFIG.SERVER_PATH,'tokenId':HealthAuth.accessToken}
+        })
+        return response;
+    }
 
     function clearCredentials() {
     	clearTimeout(timer);
@@ -2962,7 +2982,8 @@ app.filter('phonenumber', function() {
     	login 				: login,
     	logout				: logout,
 		forgotPassword		: forgotPassword,
-		changePassword		: changePassword
+		changePassword		: changePassword,
+        verifyUser          : verifyUser
 	};
 }])
 app.factory("HealthAuth",["HEALTH_ADVISER", function(HEALTH_ADVISER){

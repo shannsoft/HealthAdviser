@@ -1189,6 +1189,9 @@ app.controller("DoctorProfileController",function($scope, $rootScope,CommonServi
 	$scope.processForm1 = function() {
 		$scope.showTheForm1 = false;
 	}
+  /****************************************************************************/
+  /**************FUNCTION IS USED TO VALIDATE THE DATE*************************/
+  /****************************************************************************/
   $scope.changeSelect = function(option,start,end){
       if(start && end){
         if(moment(start).isAfter(end)){

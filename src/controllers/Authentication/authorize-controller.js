@@ -1,4 +1,4 @@
-app.controller('AuthenticationController',function($scope,$rootScope,$timeout,Util,AuthorizeService,$state,DoctorDetailsService,$state,$localStorage,$location){
+app.controller('AuthenticationController',function($scope,$rootScope,$timeout,Util,AuthorizeService,$state,DoctorDetailsService,$state,$localStorage,$location,HealthAuth){
 	$scope.user = {};
 	google = typeof google === 'undefined' ? "" : google;
   	var googleTime;
@@ -168,7 +168,7 @@ app.controller('AuthenticationController',function($scope,$rootScope,$timeout,Ut
 		})
 	}
 	/****************************************************************************/
-  /***********************FUNCTION USE FOR FORGOT PASSWORD*********************/
+  	/***********************FUNCTION USE FOR FORGOT PASSWORD*********************/
 	/****************************************************************************/
 	$scope.changePassword = function(){
 		$rootScope.showPreloader = true;
@@ -179,6 +179,20 @@ app.controller('AuthenticationController',function($scope,$rootScope,$timeout,Ut
   		}
 			else{
 				Util.alertMessage('danger',"Something went wrong!");
+			}
+		})
+	}
+	/****************************************************************************/
+  	/******************FUNCTION USE FOR VERIFY MOBILE NUMBER*********************/
+	/****************************************************************************/
+	$scope.verifyDoctor = function(){
+		$scope.verify.userId = $rootScope.logedInUser.userCode;
+		console.log($scope.verify);
+		$rootScope.showPreloader = true;
+		AuthorizeService.verifyUser($scope.verify).then(function(response){
+			$rootScope.showPreloader = false;
+			if (response.data.StatusCode == 200) {
+				$state.go('updateDoctorProfile');
 			}
 		})
 	}
