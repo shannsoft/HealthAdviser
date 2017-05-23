@@ -23,10 +23,21 @@ app.controller('AuthenticationController',function($scope,$rootScope,$timeout,Ut
 			}
 	}
 	function populateAddressFields(place) {
-    if (place.geometry) {
-      $scope.user.latLng = place.geometry.location.lat() + "," + place.geometry.location.lng();
-    }
-    $scope.user.city = place.name;
+	    if (place.geometry) {
+	      $scope.user.latLng = place.geometry.location.lat() + "," + place.geometry.location.lng();
+	    }
+	    $scope.user.city = place.name;
+	    var address_components = place.address_components;
+	    for(var i = 0; i < address_components.length; i++) {
+	        var types = address_components[i].types;
+	        if (types[0] == 'administrative_area_level_1' ) {
+	            $scope.user.state = address_components[i].long_name;
+	        }
+	        else if(types[0] == 'country') {
+	            $scope.user.country = address_components[i].long_name;
+	        }
+	    }
+	    console.log($scope.user);
 	}
 
 	/****************************************************************************/
@@ -66,7 +77,9 @@ app.controller('AuthenticationController',function($scope,$rootScope,$timeout,Ut
 		"actType": "I",
       	"address": {
         	"city": $scope.user.city,
-        	"lat":$scope.user.latLng
+        	"lat": $scope.user.latLng,
+        	"state": $scope.user.state,
+        	"country" : $scope.user.country
       	},
       	"phone": $scope.user.phone,
       	"profile": {
