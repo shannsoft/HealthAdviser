@@ -198,6 +198,19 @@ app.config(function($stateProvider, $urlRouterProvider,$provide) {
     controller:"ClaimController"
   })
 
+  /****************************************************************************/
+  /*******************ROUTING USE FOR PRODUCT AND ACCOUNT**********************/
+  /****************************************************************************/
+  .state('account-setting',{
+    templateUrl: 'src/views/doctors/account/accountSetting.html',
+    url: '/account-setting',
+    controller:"AccountController" 
+  })
+  .state('premium-landing', {
+    templateUrl: 'src/views/premiumProfile/premium-landing.html',
+    url: '/premium-landing',
+    controller:"AccountController" 
+  })
 
 
   /****************************************************************************/

@@ -65,7 +65,6 @@ a:hover{ color:#000;}
 }
 .btn {
   letter-spacing: 1px;
-  font-weight: bold;
   font-size:18px;
   display: inline-block;
   line-height: 43px;
@@ -75,7 +74,7 @@ a:hover{ color:#000;}
   text-shadow: none;
 }
 .btn.btn-xs {
-  padding: 5px 15px;
+  padding: 5px 15px!important;
 }
 .btn-xs,
 .btn-group-xs > .btn {
@@ -2380,6 +2379,7 @@ dl {
 .doctor-specialized img{
     margin: 60px 0px 20px 30px;
     float: right;
+    max-width:500px;
 }
 .auto-complete .dropdown-menu{
 	max-height: 450px;
@@ -2515,7 +2515,7 @@ dl {
 	width: 100%;
 }
 
-* Some of these styles you can override, things like colors,
+/* Some of these styles you can override, things like colors,
  * however some styles are required for the structure, and are critical to this module behaving properly!
  */
 
@@ -2873,4 +2873,549 @@ tags-input .tags .tag-item {
 }
 .h-220{
 	height:220px;
+}
+.claim-method-progress {
+    margin: 0;
+    padding: 0;
+    display: block
+}
+.claim-method-progress li {
+    display: table-cell;
+    list-style: none
+}
+.claim-method-progress li p {
+    font-size: 18px;
+    line-height: 24px
+}
+
+.ls-enroll-box {
+    background: #f5f5f6!important;
+    color: #000;
+    padding: 50px 0 0;
+    text-align: center;
+    min-height: 190px
+}
+.box-bottom-section {
+    background: #ececec;
+    padding: 15px;
+    text-align: center;
+    margin-top: 40px
+}
+.box-bottom-section a {
+    text-decoration: underline
+}
+.ls-search-btn {
+    position: absolute;
+    right: 0;
+    bottom: 1px;
+    border-radius: 0
+}
+.user-instruction {
+    display: block;
+    background: #f8f8fa;
+    padding: 80px 0 0
+}
+.user-instruction-box {
+    display: block;
+    background: #fff;
+    width: 100%;
+    padding: 50px;
+    font-size: 20px;
+    line-height: 30px
+}
+.lpb-section {
+    background: #2a3b4d
+}
+.lpb-section h2 {
+    font-size: 40px
+}
+.line-center {
+    margin: 20px auto
+}
+#footermap {
+    height: 250px;
+    width: 100%
+}
+.terms-section {
+    height: 500px;
+    overflow-y: scroll
+}
+.p-v-20 {
+    padding: 0 20px
+}
+.sponserd-tag .dropdown-menu {
+    max-height: 250px;
+    overflow-y: scroll;
+    width: 100%
+}
+
+.billing-form {
+    display: block;
+    background: #f8f8fa;
+    padding: 80px 0 0
+}
+.billing-form h3 {
+    margin: 0;
+    text-transform: uppercase;
+    font-size: 20px;
+    font-weight: 700
+}
+.billing-form .close {
+    position: absolute;
+    right: 0;
+    top: -3px;
+    box-shadow: none
+}
+.billing-form .line {
+    height: 2px;
+    background: #000;
+    display: block;
+    width: 100px;
+    margin: 15px 0 40px
+}
+.billing-form label {
+    margin-bottom: 10px;
+    font-size: 16px
+}
+.billing-form .f-line {
+    height: 2px;
+    background: #c7dae4;
+    width: 100%;
+    margin: 20px 0;
+    display: block
+}
+.billing-form .billed-btn {
+    padding: 15px 20px;
+    display: block;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 16px
+}
+.btn-active {
+    background: #11a6e5!important;
+    color: #fff!important
+}
+.card-save-section {
+    display: block;
+    padding-top: 70px
+}
+.card-save-section h2 {
+    font-size: 24px;
+    margin: 0 0 60px;
+    position: relative;
+    font-weight: 400
+}
+.save-card-box {
+    display: block;
+    background: #f8f8fa;
+    padding: 25px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    min-height: 245px
+}
+.save-card-box h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 5px
+}
+.save-card-box h5 {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 10px
+}
+.save-card-box span {
+    color: #a5a5a5;
+    font-size: 18px
+}
+.preloader-msg {
+    height: 500px;
+    text-align: center;
+    display: block;
+    padding-top: 120px
+}
+.preloader-msg i {
+    display: block;
+    margin-bottom: 6px
+}
+.sponserd-input {
+    display: block
+}
+.sponserd-input input {
+    padding: 0 30px
+}
+.sponserd-input .sponserd-marker-icon {
+    position: absolute;
+    z-index: 99;
+    left: 10px;
+    top: 24%;
+    font-size: 25px;
+    color: #f56c0f
+}
+.sponserd-input .sponserd-close {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    color: #777
+}
+.sponserd-tag tags-input .tags .input {
+    height: 34px
+}
+.ls-payment-details {
+    background: #f8f8fa;
+    padding: 20px;
+    margin-bottom: 20px
+}
+.redirect-timer {
+    padding: 6px 15px;
+    background: #fff;
+    color: red;
+    border-radius: 3px;
+    display: inline-block;
+    border: 2px solid #f3f3f3;
+    margin: 6px auto auto;
+    text-align: center;
+    font-weight: 700;
+    font-size: 18px
+}
+.authorize-logo {
+    margin-top: -13px;
+    text-align: center
+}
+.lawyer-product-banner {
+    background: url(../images/banner/lawyer-product-banner.jpg) no-repeat #000;
+    background-size: cover
+}
+.lawyer-product-banner h2 {
+    color: #1080b6;
+    line-height: 50px;
+    margin: 0;
+    text-transform: none;
+    font-size: 40px;
+    font-weight: 700;
+    font-family: open_sansbold
+}
+.lawyer-product-section {
+    display: block
+}
+.lawyer-product-section .product-box-wrap {
+    border: 2px solid #f4f4f4;
+    border-radius: 4px;
+    padding: 20px;
+    min-height: 210px;
+    margin-bottom: 30px
+}
+.lawyer-product-section .product-box-wrap .img-sec {
+    display: table-cell;
+    width: 145px
+}
+.lawyer-product-section .product-box-wrap .content-sec {
+    display: table-cell;
+    vertical-align: top
+}
+.lawyer-product-section .product-box-wrap .content-sec h3 {
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #1080b6;
+    margin: 0
+}
+.lawyer-product-section .product-box-wrap .content-sec p {
+    margin: 20px 0
+}
+.lawyer-product-section .product-box-wrap .content-sec a {
+    text-decoration: underline;
+    font-size: 16px
+}
+.lawyer-product-section .product-details-wrap {
+    display: block;
+    background: #f7f7f7;
+    padding: 50px
+}
+.lawyer-product-section .product-details-wrap h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0
+}
+.lawyer-product-section .product-details-wrap .line {
+    height: 3px;
+    background: #1897d4;
+    width: 80px;
+    display: block;
+    margin: 15px 0
+}
+.lawyer-product-section .product-details-wrap ul {
+    margin: 20px 0
+}
+.lawyer-product-section .product-details-wrap ul li {
+    display: block;
+    list-style: none;
+    font-size: 18px;
+    line-height: 50px
+}
+.lawyer-product-section .product-details-wrap ul li span {
+    background: #1080b6;
+    border-radius: 50px;
+    color: #fff;
+    padding: 10px;
+    display: inline-table;
+    line-height: 9px;
+    margin-right: 12px
+}
+.lawyer-product-section .product-details-wrap ul li p {
+    display: inline-table;
+    margin: 0;
+    line-height: 30px
+}
+.lawyer-product-section .product-details-wrap ul li ul {
+    margin: 0 0 0 50px
+}
+.lawyer-product-section .product-details-wrap ul li ul h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 10px 0;
+    color: #1080b6
+}
+.lawyer-product-section .product-details-wrap ul li ul li span {
+    background: 0 0!important;
+    padding: 0;
+    line-height: 0;
+    margin-right: 5px;
+    color: #555;
+    font-weight: 700;
+    min-width: 36px
+}
+.lawyer-product-section .product-details-wrap ul li ul li {
+    line-height: 25px;
+    margin-right: 12px;
+    padding: 0;
+    font-size: 14px
+}
+.billing-section {
+    display: block;
+    background: #f8f8fa;
+    padding: 50px 0 50px;
+}
+.billing-section .billing-box {
+    display: block;
+    background: #fff;
+    padding: 40px
+}
+.billing-section .billing-box .h-line {
+    height: 1px;
+    background: #ddd;
+    display: block;
+    width: 100%;
+    margin: 30px 0
+}
+.billing-section .billing-box .v-line {
+    width: 1px;
+    background: #ddd;
+    display: block;
+    height: 120px
+}
+.billing-section .billing-address {
+    display: block
+}
+.billing-section .billing-address h4 {
+    margin: 0 0 15px;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 700
+}
+.billing-section .billing-address label {
+    margin-right: 10px
+}
+.billing-section .billing-box h3 {
+    font-size: 22px;
+    margin: 0;
+    padding: 0
+}
+.billing-section .billing-box .line {
+    height: 2px;
+    background: #000;
+    display: block;
+    width: 100px;
+    margin: 15px 0 30px
+}
+.billing-section .billing-box .prof-info li {
+    display: block;
+    list-style: none;
+    font-size: 16px;
+    line-height: 28px
+}
+.billing-section .billing-box .prof-info li a {
+    color: #1aa1f3;
+    font-size: 14px
+}
+.billing-section .billing-box .billing-table {
+    border: none;
+    border-top: none!important;
+    margin-bottom: 0
+}
+.billing-section .billing-box .billing-table tbody tr {
+    border-bottom: 1px solid #ddd
+}
+.billing-section .billing-box .billing-table tbody tr:last-child {
+    border-bottom: none!important
+}
+.billing-section .billing-box .billing-table tbody tr td {
+    border: none;
+    padding: 15px 10px
+}
+.billing-section .billing-box .billing-table tbody tr td:last-child {
+    border: none
+}
+.billing-section .billing-box .billing-table tbody tr td span {
+    font-size: 20px;
+    color: #000
+}
+.billing-section .billing-box .billing-table tbody tr td p {
+    color: #8a8a8a;
+    margin: 0;
+    padding: 0
+}
+.billing-section .billing-box .side-link {
+    background: #f5f5f6;
+    padding: 30px
+}
+.billing-section .billing-box .side-link ul {
+    margin: 0
+}
+.billing-section .billing-box .side-link ul li {
+    display: block;
+    list-style: none
+}
+.billing-section .billing-box .side-link ul li a {
+    font-size: 16px;
+    line-height: 26px;
+    color: #1187c0
+}
+.billing-section .billing-box .billed-table thead tr th {
+    background: #f5f5f6!important;
+    color: #000;
+    border: 1px solid #ddd
+}
+.billing-section .billing-box .enroll-box {
+    background: #f5f5f6!important;
+    color: #000;
+    padding: 50px 30px;
+    margin-top: 30px;
+    text-align: center;
+    min-height: 190px
+}
+.billing-section .billing-box .enroll-box h3 {
+    font-size: 22px;
+    margin-bottom: 20px
+}
+.billing-section .billing-box .enroll-box .hyper-link:hover {
+    text-decoration: none
+}
+.inner-banner {
+    padding: 170px 0 80px
+}
+.inner-banner h2 {
+    color: #fff;
+    line-height: 50px;
+    margin: 0;
+    text-transform: none;
+    font-size: 40px;
+    font-weight: 700;
+}
+.inner-banner-lg h2,
+.inner-banner-signedLawyer h2 {
+    font-size: 50px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 50px;
+    margin: 0;
+    text-transform: none
+}
+.inner-banner-lg {
+    padding: 150px 0 0
+}
+.inner-banner-signedLawyer {
+    padding: 150px 0 80px
+}
+.inner-banner-xl {
+    padding: 75px 0 0
+}
+.inner-banner-xl h2 {
+    color: #fff;
+    line-height: 50px;
+    margin: 0;
+    text-transform: none;
+    font-size: 45px;
+    font-weight: 700
+}
+.inner-banner-sm h2,
+.inner-banner-xs h2 {
+    font-size: 30px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 50px;
+    margin: 0;
+    text-transform: none;
+}
+.inner-banner-sm {
+    padding: 50px 0 50px
+}
+.inner-banner-xs {
+    padding: 50px 0 0
+}
+.inner-banner-direction {
+    padding: 50px 0 30px
+}
+.inner-banner-direction h2 {
+    color: #fff;
+    line-height: 50px;
+    margin: 0;
+    text-transform: none;
+    font-size: 40px;
+    font-weight: 700;
+}
+.forgot-section h3,
+.sign-section h3 {
+    font-size: 20px;
+    margin-top: 0;
+    font-weight: 700
+}
+.landing-page-wrap {
+    background: #f3f5f6;
+    padding: 60px 0;
+    position: relative;
+}
+.landing-page-wrap h2 {
+    font-size: 30px;
+    margin:0px;
+    font-weight: bold;
+    
+}
+
+.landing-page-wrap .line {
+    height: 2px;
+    background: #bfc4c8;
+    display: block;
+    margin: 80px 0!important;
+    width: 100%
+}
+.landing-page-wrap .preview-box {
+    background: #fff;
+    border-radius: 3px;
+    padding: 30px 20px;
+    margin-bottom: 30px;
+    text-align: center
+}
+.landing-page-wrap .preview-box h3 {
+    font-size: 22px;
+    margin: 0 0 15px
+}
+.landing-page-wrap .preview-box .btn {
+    width: 110px
+}
+.line-sm{
+	background: #0088a4;
+	height: 3px;
+	width:80px;
+	display: block;
+	margin: 20px auto;
 }

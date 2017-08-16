@@ -190,7 +190,10 @@
 	.details-banner-section {
 		padding: 20px 0px 0px;
 	}
-
+  .claim-method-progress li {
+      display: block;
+      margin-top: 40px
+  }
 
 }
 @media (max-width: 480px) {

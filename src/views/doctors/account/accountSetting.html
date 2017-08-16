@@ -1,0 +1,159 @@
+<section class="billing-section">
+	<div class="page-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+          			<div class="billing-box m-b-30">
+						<h3>Upgrade Your Subscription</h3>
+						<div class="line"></div>
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="ls-enroll-box">
+									<h3><a class="hyper-link" ng-click="enrollProduct(product)">Premium Profile</a></h3>
+									<p>Price: Rs: 2000</p>
+									<div class="box-bottom-section"><a href="" ng-click="modifyTemplate(product,'Update')">Continue</a> to Upgrade</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="ls-enroll-box">
+									<h3><a class="hyper-link" ng-click="enrollProduct(product)">Sponsored Doctor</a></h3>
+									<p>Price: Rs: 2000</p>
+									<div class="box-bottom-section"><a href="" ng-click="modifyTemplate(product,'Update')">Continue</a> to Upgrade</div>
+								</div>
+							</div>
+						</div>
+					</div>
+          			<div class="billing-box m-b-30">
+						<h3>Subscription</h3>
+						<div class="line"></div>
+						<div class="row">
+							<div class="col-sm-12">
+								<table class="table billing-table">
+									<tbody>
+										<tr>
+											<td><span>Premium Profile</span> <p><strong>Start Date :</strong>23 jul, 2017 </p><p><strong>End Date :</strong> 23 Aug, 2017</p></td>
+											<td ng-if="product.status == 'ACTIVE'">Active <i class="fa fa-check-square-o"></i></td>
+											<td ng-if="product.status != 'ACTIVE'">InActive <i class="fa fa-times"></i></td>
+											<td class="text-right">
+												<a class="btn btn-blue btn-sm m-r-5" href="" ng-click="gotoPaymentList(product)">Change Payment Method</a>
+												<a class="btn btn-blue btn-sm m-r-5" href="" ng-click="modifyTemplate(product,'New')">Change Template</a>
+												<a class="btn btn-blue btn-sm m-r-5" href="" ng-click="modifyTemplate(product,'Update')">Customize</a>
+												<a class="btn btn-danger btn-sm" href="" ng-click="cancelSubscriptionModal(product)">Cancel</a>
+											</td>
+											<td class="text-right" ng-if="product.name == 'Sponsored Lawyer'">
+												<a ng-if="product.status == 'ACTIVE'" class="btn btn-blue m-r-5" href="" ng-click="gotoPaymentList(product)">Change Payment Method</a>
+												<a class="btn btn-blue btn-sm m-r-5" href="" ng-click="modifySponsored(product)">Customize</a>
+												<a  ng-if="product.status == 'ACTIVE'" class="btn btn-danger btn-sm" href="" ng-click="cancelSubscriptionModal(product)">Cancel</a>
+											</td>
+										</tr>
+										<tr>
+											<td><span>Sponsored Doctor</span> <p><strong>Start Date :</strong>23 jul, 2017 </p><p><strong>End Date :</strong> 23 Aug, 2017</p></td>
+											<td ng-if="product.status == 'ACTIVE'">Active <i class="fa fa-check-square-o"></i></td>
+											<td ng-if="product.status != 'ACTIVE'">InActive <i class="fa fa-times"></i></td>
+											<td class="text-right">
+												<a class="btn btn-blue btn-sm m-r-5" href="" ng-click="gotoPaymentList(product)">Change Payment Method</a>
+												<a class="btn btn-blue btn-sm m-r-5" href="" ng-click="modifySponsored(product)">Customize</a>
+												<a class="btn btn-danger btn-sm" href="" ng-click="cancelSubscriptionModal(product)">Cancel</a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+          			<div class="billing-box m-b-30">
+						<h3>Payment Profile</h3>
+						<div class="line"></div>
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="ls-payment-details">
+									<div class="billing-address m-b-20">
+										<div class="clearfix">
+											<label>Card Profile :</label>
+											<span>My Card 1</span>
+										</div>
+										<div class="clearfix">
+											<label>Card Ending With :</label>
+											<span>0890</span>
+										</div>
+									</div>
+									<div class="billing-address">
+										<h4>Billing Address</h4>
+										<label>Santosh Majhi</label>
+										<address>
+											207, Saheed nagar<br>
+											Bhubaneswr, Odisha 751007<br>
+											India
+										</address>
+										<a class="btn btn-blue btn-xs" href="" ng-click="editPaymentProfile(payment)">Modify Payment Method</a>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="ls-payment-details">
+									<div class="billing-address m-b-20">
+										<div class="clearfix">
+											<label>Card Profile :</label>
+											<span>My Card 1</span>
+										</div>
+										<div class="clearfix">
+											<label>Card Ending With :</label>
+											<span>0890</span>
+										</div>
+									</div>
+									<div class="billing-address">
+										<h4>Billing Address</h4>
+										<label>Santosh Majhi</label>
+										<address>
+											207, Saheed nagar<br>
+											Bhubaneswr, Odisha 751007<br>
+											India
+										</address>
+										<a class="btn btn-blue btn-xs" href="" ng-click="editPaymentProfile(payment)">Modify Payment Method</a>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="h-line">
+								</div>
+							</div>
+						</div>
+						<a class="btn btn-primary btn-md" href="" ui-sref="add-account">Add New Card</a>
+					</div>
+          			<div class="billing-box m-b-30">
+						<h3>Payment History</h3>
+						<div class="line"></div>
+						<div class="row">
+							<div class="col-sm-12">
+								<table class="table table-bordered billed-table">
+									<thead>
+										<tr>
+											<th>Date</th>
+											<th>Subscription Name</th>
+											<th>Amount</th>
+											<th>Payment Method</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>23 Jul, 2017</td>
+											<td>Sponsored Doctor</td>
+											<td class="font-md bold">Rs : 2000</td>
+											<td><strong>Credit ending 0890</strong></td>
+										</tr>
+										<tr>
+											<td>23 Jul, 2017</td>
+											<td>Sponsored Doctor</td>
+											<td class="font-md bold">Rs : 2000</td>
+											<td><strong>Credit ending 0890</strong></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

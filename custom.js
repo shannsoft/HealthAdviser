@@ -200,6 +200,16 @@ app.config(["$stateProvider", "$urlRouterProvider", "$provide", function($stateP
     url: '/claim-update',
     controller:"ClaimController"
   })
+  .state('account-setting',{
+    templateUrl: 'src/views/doctors/account/accountSetting.html',
+    url: '/account-setting',
+    controller:"AccountController" 
+  })
+  .state('premium-landing', {
+    templateUrl: 'src/views/premiumProfile/premium-landing.html',
+    url: '/premium-landing',
+    controller:"AccountController" 
+  })
   .state('privacy-policy', {
     templateUrl: 'src/views/footer/privacy-policy.html',
     url: '/privacy-policy',
@@ -912,6 +922,8 @@ app.controller('TimingModalCtrl', ["$scope", "$uibModalInstance", "deleteTiming"
 		$scope.doctorsList();
 	}
 
+}]);app.controller("AccountController", ["$scope", "$rootScope", function($scope,$rootScope){
+	
 }]);app.controller('ClaimController',["$scope", "$rootScope", "$stateParams", "DoctorService", "Util", "$sessionStorage", "AuthorizeService", "$state", function($scope,$rootScope,$stateParams,DoctorService,Util,$sessionStorage,AuthorizeService,$state){
 	$scope.paging = {currentPage:1,totalPage:0,showResult:0};
 	$scope.claim = {};
